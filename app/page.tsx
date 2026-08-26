@@ -1,64 +1,662 @@
 'use client';
-import {useState} from "react";
-import {CalendarDays, CreditCard, Gift, Home, Search, UserRound, Star, Bell, Dumbbell, ChevronRight} from "lucide-react";
 
-const services=[
- {name:"Siłownia",place:"STREFA Fitness Centrum",price:49,icon:"🏋️"},
- {name:"SPA & Wellness",place:"STREFA SPA",price:120,icon:"🧖"},
- {name:"Trening personalny",place:"z trenerem",price:90,icon:"🧑‍🏫"},
- {name:"Escape room",place:"STREFA Fun",price:80,icon:"🗝️"},
+import { useMemo, useState } from 'react';
+
+const services = [
+  { name: 'Siłownia', place: 'STREFA Fitness Centrum', price: 49, category: 'Sport', icon: '🏋️' },
+  { name: 'SPA & Wellness', place: 'STREFA SPA', price: 120, category: 'Wellness', icon: '🧖' },
+  { name: 'Trening personalny', place: 'STREFA Fitness Centrum', price: 90, category: 'Sport', icon: '💪' },
+  { name: 'Escape room', place: 'STREFA Fun', price: 80, category: 'Rozrywka', icon: '🔐' },
+  { name: 'Masaż relaksacyjny', place: 'STREFA SPA', price: 150, category: 'Wellness', icon: '💆' },
+  { name: 'Joga', place: 'STREFA Fitness Centrum', price: 45, category: 'Sport', icon: '🧘' },
+  { name: 'Bilard', place: 'STREFA Fun', price: 35, category: 'Rozrywka', icon: '🎱' },
+  { name: 'Sauna', place: 'STREFA SPA', price: 60, category: 'Wellness', icon: '🔥' },
 ];
-function ServiceFlow({selected,close,finish}:{selected:string,close:()=>void,finish:()=>void}){
- const [step,setStep]=useState(1);
- const [day,setDay]=useState("28 sierpnia");
- const [time,setTime]=useState("18:00");
- const service=services.find(x=>x.name===selected)||services[0];
- return <div className="modal" onClick={close}><div className="sheet" onClick={e=>e.stopPropagation()}>
-  <button className="close" onClick={close}>×</button>
-  {step===1 && <>
-   <div className="bigEmoji">{service.icon}</div><small className="eyebrow">USŁUGA</small>
-   <h2>{service.name}</h2><span className="placeLine">{service.place} · od {service.price} zł</span>
-   <p>Wybierz dogodny termin. Przed potwierdzeniem zobaczysz podsumowanie ceny i dostępnych benefitów.</p>
-   <div className="choice"><b>Najbliższe terminy</b><span>Jutro · 10:00, 12:30, 18:00</span></div>
-   <button className="primary" onClick={()=>setStep(2)}>Wybierz termin</button>
-  </>}
-  {step===2 && <>
-   <small className="eyebrow">KROK 2 Z 3</small><h2>Wybierz termin</h2>
-   <div className="days">{["28 sie","29 sie","30 sie","31 sie"].map(x=><button className={day===x.replace(" sie"," sierpnia")?"selected":""} onClick={()=>setDay(x.replace(" sie"," sierpnia"))} key={x}>{x}</button>)}</div>
-   <div className="times">{["10:00","12:30","16:00","18:00","19:30"].map(x=><button className={time===x?"selected":""} onClick={()=>setTime(x)} key={x}>{x}</button>)}</div>
-   <button className="primary" onClick={()=>setStep(3)}>Dalej</button>
-  </>}
-  {step===3 && <>
-   <small className="eyebrow">KROK 3 Z 3</small><h2>Potwierdź rezerwację</h2>
-   <div className="summary"><span>Usługa<b>{service.name}</b></span><span>Termin<b>{day}, {time}</b></span><span>Cena<b>{service.price} zł</b></span><span>Benefit<b>Możliwy do użycia</b></span></div>
-   <button className="primary" onClick={finish}>Potwierdź rezerwację</button>
-  </>}
- </div></div>
-}
 
-export default function HomePage(){
- const [tab,setTab]=useState("home");
- const [selected,setSelected]=useState<string|null>(null);
- const [toast,setToast]=useState("");
- const notify=(s:string)=>{setToast(s);setTimeout(()=>setToast(""),2200)};
- return <main>
-  <header><div className="brand">STREFA</div><button className="icon"><Bell size={20}/><i/></button></header>
-  {tab==="home" && <section className="page">
-   <div className="hello"><div><span>Dzień dobry,</span><h1>Krzysia 👋</h1></div><div className="avatar">K</div></div>
-   <div className="hero"><div><small>Twój portfel</small><strong>248,50 zł</strong><p>+ 320 pkt Loyalty</p></div><button onClick={()=>setTab("wallet")}>Zobacz <ChevronRight size={16}/></button></div>
-   <div className="quick"><button onClick={()=>setTab("discover")}><Search/><span>Znajdź usługę</span></button><button onClick={()=>setTab("bookings")}><CalendarDays/><span>Moje rezerwacje</span></button></div>
-   <div className="sectionTitle"><h2>Polecane dla Ciebie</h2><button onClick={()=>setTab("discover")}>Wszystkie</button></div>
-   <div className="cards">{services.slice(0,3).map(s=><article className="service" key={s.name} onClick={()=>setSelected(s.name)}><div className="photo">{s.icon}</div><div><b>{s.name}</b><span>{s.place}</span><strong>od {s.price} zł</strong></div></article>)}</div>
-   <div className="sectionTitle"><h2>Twoje benefity</h2><button onClick={()=>setTab("benefits")}>Zobacz</button></div>
-   <div className="benefit"><div className="gift"><Gift/></div><div><b>Benefit sportowy</b><span>Wykorzystano 2 z 8 wejść</span><div className="progress"><i style={{width:"25%"}}/></div></div><strong>6 wejść</strong></div>
-  </section>}
-  {tab==="discover" && <section className="page"><div className="topTitle"><h1>Odkrywaj</h1><div className="search"><Search size={18}/><input placeholder="Czego szukasz?" /></div></div><div className="chips"><button>Wszystko</button><button>Fitness</button><button>SPA</button><button>Trenerzy</button><button>Rozrywka</button></div><div className="cards">{services.map(s=><article className="service large" key={s.name} onClick={()=>setSelected(s.name)}><div className="photo">{s.icon}</div><div><b>{s.name}</b><span>{s.place}</span><strong>od {s.price} zł</strong></div><ChevronRight/></article>)}</div></section>}
-  {tab==="bookings" && <section className="page"><div className="topTitle"><h1>Rezerwacje</h1></div><div className="booking"><span className="date">28<br/><small>SIE</small></span><div><b>Trening personalny</b><span>STREFA Fitness · 18:00</span><small>Potwierdzona</small></div><ChevronRight/></div><div className="booking muted"><span className="date">02<br/><small>WRZ</small></span><div><b>SPA & Wellness</b><span>STREFA SPA · 16:30</span><small>Potwierdzona</small></div><ChevronRight/></div></section>}
-  {tab==="wallet" && <section className="page"><div className="topTitle"><h1>Portfel</h1></div><div className="wallet"><small>Dostępne środki</small><strong>248,50 zł</strong><button onClick={()=>notify("Dodawanie środków — moduł płatności w przygotowaniu")}>+ Dodaj środki</button></div><h2 className="sub">Ostatnie operacje</h2>{["Trening personalny · −90 zł","Wpłata · +200 zł","Siłownia · −49 zł"].map((x,i)=><div className="transaction" key={x}><span>{i===1?"↗":"↙"}</span><div><b>{x.split(" · ")[0]}</b><small>26 sierpnia 2026</small></div><strong>{x.split(" · ")[1]}</strong></div>)}</section>}
-  {tab==="benefits" && <section className="page"><div className="topTitle"><h1>Benefity</h1></div><div className="benefit big"><div className="gift"><Gift/></div><div><b>Benefit sportowy</b><span>8 wejść / miesiąc</span><div className="progress"><i style={{width:"25%"}}/></div><small>Wykorzystano 2 · pozostało 6</small></div></div><div className="benefit big"><div className="gift"><Star/></div><div><b>Loyalty</b><span>320 punktów dostępnych</span><button onClick={()=>notify("Katalog nagród — w przygotowaniu")}>Wymień punkty</button></div></div></section>}
-  {tab==="profile" && <section className="page"><div className="profile"><div className="avatar bigAvatar">K</div><h1>Krzysia</h1><span>Klient STREFA</span></div><div className="menu">{["Dane osobowe","Pełnomocnictwa","Preferencje powiadomień","Historia aktywności"].map(x=><button key={x} onClick={()=>notify(x+" — moduł w przygotowaniu")}>{x}<ChevronRight/></button>)}</div></section>}
-  <nav>{[[Home,"home","Start"],[Search,"discover","Odkrywaj"],[CalendarDays,"bookings","Rezerwacje"],[Gift,"benefits","Benefity"],[UserRound,"profile","Profil"]].map(([I,k,l]:any)=><button className={tab===k?"active":""} onClick={()=>setTab(k)} key={k}><I size={21}/><span>{l}</span></button>)}</nav>
-  {selected && <ServiceFlow selected={selected} close={()=>setSelected(null)} finish={()=>{setSelected(null);setTab("bookings");notify("Rezerwacja potwierdzona — wersja demonstracyjna")}}/>}
-  {toast&&<div className="toast">{toast}</div>}
- </main>
+const categories = ['Wszystko', 'Sport', 'Wellness', 'Rozrywka'];
+
+export default function HomePage() {
+  const [tab, setTab] = useState('home');
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('Wszystko');
+  const [selected, setSelected] = useState<string | null>(null);
+  const [day, setDay] = useState('28 sierpnia');
+  const [time, setTime] = useState('18:00');
+  const [toast, setToast] = useState('');
+
+  const filteredServices = useMemo(() => {
+    return services.filter((service) => {
+      const matchesSearch =
+        service.name.toLowerCase().includes(search.toLowerCase()) ||
+        service.place.toLowerCase().includes(search.toLowerCase());
+
+      const matchesCategory =
+        category === 'Wszystko' || service.category === category;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, category]);
+
+  const notify = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const openDiscover = () => {
+    setTab('discover');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <main className="app">
+      <style jsx global>{`
+        * { box-sizing: border-box; }
+
+        body {
+          margin: 0;
+          background: #f5f6f7;
+          font-family: Arial, Helvetica, sans-serif;
+          color: #17191c;
+        }
+
+        button {
+          font: inherit;
+          cursor: pointer;
+        }
+
+        .app {
+          width: 100%;
+          max-width: 650px;
+          min-height: 100vh;
+          margin: 0 auto;
+          background: #f8f9fa;
+          padding-bottom: 95px;
+        }
+
+        .header {
+          height: 76px;
+          background: white;
+          border-bottom: 1px solid #e7e7e7;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 24px;
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        }
+
+        .brand {
+          font-size: 24px;
+          font-weight: 900;
+          letter-spacing: 6px;
+        }
+
+        .bell {
+          border: 0;
+          background: transparent;
+          font-size: 24px;
+          position: relative;
+        }
+
+        .dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #ef4444;
+          position: absolute;
+          top: 2px;
+          right: 1px;
+        }
+
+        .content {
+          padding: 28px 24px;
+        }
+
+        .hello {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 25px;
+        }
+
+        .hello small {
+          color: #8d9299;
+          font-size: 15px;
+        }
+
+        .hello h1 {
+          margin: 5px 0 0;
+          font-size: 32px;
+        }
+
+        .avatar {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: #17191c;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        .wallet {
+          background: #191b1f;
+          color: white;
+          border-radius: 25px;
+          padding: 25px;
+          margin-bottom: 18px;
+        }
+
+        .wallet small {
+          color: #aeb2b8;
+        }
+
+        .wallet-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 8px;
+        }
+
+        .wallet strong {
+          font-size: 34px;
+        }
+
+        .wallet button {
+          border: 0;
+          border-radius: 13px;
+          background: white;
+          padding: 12px 18px;
+        }
+
+        .quick {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-bottom: 30px;
+        }
+
+        .quick button {
+          border: 1px solid #e2e3e5;
+          background: white;
+          border-radius: 17px;
+          padding: 17px 12px;
+          font-weight: 700;
+        }
+
+        .section-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+
+        .section-title h2 {
+          margin: 0;
+          font-size: 20px;
+        }
+
+        .section-title button {
+          border: 0;
+          background: transparent;
+          color: #8a8e94;
+        }
+
+        .service {
+          width: 100%;
+          border: 1px solid #e4e5e7;
+          background: white;
+          border-radius: 20px;
+          padding: 13px;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          text-align: left;
+          margin-bottom: 12px;
+        }
+
+        .service-icon {
+          width: 70px;
+          height: 70px;
+          border-radius: 15px;
+          background: #eef0f2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+          flex-shrink: 0;
+        }
+
+        .service-info {
+          flex: 1;
+        }
+
+        .service-info h3 {
+          margin: 0 0 6px;
+          font-size: 17px;
+        }
+
+        .service-info p {
+          margin: 0 0 7px;
+          color: #8b9097;
+          font-size: 14px;
+        }
+
+        .price {
+          font-weight: 800;
+        }
+
+        .page-title {
+          font-size: 30px;
+          margin: 5px 0 20px;
+        }
+
+        .search {
+          width: 100%;
+          padding: 17px 18px;
+          border-radius: 16px;
+          border: 1px solid #dedfe1;
+          background: white;
+          font-size: 16px;
+          outline: none;
+          margin-bottom: 15px;
+        }
+
+        .categories {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          padding-bottom: 8px;
+          margin-bottom: 20px;
+        }
+
+        .category {
+          white-space: nowrap;
+          border: 1px solid #dedfe1;
+          background: white;
+          padding: 10px 16px;
+          border-radius: 20px;
+        }
+
+        .category.active {
+          background: #191b1f;
+          color: white;
+          border-color: #191b1f;
+        }
+
+        .empty {
+          background: white;
+          border-radius: 20px;
+          padding: 40px 20px;
+          text-align: center;
+          color: #8b9097;
+        }
+
+        .modal-bg {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,.45);
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          z-index: 50;
+        }
+
+        .modal {
+          width: 100%;
+          max-width: 650px;
+          background: white;
+          border-radius: 28px 28px 0 0;
+          padding: 25px;
+        }
+
+        .modal h2 {
+          margin-top: 0;
+        }
+
+        .modal-row {
+          display: flex;
+          gap: 10px;
+          margin: 12px 0;
+        }
+
+        .modal input {
+          width: 100%;
+          border: 1px solid #ddd;
+          border-radius: 13px;
+          padding: 14px;
+        }
+
+        .primary {
+          width: 100%;
+          border: 0;
+          background: #191b1f;
+          color: white;
+          border-radius: 15px;
+          padding: 16px;
+          font-weight: 700;
+          margin-top: 10px;
+        }
+
+        .close {
+          width: 100%;
+          border: 0;
+          background: #f1f2f3;
+          border-radius: 15px;
+          padding: 14px;
+          margin-top: 8px;
+        }
+
+        .bottom {
+          position: fixed;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          max-width: 650px;
+          height: 82px;
+          background: rgba(255,255,255,.97);
+          border-top: 1px solid #e5e5e5;
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          z-index: 20;
+        }
+
+        .bottom button {
+          border: 0;
+          background: transparent;
+          color: #9a9da3;
+          font-size: 12px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+        }
+
+        .bottom button.active {
+          color: #17191c;
+          font-weight: 700;
+        }
+
+        .bottom span:first-child {
+          font-size: 22px;
+        }
+
+        .toast {
+          position: fixed;
+          left: 50%;
+          bottom: 100px;
+          transform: translateX(-50%);
+          background: #191b1f;
+          color: white;
+          padding: 13px 20px;
+          border-radius: 14px;
+          z-index: 100;
+        }
+      `}</style>
+
+      <header className="header">
+        <div className="brand">STREFA</div>
+        <button className="bell" onClick={() => notify('Brak nowych powiadomień')}>
+          🔔
+          <span className="dot" />
+        </button>
+      </header>
+
+      <div className="content">
+        {tab === 'home' && (
+          <>
+            <div className="hello">
+              <div>
+                <small>Dzień dobry,</small>
+                <h1>Krzysia 👋</h1>
+              </div>
+              <div className="avatar">K</div>
+            </div>
+
+            <div className="wallet">
+              <small>Twój portfel</small>
+              <div className="wallet-row">
+                <div>
+                  <strong>248,50 zł</strong>
+                  <div style={{ color: '#aeb2b8', marginTop: 5 }}>+ 320 pkt Loyalty</div>
+                </div>
+                <button onClick={() => setTab('wallet')}>Zobacz →</button>
+              </div>
+            </div>
+
+            <div className="quick">
+              <button onClick={openDiscover}>🔎 Znajdź usługę</button>
+              <button onClick={() => setTab('bookings')}>📅 Moje rezerwacje</button>
+            </div>
+
+            <div className="section-title">
+              <h2>Polecane dla Ciebie</h2>
+              <button onClick={openDiscover}>Wszystkie</button>
+            </div>
+
+            {services.slice(0, 3).map((service) => (
+              <button
+                className="service"
+                key={service.name}
+                onClick={() => setSelected(service.name)}
+              >
+                <div className="service-icon">{service.icon}</div>
+                <div className="service-info">
+                  <h3>{service.name}</h3>
+                  <p>{service.place}</p>
+                  <span className="price">od {service.price} zł</span>
+                </div>
+                <span>›</span>
+              </button>
+            ))}
+          </>
+        )}
+
+        {tab === 'discover' && (
+          <>
+            <h1 className="page-title">Odkrywaj</h1>
+
+            <input
+              className="search"
+              placeholder="🔎  Czego szukasz?"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <div className="categories">
+              {categories.map((item) => (
+                <button
+                  key={item}
+                  className={`category ${category === item ? 'active' : ''}`}
+                  onClick={() => setCategory(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
+            <div className="section-title">
+              <h2>Usługi</h2>
+              <span style={{ color: '#8b9097' }}>{filteredServices.length}</span>
+            </div>
+
+            {filteredServices.length > 0 ? (
+              filteredServices.map((service) => (
+                <button
+                  className="service"
+                  key={service.name}
+                  onClick={() => setSelected(service.name)}
+                >
+                  <div className="service-icon">{service.icon}</div>
+                  <div className="service-info">
+                    <h3>{service.name}</h3>
+                    <p>{service.place}</p>
+                    <span className="price">od {service.price} zł</span>
+                  </div>
+                  <span>›</span>
+                </button>
+              ))
+            ) : (
+              <div className="empty">
+                Nie znaleziono usług.<br />
+                Spróbuj innej nazwy lub kategorii.
+              </div>
+            )}
+          </>
+        )}
+
+        {tab === 'bookings' && (
+          <>
+            <h1 className="page-title">Rezerwacje</h1>
+            <div className="empty">
+              📅<br /><br />
+              Nie masz jeszcze żadnych rezerwacji.
+              <br /><br />
+              <button className="primary" onClick={openDiscover}>
+                Znajdź usługę
+              </button>
+            </div>
+          </>
+        )}
+
+        {tab === 'wallet' && (
+          <>
+            <h1 className="page-title">Portfel</h1>
+            <div className="wallet">
+              <small>Dostępne środki</small>
+              <div style={{ marginTop: 8 }}>
+                <strong>248,50 zł</strong>
+              </div>
+            </div>
+
+            <div className="section-title">
+              <h2>Historia</h2>
+            </div>
+
+            <div className="service">
+              <div className="service-icon">🎁</div>
+              <div className="service-info">
+                <h3>Punkty Loyalty</h3>
+                <p>Bonus za aktywność</p>
+                <span className="price">+320 pkt</span>
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === 'benefits' && (
+          <>
+            <h1 className="page-title">Benefity</h1>
+            <div className="service">
+              <div className="service-icon">🎁</div>
+              <div className="service-info">
+                <h3>Benefit sportowy</h3>
+                <p>Wykorzystaj swoje punkty</p>
+                <span className="price">320 pkt</span>
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === 'profile' && (
+          <>
+            <h1 className="page-title">Profil</h1>
+            <div className="hello">
+              <div>
+                <small>Twój profil</small>
+                <h1>Krzysia</h1>
+              </div>
+              <div className="avatar">K</div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {selected && (
+        <div className="modal-bg" onClick={() => setSelected(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>{selected}</h2>
+            <p>Wybierz dogodny termin rezerwacji.</p>
+
+            <div className="modal-row">
+              <input
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+                placeholder="Data"
+              />
+              <input
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                placeholder="Godzina"
+              />
+            </div>
+
+            <button
+              className="primary"
+              onClick={() => {
+                setSelected(null);
+                notify(`Wybrano ${selected} — ${day}, ${time}`);
+              }}
+            >
+              Zarezerwuj
+            </button>
+
+            <button className="close" onClick={() => setSelected(null)}>
+              Anuluj
+            </button>
+          </div>
+        </div>
+      )}
+
+      {toast && <div className="toast">{toast}</div>}
+
+      <nav className="bottom">
+        <button
+          className={tab === 'home' ? 'active' : ''}
+          onClick={() => setTab('home')}
+        >
+          <span>⌂</span>
+          Start
+        </button>
+
+        <button
+          className={tab === 'discover' ? 'active' : ''}
+          onClick={() => setTab('discover')}
+        >
+          <span>⌕</span>
+          Odkrywaj
+        </button>
+
+        <button
+          className={tab === 'bookings' ? 'active' : ''}
+          onClick={() => setTab('bookings')}
+        >
+          <span>▣</span>
+          Rezerwacje
+        </button>
+
+        <button
+          className={tab === 'benefits' ? 'active' : ''}
+          onClick={() => setTab('benefits')}
+        >
+          <span>🎁</span>
+          Benefity
+        </button>
+
+        <button
+          className={tab === 'profile' ? 'active' : ''}
+          onClick={() => setTab('profile')}
+        >
+          <span>●</span>
+          Profil
+        </button>
+      </nav>
+    </main>
+  );
 }
