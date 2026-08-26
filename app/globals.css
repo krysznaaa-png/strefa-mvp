@@ -1,2 +1,189 @@
-*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#15171b;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}main{max-width:520px;margin:auto;min-height:100vh;background:#f7f8fa;padding-bottom:88px;box-shadow:0 0 60px #00000008}header{height:72px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:5;border-bottom:1px solid #eee}.brand{font-weight:900;letter-spacing:.22em;font-size:21px}.icon{position:relative}.icon i{position:absolute;width:7px;height:7px;background:#ef5350;border-radius:50%;right:1px;top:0}.page{padding:24px 20px}.hello{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.hello span{color:#858993;font-size:13px}.hello h1{margin:3px 0;font-size:28px}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#181a1e;color:#fff;font-weight:700}.hero{background:#191b1f;color:#fff;border-radius:22px;padding:22px;display:flex;justify-content:space-between;align-items:end;min-height:145px}.hero small,.hero p{display:block;color:#aeb2bb;margin:0}.hero strong{font-size:34px;display:block;margin:6px 0}.hero button{background:#fff;color:#111;border-radius:12px;padding:10px 12px;display:flex;align-items:center}.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 28px}.quick button{background:#fff;border:1px solid #e7e8eb;border-radius:15px;padding:14px;display:flex;gap:8px;align-items:center;font-weight:650;font-size:13px}.quick svg{width:19px}.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}.sectionTitle h2,.sub{font-size:17px;margin:0}.sectionTitle button{font-size:13px;color:#777}.cards{display:flex;flex-direction:column;gap:10px}.service{background:#fff;border-radius:17px;padding:10px;display:flex;align-items:center;gap:12px;border:1px solid #eceef1;cursor:pointer}.service .photo{width:72px;height:72px;border-radius:12px;background:#eceff2;display:grid;place-items:center;font-size:32px}.service div:last-child{display:flex;flex-direction:column;gap:4px;flex:1}.service span{font-size:12px;color:#858993}.service strong{font-size:13px;margin-top:2px}.benefit{background:#fff;border:1px solid #eceef1;border-radius:17px;padding:15px;display:flex;align-items:center;gap:12px}.gift{width:44px;height:44px;border-radius:13px;background:#f0f1f3;display:grid;place-items:center}.benefit>div:nth-child(2){flex:1;display:flex;flex-direction:column;gap:4px}.benefit span,.benefit small{font-size:12px;color:#858993}.progress{height:6px;background:#e9eaed;border-radius:10px;margin:5px 0}.progress i{height:100%;display:block;background:#181a1e;border-radius:10px}.topTitle h1{font-size:28px;margin:0 0 17px}.search{height:46px;background:#fff;border:1px solid #e7e8eb;border-radius:14px;display:flex;align-items:center;padding:0 13px;gap:8px}.search input{border:0;outline:0;font-size:14px;flex:1}.chips{display:flex;gap:7px;overflow:auto;margin:14px 0 18px}.chips button{background:#fff;border:1px solid #e3e5e8;padding:9px 13px;border-radius:20px;white-space:nowrap;font-size:12px}.chips button:first-child{background:#191b1f;color:#fff}.large{padding:12px}.booking{background:#fff;border-radius:17px;padding:15px;display:flex;gap:13px;align-items:center;margin-bottom:10px;border:1px solid #eceef1}.booking .date{width:48px;height:56px;border-radius:12px;background:#191b1f;color:#fff;text-align:center;padding-top:8px;font-weight:800;font-size:20px}.booking .date small{font-size:9px;letter-spacing:.1em}.booking div:nth-child(2){display:flex;flex-direction:column;gap:4px;flex:1}.booking span,.booking small{font-size:12px;color:#858993}.booking small:last-child{color:#23864b}.muted{opacity:.9}.wallet{background:#191b1f;color:#fff;border-radius:22px;padding:24px}.wallet small{color:#aeb2bb}.wallet strong{display:block;font-size:38px;margin:8px 0 20px}.wallet button,.benefit button{background:#fff;color:#111;border-radius:10px;padding:10px 12px;font-size:13px}.sub{margin:26px 0 12px}.transaction{display:flex;align-items:center;gap:12px;background:#fff;padding:14px;border-bottom:1px solid #eee}.transaction>span{width:35px;height:35px;border-radius:50%;background:#f0f1f3;display:grid;place-items:center}.transaction div{flex:1;display:flex;flex-direction:column;gap:3px}.transaction small{color:#858993;font-size:11px}.transaction strong{font-size:13px}.big{margin-bottom:10px;padding:18px}.profile{text-align:center;padding:20px 0 28px}.bigAvatar{width:72px;height:72px;font-size:25px;margin:auto}.profile h1{margin:12px 0 3px}.profile span{font-size:13px;color:#858993}.menu{background:#fff;border-radius:17px;overflow:hidden}.menu button{display:flex;justify-content:space-between;width:100%;padding:17px;border-bottom:1px solid #eee;font-size:14px}.menu button:last-child{border:0}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:76px;background:#fff;border-top:1px solid #e9eaed;display:flex;justify-content:space-around;padding:8px 6px 10px;z-index:10}nav button{display:flex;flex-direction:column;align-items:center;gap:5px;color:#989ca4;font-size:10px;min-width:64px}nav button.active{color:#111;font-weight:700}nav button.active svg{stroke-width:2.7}.modal{position:fixed;inset:0;background:#0008;z-index:20;display:flex;align-items:end;justify-content:center}.sheet{background:#fff;width:min(520px,100%);border-radius:25px 25px 0 0;padding:28px 22px 30px;position:relative}.close{position:absolute;right:17px;top:12px;font-size:28px;color:#777}.bigEmoji{font-size:52px}.sheet h2{font-size:25px;margin:10px 0}.sheet p{color:#6e737c;line-height:1.5;font-size:14px}.primary{width:100%;padding:14px;border-radius:13px;background:#191b1f;color:#fff;font-weight:700;margin-top:8px}.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#191b1f;color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;z-index:30;box-shadow:0 8px 25px #0003}
-.eyebrow{font-size:10px;letter-spacing:.14em;color:#8a8e96;font-weight:800}.placeLine{font-size:13px;color:#777c85}.choice{background:#f5f6f8;border-radius:14px;padding:14px;margin:16px 0;display:flex;flex-direction:column;gap:4px}.choice span{font-size:12px;color:#777c85}.days,.times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.times{grid-template-columns:repeat(3,1fr)}.days button,.times button{padding:11px 6px;border:1px solid #e3e5e8;border-radius:11px;background:#fff;font-size:12px}.days button.selected,.times button.selected{background:#191b1f;color:#fff;border-color:#191b1f}.summary{background:#f5f6f8;border-radius:15px;padding:3px 14px;margin:18px 0}.summary span{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #e5e6e9;font-size:12px;color:#777c85}.summary span:last-child{border:0}.summary b{color:#15171b;font-size:13px}
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f6f8;
+  color: #15171b;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 86px;
+}
+
+.bottomNav {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 812px);
+  height: 76px;
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.bottomNav button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 8px 12px;
+  min-width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #92969e;
+}
+
+.bottomNav button.active {
+  color: #15171b;
+  font-weight: 700;
+}
+
+.bottomNav .navIcon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.bottomNav .navLabel {
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 200;
+}
+
+.reservationSheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 812px);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  padding: 18px 24px 24px;
+  z-index: 201;
+  overflow-y: auto;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.reservationHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reservationHeader h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.reservationClose {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f2f4;
+  font-size: 22px;
+}
+
+.reservationService {
+  margin-bottom: 24px;
+}
+
+.reservationServiceName {
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.reservationServicePlace {
+  color: #8a8e96;
+  font-size: 14px;
+}
+
+.reservationText {
+  margin: 20px 0;
+  color: #4d5159;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.reservationOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.reservationOption {
+  min-height: 54px;
+  border: 1px solid #dedfe3;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.reservationOption.selected {
+  background: #15171b;
+  color: #fff;
+  border-color: #15171b;
+}
+
+.reservationConfirm {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 16px;
+  background: #15171b;
+  color: #fff;
+  font-weight: 750;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .reservationSheet {
+    width: 100%;
+    padding: 16px 18px 22px;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .reservationOptions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
