@@ -59,19 +59,6 @@ const services: Service[] = [
 
 const categories = ["Wszystko", "Sport", "Wellness", "Aktywność"];
 
-const timeSlots = [
-  "09:00",
-  "10:00",
-  "11:30",
-  "12:30",
-  "13:30",
-  "15:00",
-  "16:30",
-  "18:00",
-  "19:30",
-  "20:00",
-];
-
 function Icon({
   name,
   size = 24,
@@ -132,6 +119,23 @@ function Icon({
         </svg>
       );
 
+    case "arrow":
+      return (
+        <svg {...common}>
+          <path d="M5 12h13" />
+          <path d="m13 7 5 5-5 5" />
+        </svg>
+      );
+
+    case "spark":
+      return (
+        <svg {...common}>
+          <path d="M12 3v5M12 16v5M3 12h5M16 12h5" />
+          <path d="m5.6 5.6 3.5 3.5M14.9 14.9l3.5 3.5" />
+          <path d="m18.4 5.6-3.5 3.5M9.1 14.9l-3.5 3.5" />
+        </svg>
+      );
+
     case "fitness":
       return (
         <svg {...common}>
@@ -170,7 +174,8 @@ function Icon({
       return (
         <svg {...common}>
           <circle cx="12" cy="4.5" r="2.2" />
-          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1M14 12l-1 5 3 4M10 12l-3 5-3 2" />
+          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1" />
+          <path d="M14 12l-1 5 3 4M10 12l-3 5-3 2" />
         </svg>
       );
 
@@ -183,28 +188,6 @@ function Icon({
         </svg>
       );
 
-    case "arrow":
-      return (
-        <svg {...common}>
-          <path d="M5 12h13" />
-          <path d="m13 7 5 5-5 5" />
-        </svg>
-      );
-
-    case "spark":
-      return (
-        <svg {...common}>
-          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5" />
-        </svg>
-      );
-
-    case "check":
-      return (
-        <svg {...common}>
-          <path d="m5 12 4 4L19 6" />
-        </svg>
-      );
-
     default:
       return null;
   }
@@ -213,32 +196,9 @@ function Icon({
 function ServiceIcon({ icon }: { icon: Service["icon"] }) {
   return (
     <div className="service-icon">
-      <Icon name={icon} size={27} />
+      <Icon name={icon} size={26} />
     </div>
   );
-}
-
-function formatDate(value: string) {
-  const date = new Date(`${value}T12:00:00`);
-
-  return {
-    weekday: new Intl.DateTimeFormat("pl-PL", {
-      weekday: "short",
-    })
-      .format(date)
-      .replace(".", ""),
-    day: date.getDate(),
-    month: new Intl.DateTimeFormat("pl-PL", {
-      month: "short",
-    })
-      .format(date)
-      .replace(".", ""),
-    full: new Intl.DateTimeFormat("pl-PL", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(date),
-  };
 }
 
 export default function HomePage() {
@@ -247,28 +207,8 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
 
   const [selected, setSelected] = useState<Service | null>(null);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-
-  const availableDates = useMemo(() => {
-    const dates: string[] = [];
-    const today = new Date();
-
-    for (let i = 1; dates.length < 12; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      if (date.getDay() !== 0) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-
-        dates.push(`${year}-${month}-${day}`);
-      }
-    }
-
-    return dates;
-  }, []);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
@@ -290,33 +230,23 @@ export default function HomePage() {
     setTab("discover");
   }
 
-  function openBooking(service: Service) {
+  function openService(service: Service) {
     setSelected(service);
-    setSelectedDate("");
-    setSelectedTime("");
-  }
-
-  function closeBooking() {
-    setSelected(null);
-    setSelectedDate("");
-    setSelectedTime("");
+    setDate("");
+    setTime("");
   }
 
   function reserve() {
-    if (!selectedDate || !selectedTime) {
-      alert("Wybierz dzień i godzinę.");
-      return;
-    }
-
     if (!selected) return;
 
-    const dateInfo = formatDate(selectedDate);
+    const selectedDate = date || "wybrany dzień";
+    const selectedTime = time || "wybraną godzinę";
 
     alert(
-      `Rezerwacja: ${selected.name}\n${dateInfo.full} — ${selectedTime}`
+      `Rezerwacja: ${selected.name}\n${selectedDate} — ${selectedTime}`
     );
 
-    closeBooking();
+    setSelected(null);
   }
 
   return (
@@ -324,210 +254,224 @@ export default function HomePage() {
       <div className="app-shell">
 
         {/* HEADER */}
-<header className="top-header">
-  <div className="brand-block">
-    <div className="brand">STREFA</div>
-    <div className="tagline">Twój czas. Twoja strefa.</div>
-  </div>
 
-  <button
-    className="profile-mini"
-    onClick={() => setTab("profile")}
-    aria-label="Otwórz profil Kryszna"
-  >
-    <span className="profile-name">Kryszna</span>
-    <span className="profile-link">
-      Zobacz profil <Icon name="arrow" size={14} />
-    </span>
-    <span className="profile-avatar">
-      K
-    </span>
-  </button>
-</header>
+        <header className="top-header">
+          <div>
+            <div className="brand">STREFA</div>
+            <div className="tagline">Twój czas. Twoja strefa.</div>
+          </div>
 
-                {/* HOME */}
-{tab === "home" && (
-  <>
-    <section className="home-hero">
-      <div className="home-greeting">
-        Dzień dobry, Kryszna! 👋
-      </div>
-
-      <h1>
-        Co dziś
-        <br />
-        wybierasz?
-      </h1>
-    </section>
-
-    {/* POINTS + BOOKINGS */}
-    <section className="home-status-grid">
-
-      <button
-        className="status-card"
-        onClick={() => setTab("benefits")}
-      >
-        <div className="status-icon">
-          <Icon name="star" size={27} />
-        </div>
-
-        <div className="status-content">
-          <span className="status-label">
-            TWOJE PUNKTY
-          </span>
-
-          <strong>320 pkt</strong>
-
-          <small>Strefa Plus</small>
-        </div>
-
-        <Icon name="arrow" size={20} />
-      </button>
-
-      <button
-        className="status-card"
-        onClick={() => setTab("bookings")}
-      >
-        <div className="status-icon">
-          <Icon name="calendar" size={27} />
-        </div>
-
-        <div className="status-content">
-          <span className="status-label">
-            NADCHODZĄCE
-          </span>
-
-          <strong>0</strong>
-
-          <small>rezerwacji</small>
-        </div>
-
-        <Icon name="arrow" size={20} />
-      </button>
-
-    </section>
-
-    {/* QUICK ACCESS */}
-    <section className="home-section">
-      <div className="home-section-title">
-        Szybki dostęp
-      </div>
-
-      <div className="quick-grid">
-
-        <button
-          className="quick-card"
-          onClick={openDiscover}
-        >
-          <span className="quick-card-icon">
-            <Icon name="search" size={23} />
-          </span>
-
-          <span className="quick-card-text">
-            <strong>Odkrywaj</strong>
-            <small>Znajdź usługę</small>
-          </span>
-
-          <Icon name="arrow" size={18} />
-        </button>
-
-        <button
-          className="quick-card"
-          onClick={() => setTab("bookings")}
-        >
-          <span className="quick-card-icon">
-            <Icon name="calendar" size={23} />
-          </span>
-
-          <span className="quick-card-text">
-            <strong>Rezerwacje</strong>
-            <small>Twoje terminy</small>
-          </span>
-
-          <Icon name="arrow" size={18} />
-        </button>
-
-        <button
-          className="quick-card"
-          onClick={() => setTab("benefits")}
-        >
-          <span className="quick-card-icon">
-            <Icon name="star" size={23} />
-          </span>
-
-          <span className="quick-card-text">
-            <strong>Benefity</strong>
-            <small>Twoje punkty</small>
-          </span>
-
-          <Icon name="arrow" size={18} />
-        </button>
-
-      </div>
-    </section>
-
-    {/* RECOMMENDED */}
-    <section className="home-section recommended-section">
-
-      <div className="section-heading">
-        <div>
-          <span className="section-label">
-            DLA CIEBIE
-          </span>
-
-          <h2>
-            Polecane dla Ciebie
-          </h2>
-        </div>
-
-        <button
-          className="text-button"
-          onClick={openDiscover}
-        >
-          Zobacz wszystkie
-          <Icon name="arrow" size={17} />
-        </button>
-      </div>
-
-      <div className="services-grid">
-        {services.slice(0, 3).map((service) => (
           <button
-            className="service-card"
-            key={service.name}
-            onClick={() => setSelected(service)}
+            className="header-avatar"
+            onClick={() => setTab("profile")}
+            aria-label="Profil"
           >
-            <ServiceIcon icon={service.icon} />
-
-            <h3>{service.name}</h3>
-
-            <p>{service.place}</p>
-
-            <div className="service-bottom">
-              <span>
-                od <strong>{service.price} zł</strong>
-              </span>
-
-              <span className="card-arrow">
-                <Icon name="arrow" size={17} />
-              </span>
-            </div>
+            K
           </button>
-        ))}
-      </div>
+        </header>
 
-    </section>
-  </>
-)}
+        {/* HOME */}
+
+        {tab === "home" && (
+          <section className="home-page">
+
+            <div className="home-intro">
+              <div className="eyebrow">
+                <Icon name="spark" size={14} />
+                <span>DLA CIEBIE</span>
+              </div>
+
+              <h1>
+                Znajdź coś
+                <br />
+                dla siebie.
+              </h1>
+
+              <p>
+                Sport, wellness i dobre chwile.
+                <br />
+                Wszystko w jednym miejscu.
+              </p>
+            </div>
+
+            {/* MAIN FEATURE GRID */}
+
+            <div className="feature-grid">
+
+              <button
+                className="discover-feature"
+                onClick={openDiscover}
+              >
+                <div className="feature-top">
+                  <span className="feature-number">01</span>
+
+                  <span className="feature-round-arrow">
+                    <Icon name="arrow" size={18} />
+                  </span>
+                </div>
+
+                <div className="feature-icon-large">
+                  <Icon name="search" size={29} />
+                </div>
+
+                <div className="feature-content">
+                  <span>ODKRYWAJ</span>
+                  <strong>Znajdź coś<br />dla siebie</strong>
+                  <small>Przeglądaj dostępne usługi</small>
+                </div>
+              </button>
+
+              {/* POINTS */}
+
+              <button
+                className="points-feature"
+                onClick={() => setTab("benefits")}
+              >
+                <div className="points-glow" />
+
+                <div className="feature-top">
+                  <span className="feature-number">STREFA PLUS</span>
+
+                  <span className="feature-round-arrow light">
+                    <Icon name="arrow" size={18} />
+                  </span>
+                </div>
+
+                <div className="points-main-icon">
+                  <Icon name="star" size={25} />
+                </div>
+
+                <div className="points-content">
+                  <small>Twoje punkty</small>
+
+                  <strong>
+                    320<span> pkt</span>
+                  </strong>
+
+                  <div className="points-footer">
+                    <span>Wykorzystaj swoje punkty</span>
+                    <Icon name="arrow" size={15} />
+                  </div>
+                </div>
+              </button>
+
+            </div>
+
+            {/* QUICK ACCESS */}
+
+            <section className="quick-section">
+
+              <div className="section-heading">
+                <div>
+                  <span className="section-label">
+                    SZYBKI DOSTĘP
+                  </span>
+
+                  <h2>Wszystko pod ręką</h2>
+                </div>
+              </div>
+
+              <div className="quick-grid">
+
+                <button
+                  className="quick-card"
+                  onClick={() => setTab("bookings")}
+                >
+                  <div className="quick-card-icon">
+                    <Icon name="calendar" size={22} />
+                  </div>
+
+                  <div>
+                    <strong>Rezerwacje</strong>
+                    <span>Twoje terminy</span>
+                  </div>
+
+                  <Icon name="arrow" size={17} />
+                </button>
+
+                <button
+                  className="quick-card"
+                  onClick={() => setTab("benefits")}
+                >
+                  <div className="quick-card-icon">
+                    <Icon name="star" size={22} />
+                  </div>
+
+                  <div>
+                    <strong>Benefity</strong>
+                    <span>320 pkt do wykorzystania</span>
+                  </div>
+
+                  <Icon name="arrow" size={17} />
+                </button>
+
+              </div>
+
+            </section>
+
+            {/* POPULAR */}
+
+            <section className="section">
+
+              <div className="section-heading">
+
+                <div>
+                  <span className="section-label">
+                    POPULARNE
+                  </span>
+
+                  <h2>Wybierz coś dla siebie</h2>
+                </div>
+
+                <button
+                  className="text-button"
+                  onClick={openDiscover}
+                >
+                  Zobacz wszystkie
+                  <Icon name="arrow" size={17} />
+                </button>
+
+              </div>
+
+              <div className="services-grid">
+                {services.slice(0, 4).map((service) => (
+                  <button
+                    className="service-card"
+                    key={service.name}
+                    onClick={() => openService(service)}
+                  >
+                    <ServiceIcon icon={service.icon} />
+
+                    <h3>{service.name}</h3>
+
+                    <p>{service.place}</p>
+
+                    <div className="service-bottom">
+                      <span>
+                        od <strong>{service.price} zł</strong>
+                      </span>
+
+                      <span className="card-arrow">
+                        <Icon name="arrow" size={16} />
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+            </section>
+
+          </section>
+        )}
+
         {/* DISCOVER */}
+
         {tab === "discover" && (
           <section className="page-section">
+
             <div className="page-heading">
-              <span className="section-label">
-                STREFA
-              </span>
-
+              <span className="section-label">STREFA</span>
               <h1>Odkrywaj</h1>
-
               <p>
                 Znajdź coś, co pasuje właśnie do Ciebie.
               </p>
@@ -560,22 +504,19 @@ export default function HomePage() {
             </div>
 
             <div className="discover-list">
+
               {filteredServices.map((service) => (
                 <button
                   className="discover-card"
                   key={service.name}
-                  onClick={() => openBooking(service)}
+                  onClick={() => openService(service)}
                 >
                   <ServiceIcon icon={service.icon} />
 
                   <div className="discover-info">
                     <h3>{service.name}</h3>
-
                     <p>{service.place}</p>
-
-                    <span>
-                      od {service.price} zł
-                    </span>
+                    <span>od {service.price} zł</span>
                   </div>
 
                   <Icon name="arrow" size={20} />
@@ -589,33 +530,30 @@ export default function HomePage() {
                   Spróbuj innej nazwy lub kategorii.
                 </div>
               )}
+
             </div>
+
           </section>
         )}
 
         {/* BOOKINGS */}
+
         {tab === "bookings" && (
           <section className="page-section">
+
             <div className="page-heading">
-              <span className="section-label">
-                TWOJA STREFA
-              </span>
-
+              <span className="section-label">TWOJA STREFA</span>
               <h1>Rezerwacje</h1>
-
-              <p>
-                Zarządzaj swoimi terminami.
-              </p>
+              <p>Zarządzaj swoimi terminami.</p>
             </div>
 
             <div className="empty-panel">
+
               <div className="large-icon">
                 <Icon name="calendar" size={34} />
               </div>
 
-              <h2>
-                Nie masz jeszcze rezerwacji
-              </h2>
+              <h2>Nie masz jeszcze rezerwacji</h2>
 
               <p>
                 Znajdź usługę i zarezerwuj dogodny termin.
@@ -628,66 +566,75 @@ export default function HomePage() {
                 Znajdź usługę
                 <Icon name="arrow" size={18} />
               </button>
+
             </div>
+
           </section>
         )}
 
         {/* BENEFITS */}
+
         {tab === "benefits" && (
           <section className="page-section">
+
             <div className="page-heading">
-              <span className="section-label">
-                STREFA PLUS
-              </span>
-
+              <span className="section-label">STREFA PLUS</span>
               <h1>Benefity</h1>
-
-              <p>
-                Wykorzystaj swoje punkty.
-              </p>
+              <p>Wykorzystaj swoje punkty.</p>
             </div>
 
-            <div className="points-card">
-              <div className="points-icon">
+            <div className="premium-points-card">
+
+              <div className="premium-points-icon">
                 <Icon name="star" size={30} />
               </div>
 
               <div>
                 <small>Twoje punkty</small>
-                <strong>320 pkt</strong>
+
+                <strong>
+                  320 <span>pkt</span>
+                </strong>
+
+                <p>Strefa Plus</p>
               </div>
+
+              <Icon name="arrow" size={20} />
+
             </div>
 
             <div className="benefit-card">
+
               <div className="benefit-icon">
                 <Icon name="fitness" size={25} />
               </div>
 
               <div>
                 <h3>Benefit sportowy</h3>
-
                 <p>
                   Wykorzystaj swoje punkty na aktywność.
                 </p>
               </div>
 
               <strong>320 pkt</strong>
+
             </div>
+
           </section>
         )}
 
         {/* PROFILE */}
+
         {tab === "profile" && (
           <section className="page-section">
-            <div className="page-heading">
-              <span className="section-label">
-                TWOJA STREFA
-              </span>
 
+            <div className="page-heading">
+              <span className="section-label">TWOJA STREFA</span>
               <h1>Profil</h1>
             </div>
 
             <div className="profile-card">
+
               <div className="profile-avatar">
                 K
               </div>
@@ -696,6 +643,7 @@ export default function HomePage() {
                 <small>Twój profil</small>
                 <h2>Kryszna</h2>
               </div>
+
             </div>
 
             <div className="profile-row">
@@ -707,27 +655,27 @@ export default function HomePage() {
               <span>Rezerwacje</span>
               <strong>0</strong>
             </div>
+
           </section>
         )}
+
       </div>
 
-      {/* ==================================================
-          NOWA REZERWACJA
-          ================================================== */}
+      {/* MODAL REZERWACJI */}
 
       {selected && (
         <div
           className="modal-backdrop"
-          onClick={closeBooking}
+          onClick={() => setSelected(null)}
         >
           <div
-            className="modal booking-modal"
+            className="modal"
             onClick={(e) => e.stopPropagation()}
           >
 
             <button
               className="modal-close"
-              onClick={closeBooking}
+              onClick={() => setSelected(null)}
               aria-label="Zamknij"
             >
               ×
@@ -749,174 +697,45 @@ export default function HomePage() {
               od <strong>{selected.price} zł</strong>
             </div>
 
-            {/* DZIEŃ */}
+            <div className="modal-fields">
 
-            <div className="booking-section">
+              <label>
+                Data
 
-              <div className="booking-section-head">
-                <div>
-                  <span className="booking-kicker">
-                    TERMIN
-                  </span>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) =>
+                    setDate(e.target.value)
+                  }
+                />
+              </label>
 
-                  <h3>
-                    Wybierz dzień
-                  </h3>
-                </div>
+              <label>
+                Godzina
 
-                {selectedDate && (
-                  <span className="booking-selected-label">
-                    {formatDate(selectedDate).full}
-                  </span>
-                )}
-              </div>
+                <input
+                  type="time"
+                  value={time}
+                  onChange={(e) =>
+                    setTime(e.target.value)
+                  }
+                />
+              </label>
 
-              <div className="date-boxes">
-
-                {availableDates.map((date) => {
-                  const info = formatDate(date);
-                  const active =
-                    selectedDate === date;
-
-                  return (
-                    <button
-                      type="button"
-                      key={date}
-                      className={
-                        active
-                          ? "date-box active"
-                          : "date-box"
-                      }
-                      onClick={() => {
-                        setSelectedDate(date);
-                        setSelectedTime("");
-                      }}
-                    >
-                      <span className="date-weekday">
-                        {info.weekday}
-                      </span>
-
-                      <strong>
-                        {info.day}
-                      </strong>
-
-                      <span className="date-month">
-                        {info.month}
-                      </span>
-
-                      {active && (
-                        <span className="date-check">
-                          <Icon
-                            name="check"
-                            size={12}
-                          />
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-
-              </div>
             </div>
-
-            {/* GODZINA */}
-
-            <div className="booking-section">
-
-              <div className="booking-section-head">
-                <div>
-                  <span className="booking-kicker">
-                    DOSTĘPNE GODZINY
-                  </span>
-
-                  <h3>
-                    Wybierz godzinę
-                  </h3>
-                </div>
-
-                {!selectedDate && (
-                  <span className="booking-hint">
-                    Najpierw wybierz dzień
-                  </span>
-                )}
-              </div>
-
-              <div className="time-boxes">
-
-                {timeSlots.map((time) => {
-                  const active =
-                    selectedTime === time;
-
-                  const disabled =
-                    !selectedDate;
-
-                  return (
-                    <button
-                      type="button"
-                      key={time}
-                      disabled={disabled}
-                      className={[
-                        "time-box",
-                        active ? "active" : "",
-                        disabled ? "disabled" : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() =>
-                        setSelectedTime(time)
-                      }
-                    >
-                      {time}
-                    </button>
-                  );
-                })}
-
-              </div>
-            </div>
-
-            {/* PODSUMOWANIE */}
-
-            {selectedDate && selectedTime && (
-              <div className="booking-summary">
-
-                <div className="summary-icon">
-                  <Icon
-                    name="calendar"
-                    size={19}
-                  />
-                </div>
-
-                <div>
-                  <span>
-                    WYBRANY TERMIN
-                  </span>
-
-                  <strong>
-                    {formatDate(selectedDate).full}
-                    {" · "}
-                    {selectedTime}
-                  </strong>
-                </div>
-
-              </div>
-            )}
-
-            {/* REZERWUJ */}
 
             <button
               className="primary-button full"
               onClick={reserve}
             >
-              Zarezerwuj termin
-              <Icon
-                name="arrow"
-                size={18}
-              />
+              Zarezerwuj
+              <Icon name="arrow" size={18} />
             </button>
 
             <button
               className="secondary-button"
-              onClick={closeBooking}
+              onClick={() => setSelected(null)}
             >
               Anuluj
             </button>
@@ -930,92 +749,52 @@ export default function HomePage() {
       <nav className="bottom">
 
         <button
-          className={
-            tab === "home"
-              ? "active"
-              : ""
-          }
+          className={tab === "home" ? "active" : ""}
           onClick={() => setTab("home")}
         >
           <span className="nav-icon">
-            <Icon
-              name="home"
-              size={22}
-            />
+            <Icon name="home" size={22} />
           </span>
-
           <span>Start</span>
         </button>
 
         <button
-          className={
-            tab === "discover"
-              ? "active"
-              : ""
-          }
+          className={tab === "discover" ? "active" : ""}
           onClick={() => setTab("discover")}
         >
           <span className="nav-icon">
-            <Icon
-              name="search"
-              size={22}
-            />
+            <Icon name="search" size={22} />
           </span>
-
           <span>Odkrywaj</span>
         </button>
 
         <button
-          className={
-            tab === "bookings"
-              ? "active"
-              : ""
-          }
+          className={tab === "bookings" ? "active" : ""}
           onClick={() => setTab("bookings")}
         >
           <span className="nav-icon">
-            <Icon
-              name="calendar"
-              size={22}
-            />
+            <Icon name="calendar" size={22} />
           </span>
-
           <span>Rezerwacje</span>
         </button>
 
         <button
-          className={
-            tab === "benefits"
-              ? "active"
-              : ""
-          }
+          className={tab === "benefits" ? "active" : ""}
           onClick={() => setTab("benefits")}
         >
           <span className="nav-icon">
-            <Icon
-              name="star"
-              size={22}
-            />
+            <Icon name="star" size={22} />
           </span>
-
           <span>Benefity</span>
         </button>
 
         <button
-          className={
-            tab === "profile"
-              ? "active"
-              : ""
-          }
+          className={tab === "profile" ? "active" : ""}
           onClick={() => setTab("profile")}
         >
           <span className="nav-icon">
-            <Icon
-              name="user"
-              size={22}
-            />
+            <Icon name="user" size={22} />
           </span>
-
           <span>Profil</span>
         </button>
 
