@@ -335,7 +335,7 @@ export default function HomePage() {
           <div className="profile-mini">K</div>
         </header>
 
-        {/* HOME */}
+                {/* HOME */}
         {tab === "home" && (
           <>
             <section className="hero">
@@ -407,13 +407,14 @@ export default function HomePage() {
               </div>
             </section>
 
+            {/* PUNKTY */}
             <div className="home-points-card">
               <div className="home-points-icon">
                 <Icon name="star" size={23} />
               </div>
 
               <div className="home-points-content">
-                <span>TWÓJ SALDO</span>
+                <span>TWOJE PUNKTY</span>
                 <strong>320 pkt</strong>
               </div>
 
@@ -426,14 +427,11 @@ export default function HomePage() {
               </button>
             </div>
 
-            <section className="section">
+            {/* POPULARNE USŁUGI */}
             <section className="section">
               <div className="section-heading">
                 <div>
-                  <span className="section-label">
-                    POLECANE
-                  </span>
-
+                  <span className="section-label">POLECANE</span>
                   <h2>Popularne usługi</h2>
                 </div>
 
@@ -451,7 +449,7 @@ export default function HomePage() {
                   <button
                     className="service-card"
                     key={service.name}
-                    onClick={() => openBooking(service)}
+                    onClick={() => setSelected(service)}
                   >
                     <ServiceIcon icon={service.icon} />
 
