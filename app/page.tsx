@@ -406,7 +406,6 @@ export default function HomePage() {
                 </button>
               </div>
             </section>
-                        </section>
 
             <div className="home-points-card">
               <div className="home-points-icon">
