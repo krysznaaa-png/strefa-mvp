@@ -1,32 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+@import "tailwindcss";
 
 :root {
-  --bg: #f8f7fa;
+  --bg: #f8f6fa;
   --surface: #ffffff;
-  --surface-soft: #f5eef8;
-
-  --text: #25232b;
-  --muted: #92909a;
-  --muted-dark: #6f6c76;
-
-  --purple: #9850ae;
-  --purple-dark: #71387f;
-  --purple-soft: #f2e7f5;
-
-  --dark: #29262e;
-  --dark-2: #332d38;
-
-  --border: rgba(37, 35, 43, 0.09);
-
-  --radius-lg: 28px;
-  --radius-md: 22px;
-  --radius-sm: 16px;
-
-  --shadow-soft:
-    0 18px 55px rgba(45, 35, 55, 0.06);
-
-  --shadow-card:
-    0 12px 40px rgba(45, 35, 55, 0.055);
+  --text: #27252d;
+  --muted: #8f8a96;
+  --purple: #9650ad;
+  --purple-dark: #342b38;
+  --purple-soft: #f2e8f5;
+  --border: rgba(45, 35, 50, 0.10);
+  --shadow: 0 18px 50px rgba(55, 35, 65, 0.07);
 }
 
 * {
@@ -47,13 +30,13 @@ body {
 body {
   background:
     radial-gradient(
-      circle at 82% 15%,
-      rgba(214, 176, 225, 0.14),
+      circle at 82% 18%,
+      rgba(180, 125, 200, 0.10),
       transparent 28%
     ),
     radial-gradient(
-      circle at 18% 45%,
-      rgba(224, 205, 231, 0.1),
+      circle at 12% 45%,
+      rgba(220, 190, 225, 0.10),
       transparent 30%
     ),
     var(--bg);
@@ -61,9 +44,11 @@ body {
   color: var(--text);
 
   font-family:
-    "DM Sans",
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
     "Segoe UI",
     sans-serif;
 
@@ -71,217 +56,271 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* --------------------------------
+   RESET
+-------------------------------- */
+
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
 
 button {
   border: 0;
-  cursor: pointer;
 }
 
-button:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--purple);
-  outline-offset: 3px;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* =========================================================
-   APP
-========================================================= */
+a:visited {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* --------------------------------
+   MAIN APP
+-------------------------------- */
 
 main {
+  width: 100%;
   min-height: 100vh;
-  padding-bottom: 130px;
 }
 
-.app-shell {
-  width: min(1440px, calc(100% - 96px));
+.home-page {
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
+  padding: 48px 48px 150px;
 }
 
-/* =========================================================
+/* --------------------------------
    HEADER
-========================================================= */
+-------------------------------- */
 
-.top-header {
-  height: 130px;
-
+.home-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+
+  width: 100%;
+  margin-bottom: 105px;
 }
 
 .brand {
-  font-family: "Manrope", sans-serif;
-  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brand-title {
+  margin: 0;
+
+  font-size: 22px;
+  line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
 }
 
-.tagline {
-  margin-top: 7px;
+.brand-subtitle {
+  margin: 0;
 
-  font-size: 15px;
   color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
 }
 
-.profile-mini {
-  width: 54px;
-  height: 54px;
+.profile-avatar {
+  width: 48px;
+  height: 48px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
 
   color: var(--purple);
-
-  font-family: "Manrope", sans-serif;
-  font-weight: 800;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 700;
 
   box-shadow:
-    0 10px 30px rgba(60, 40, 70, 0.08),
-    inset 0 0 0 1px rgba(40, 30, 50, 0.05);
+    0 10px 30px rgba(70, 45, 80, 0.08),
+    inset 0 0 0 1px rgba(80, 50, 90, 0.06);
 }
 
-/* =========================================================
+/* --------------------------------
    HERO
-========================================================= */
+-------------------------------- */
 
 .hero {
-  padding-top: 95px;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 72px;
 }
 
-.eyebrow {
+.hero-kicker {
   display: flex;
   align-items: center;
   gap: 10px;
 
+  margin-bottom: 18px;
+
   color: var(--purple);
 
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
 
-  letter-spacing: 0.23em;
+.hero-kicker::before {
+  content: "✦";
+  font-size: 14px;
 }
 
 .hero h1 {
-  margin: 22px 0 24px;
+  max-width: 700px;
 
-  max-width: 720px;
+  margin: 0;
 
-  font-family: "Manrope", sans-serif;
+  color: var(--text);
 
-  font-size: clamp(64px, 7vw, 106px);
-  line-height: 0.91;
-
+  font-size: clamp(54px, 6vw, 88px);
+  line-height: 0.94;
   letter-spacing: -0.065em;
-
   font-weight: 800;
 }
 
+.hero h1 .accent {
+  color: var(--purple);
+}
+
 .hero p {
-  margin: 0;
+  max-width: 470px;
+
+  margin: 28px 0 0;
 
   color: var(--muted);
 
   font-size: 20px;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
-/* =========================================================
-   HERO CARDS
-========================================================= */
+/* --------------------------------
+   MAIN FEATURE GRID
+-------------------------------- */
 
-.hero-grid {
+.home-feature-grid {
   display: grid;
 
   grid-template-columns:
     minmax(0, 1.65fr)
-    minmax(320px, 1fr);
+    minmax(340px, 0.95fr);
 
   gap: 28px;
 
-  margin-top: 70px;
+  width: 100%;
+  margin-bottom: 78px;
 }
 
-.discover-hero-card,
-.points-hero-card {
-  min-height: 390px;
+/* --------------------------------
+   DISCOVER CARD
+-------------------------------- */
 
-  border-radius: var(--radius-lg);
-
+.home-discover-card {
   position: relative;
 
-  overflow: hidden;
-}
+  min-height: 380px;
 
-/* =========================================================
-   DISCOVER CARD
-========================================================= */
-
-.discover-hero-card {
-  padding: 54px 58px;
-
-  background:
-    radial-gradient(
-      circle at 92% 75%,
-      rgba(176, 98, 194, 0.12),
-      transparent 30%
-    ),
-    #fff;
-
-  border: 1px solid var(--border);
-
-  box-shadow: var(--shadow-card);
+  padding: 48px;
 
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  overflow: hidden;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: 30px;
+
+  box-shadow: var(--shadow);
 }
 
-.discover-hero-card .section-label {
+.home-discover-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  right: -150px;
+  bottom: -170px;
+
+  background: radial-gradient(
+    circle,
+    rgba(160, 85, 180, 0.10),
+    transparent 68%
+  );
+
+  pointer-events: none;
+}
+
+.discover-content {
+  position: relative;
+  z-index: 1;
+
+  max-width: 570px;
+}
+
+.discover-label {
   margin-bottom: 18px;
+
+  color: var(--purple);
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
-.discover-hero-card h2 {
+.discover-title {
   margin: 0;
 
-  max-width: 520px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: clamp(40px, 4vw, 62px);
+  font-size: clamp(38px, 4vw, 58px);
   line-height: 0.98;
-
   letter-spacing: -0.055em;
-
   font-weight: 800;
 }
 
-.discover-hero-card p {
-  margin: 20px 0 0;
+.discover-description {
+  margin: 18px 0 0;
 
   color: var(--muted);
 
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .discover-icon {
   position: absolute;
 
   right: 42px;
-  bottom: 42px;
+  top: 42px;
 
-  width: 76px;
-  height: 76px;
+  width: 72px;
+  height: 72px;
 
   display: flex;
   align-items: center;
@@ -289,1213 +328,439 @@ main {
 
   border-radius: 22px;
 
+  background: var(--purple-soft);
   color: var(--purple);
 
-  background: var(--purple-soft);
+  font-size: 28px;
 }
 
-/* =========================================================
-   POINTS CARD — POPRAWIONA
-========================================================= */
+/* --------------------------------
+   POINTS CARD
+-------------------------------- */
 
-.points-hero-card {
+.points-card {
+  position: relative;
+
+  min-height: 380px;
+
   padding: 40px;
-
-  color: white;
-
-  background:
-    radial-gradient(
-      circle at 85% 15%,
-      rgba(174, 93, 191, 0.34),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 80% 100%,
-      rgba(126, 65, 143, 0.5),
-      transparent 45%
-    ),
-    linear-gradient(
-      145deg,
-      #28252d 0%,
-      #2d2932 52%,
-      #3e2946 100%
-    );
-
-  box-shadow:
-    0 22px 55px rgba(50, 35, 55, 0.18),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.045);
 
   display: flex;
   flex-direction: column;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(176, 90, 195, 0.42),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      #27232b 0%,
+      #302632 52%,
+      #54305f 100%
+    );
+
+  border-radius: 30px;
+
+  box-shadow:
+    0 25px 55px rgba(45, 25, 55, 0.20);
 }
 
-/* ikona */
+.points-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -80px;
+  bottom: -100px;
+
+  background: rgba(225, 174, 235, 0.22);
+
+  filter: blur(40px);
+
+  pointer-events: none;
+}
 
 .points-icon {
-  width: 58px;
-  height: 58px;
+  width: 64px;
+  height: 64px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(161, 79, 184, 0.34),
-      rgba(117, 59, 133, 0.42)
-    );
+  background: rgba(170, 90, 190, 0.22);
 
-  color: #e0a7eb;
+  color: #d59ae3;
 
-  flex-shrink: 0;
+  font-size: 25px;
 }
 
-/* nagłówek */
+.points-label {
+  margin-top: auto;
 
-.points-card-top {
-  margin-top: 30px;
-}
-
-.points-card-top .section-label {
-  color: rgba(255, 255, 255, 0.56);
-}
-
-.points-card-title {
-  margin-top: 12px;
-
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.62);
 
   font-size: 12px;
-  font-weight: 700;
-
-  letter-spacing: 0.23em;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
-
-/* liczba */
 
 .points-value {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 9px;
 
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
-.points-value strong {
-  font-family: "Manrope", sans-serif;
-
-  font-size: clamp(62px, 6vw, 82px);
+.points-number {
+  font-size: clamp(64px, 6vw, 86px);
   line-height: 0.95;
-
-  letter-spacing: -0.065em;
-
+  letter-spacing: -0.06em;
   font-weight: 800;
-
-  color: #ffffff;
 }
 
-.points-value span {
-  font-size: 22px;
-  font-weight: 700;
+.points-unit {
+  color: rgba(255, 255, 255, 0.62);
 
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 24px;
+  font-weight: 600;
 }
 
-/* dół */
+.points-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 25px 0 18px;
+
+  background: rgba(255, 255, 255, 0.14);
+}
 
 .points-footer {
-  margin-top: auto;
-  padding-top: 24px;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.62);
 
   font-size: 15px;
 }
 
-.points-footer span:last-child {
-  color: rgba(255, 255, 255, 0.8);
+/* --------------------------------
+   QUICK ACCESS
+-------------------------------- */
+
+.quick-section {
+  width: 100%;
 }
 
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section {
-  margin-top: 92px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-
-  margin-bottom: 28px;
-}
-
-.section-label {
-  display: block;
+.section-kicker {
+  margin-bottom: 10px;
 
   color: var(--purple);
 
   font-size: 12px;
   font-weight: 800;
-
   letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
-.section-heading h2 {
-  margin: 9px 0 0;
+.section-title {
+  margin: 0 0 28px;
 
-  font-family: "Manrope", sans-serif;
-
-  font-size: 34px;
+  font-size: clamp(30px, 3vw, 42px);
   line-height: 1;
-
   letter-spacing: -0.045em;
-}
-
-/* =========================================================
-   QUICK ACCESS
-========================================================= */
-
-.quick-access {
-  margin-top: 70px;
-}
-
-.quick-access-heading {
-  margin-bottom: 28px;
-}
-
-.quick-access-heading h2 {
-  margin: 10px 0 0;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 34px;
-  letter-spacing: -0.045em;
+  font-weight: 800;
 }
 
 .quick-grid {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 22px;
 }
 
 .quick-card {
-  min-height: 110px;
+  min-height: 112px;
 
   padding: 24px 28px;
-
-  background: rgba(255, 255, 255, 0.96);
-
-  border: 1px solid var(--border);
-
-  border-radius: 22px;
 
   display: flex;
   align-items: center;
   gap: 20px;
 
-  text-align: left;
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+  border-radius: 24px;
+
+  box-shadow: 0 12px 35px rgba(50, 35, 60, 0.045);
 
   transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .quick-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 18px 40px rgba(50, 35, 60, 0.08);
 }
 
 .quick-icon {
   width: 58px;
   height: 58px;
 
-  flex-shrink: 0;
+  flex: 0 0 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 18px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  background: var(--purple-soft);
   color: var(--purple);
 
-  background: var(--purple-soft);
+  font-size: 24px;
 }
 
-.quick-card-content {
-  flex: 1;
+.quick-content {
+  min-width: 0;
 }
 
-.quick-card h3 {
+.quick-title {
   margin: 0;
-
-  font-family: "Manrope", sans-serif;
 
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 750;
 }
 
-.quick-card p {
-  margin: 6px 0 0;
-
-  color: var(--muted);
-
-  font-size: 14px;
-}
-
-.quick-card-arrow {
-  color: #aaa5ae;
-}
-
-/* =========================================================
-   SERVICES
-========================================================= */
-
-.services-grid {
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 20px;
-}
-
-.service-card {
-  min-height: 250px;
-
-  padding: 26px;
-
-  text-align: left;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: var(--radius-md);
-
-  box-shadow: var(--shadow-card);
-
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
-}
-
-.service-card:hover {
-  transform: translateY(-4px);
-
-  box-shadow:
-    0 20px 50px rgba(45, 35, 55, 0.09);
-}
-
-.service-icon {
-  width: 62px;
-  height: 62px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 19px;
-
-  background: var(--purple-soft);
-
-  color: var(--purple);
-}
-
-.service-card h3 {
-  margin: 24px 0 7px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 18px;
-}
-
-.service-card p {
-  margin: 0;
+.quick-description {
+  margin: 5px 0 0;
 
   color: var(--muted);
 
   font-size: 14px;
 }
 
-.service-bottom {
-  margin-top: 28px;
+.quick-arrow {
+  margin-left: auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  color: #aaa4ae;
 
-  color: var(--muted);
-
-  font-size: 13px;
+  font-size: 20px;
 }
 
-.service-bottom strong {
-  color: var(--text);
-}
-
-.card-arrow {
-  width: 34px;
-  height: 34px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: var(--purple-soft);
-
-  color: var(--purple);
-}
-
-/* =========================================================
-   TEXT BUTTON
-========================================================= */
-
-.text-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  background: transparent;
-
-  color: var(--purple);
-
-  font-weight: 700;
-}
-
-/* =========================================================
-   PAGES
-========================================================= */
-
-.page-section {
-  padding-top: 70px;
-}
-
-.page-heading {
-  margin-bottom: 42px;
-}
-
-.page-heading h1 {
-  margin: 12px 0 12px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: clamp(48px, 6vw, 78px);
-
-  line-height: 0.95;
-
-  letter-spacing: -0.06em;
-}
-
-.page-heading p {
-  margin: 0;
-
-  color: var(--muted);
-
-  font-size: 18px;
-}
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-.search-box {
-  height: 64px;
-
-  padding: 0 22px;
-
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: 18px;
-
-  box-shadow: var(--shadow-card);
-}
-
-.search-box svg {
-  color: var(--muted);
-}
-
-.search-box input {
-  width: 100%;
-
-  border: 0;
-  outline: 0;
-
-  background: transparent;
-
-  color: var(--text);
-
-  font-size: 16px;
-}
-
-.search-box input::placeholder {
-  color: #aaa6af;
-}
-
-/* =========================================================
-   CATEGORIES
-========================================================= */
-
-.categories {
-  display: flex;
-  gap: 10px;
-
-  margin: 22px 0 30px;
-
-  overflow-x: auto;
-
-  scrollbar-width: none;
-}
-
-.categories::-webkit-scrollbar {
-  display: none;
-}
-
-.category {
-  padding: 11px 18px;
-
-  white-space: nowrap;
-
-  border-radius: 999px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  color: var(--muted-dark);
-
-  font-size: 14px;
-}
-
-.category.active {
-  background: var(--dark);
-
-  color: #fff;
-
-  border-color: var(--dark);
-}
-
-/* =========================================================
-   DISCOVER LIST
-========================================================= */
-
-.discover-list {
-  display: grid;
-  gap: 14px;
-}
-
-.discover-card {
-  width: 100%;
-
-  padding: 20px 24px;
-
-  display: flex;
-  align-items: center;
-  gap: 20px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: 20px;
-
-  text-align: left;
-
-  box-shadow: var(--shadow-card);
-}
-
-.discover-info {
-  flex: 1;
-}
-
-.discover-info h3 {
-  margin: 0 0 5px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 18px;
-}
-
-.discover-info p {
-  margin: 0 0 7px;
-
-  color: var(--muted);
-
-  font-size: 14px;
-}
-
-.discover-info span {
-  color: var(--purple);
-
-  font-size: 14px;
-
-  font-weight: 700;
-}
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty {
-  padding: 70px 20px;
-
-  text-align: center;
-
-  color: var(--muted);
-
-  line-height: 1.6;
-}
-
-/* =========================================================
-   EMPTY PANEL
-========================================================= */
-
-.empty-panel {
-  max-width: 620px;
-
-  padding: 50px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: 28px;
-
-  box-shadow: var(--shadow-card);
-
-  text-align: center;
-}
-
-.large-icon {
-  width: 74px;
-  height: 74px;
-
-  margin: 0 auto 24px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 23px;
-
-  background: var(--purple-soft);
-
-  color: var(--purple);
-}
-
-.empty-panel h2 {
-  margin: 0;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 26px;
-}
-
-.empty-panel p {
-  margin: 12px 0 28px;
-
-  color: var(--muted);
-}
-
-/* =========================================================
-   BENEFITS
-========================================================= */
-
-.points-card {
-  padding: 35px;
-
-  max-width: 620px;
-
-  display: flex;
-  align-items: center;
-  gap: 24px;
-
-  border-radius: 26px;
-
-  color: #fff;
-
-  background:
-    radial-gradient(
-      circle at 90% 20%,
-      rgba(170, 90, 190, 0.4),
-      transparent 40%
-    ),
-    var(--dark);
-
-  box-shadow: var(--shadow-soft);
-}
-
-.points-icon {
-  flex-shrink: 0;
-}
-
-.points-card small {
-  display: block;
-
-  color: rgba(255, 255, 255, 0.5);
-
-  font-size: 11px;
-
-  letter-spacing: 0.18em;
-
-  text-transform: uppercase;
-}
-
-.points-card strong {
-  display: block;
-
-  margin-top: 5px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 38px;
-}
-
-.benefit-card {
-  max-width: 620px;
-
-  margin-top: 18px;
-
-  padding: 22px 25px;
-
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: 22px;
-}
-
-.benefit-icon {
-  width: 52px;
-  height: 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 16px;
-
-  background: var(--purple-soft);
-
-  color: var(--purple);
-}
-
-.benefit-card div:nth-child(2) {
-  flex: 1;
-}
-
-.benefit-card h3 {
-  margin: 0 0 5px;
-
-  font-family: "Manrope", sans-serif;
-}
-
-.benefit-card p {
-  margin: 0;
-
-  color: var(--muted);
-
-  font-size: 14px;
-}
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-.profile-card {
-  max-width: 620px;
-
-  padding: 30px;
-
-  display: flex;
-  align-items: center;
-  gap: 20px;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-
-  border-radius: 24px;
-}
-
-.profile-avatar {
-  width: 70px;
-  height: 70px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: var(--purple);
-
-  color: white;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 25px;
-  font-weight: 800;
-}
-
-.profile-card small {
-  color: var(--muted);
-}
-
-.profile-card h2 {
-  margin: 4px 0 0;
-
-  font-family: "Manrope", sans-serif;
-}
-
-.profile-row {
-  max-width: 620px;
-
-  padding: 22px 4px;
-
-  display: flex;
-  justify-content: space-between;
-
-  border-bottom: 1px solid var(--border);
-}
-
-.profile-row span {
-  color: var(--muted);
-}
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.primary-button {
-  min-height: 52px;
-
-  padding: 0 22px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
-  border-radius: 15px;
-
-  background: var(--dark);
-
-  color: white;
-
-  font-weight: 700;
-
-  transition:
-    transform 150ms ease,
-    background 150ms ease;
-}
-
-.primary-button:hover {
-  transform: translateY(-2px);
-
-  background: #1f1d23;
-}
-
-.primary-button.full {
-  width: 100%;
-}
-
-.secondary-button {
-  width: 100%;
-
-  margin-top: 10px;
-
-  min-height: 48px;
-
-  border-radius: 14px;
-
-  background: #f4f2f5;
-
-  color: var(--muted-dark);
-
-  font-weight: 600;
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal-backdrop {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 100;
-
-  padding: 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(25, 22, 28, 0.48);
-
-  backdrop-filter: blur(12px);
-}
-
-.modal {
-  width: min(520px, 100%);
-
-  position: relative;
-
-  padding: 38px;
-
-  background: #fff;
-
-  border-radius: 28px;
-
-  box-shadow:
-    0 35px 100px rgba(30, 20, 35, 0.2);
-}
-
-.modal-close {
-  position: absolute;
-
-  top: 20px;
-  right: 20px;
-
-  width: 38px;
-  height: 38px;
-
-  border-radius: 50%;
-
-  background: #f3f1f4;
-
-  color: var(--muted-dark);
-
-  font-size: 25px;
-}
-
-.modal h2 {
-  margin: 20px 0 5px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 34px;
-
-  letter-spacing: -0.04em;
-}
-
-.modal-place {
-  margin: 0;
-
-  color: var(--muted);
-}
-
-.modal-price {
-  margin-top: 22px;
-
-  font-size: 15px;
-
-  color: var(--muted);
-}
-
-.modal-price strong {
-  color: var(--text);
-
-  font-size: 22px;
-}
-
-.modal-fields {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 14px;
-
-  margin: 28px 0;
-}
-
-.modal-fields label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  color: var(--muted-dark);
-
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.modal-fields input {
-  width: 100%;
-
-  height: 50px;
-
-  padding: 0 13px;
-
-  border: 1px solid var(--border);
-
-  border-radius: 13px;
-
-  background: #faf9fb;
-
-  color: var(--text);
-}
-
-/* =========================================================
+/* --------------------------------
    BOTTOM NAV
-========================================================= */
+-------------------------------- */
 
-.bottom {
+.bottom-nav {
   position: fixed;
 
-  z-index: 90;
+  z-index: 50;
 
   left: 50%;
-  bottom: 22px;
+  bottom: 18px;
 
   transform: translateX(-50%);
 
-  width: min(820px, calc(100% - 42px));
+  width: min(900px, calc(100% - 32px));
 
-  padding: 8px;
+  padding: 7px;
 
   display: grid;
-
   grid-template-columns: repeat(5, 1fr);
 
-  gap: 3px;
+  background: rgba(255, 255, 255, 0.92);
 
-  background: rgba(255, 255, 255, 0.93);
+  border: 1px solid rgba(50, 35, 55, 0.09);
 
-  border: 1px solid rgba(30, 25, 35, 0.08);
-
-  border-radius: 27px;
+  border-radius: 25px;
 
   box-shadow:
-    0 18px 55px rgba(35, 25, 45, 0.14);
+    0 18px 55px rgba(50, 35, 60, 0.13),
+    0 2px 8px rgba(50, 35, 60, 0.05);
 
   backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
 }
 
-.bottom button {
-  min-height: 70px;
+.bottom-nav-item {
+  min-height: 68px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   gap: 5px;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
-  background: transparent;
-
-  color: #aaa6af;
+  color: #aaa4ae;
 
   font-size: 12px;
-
   font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-.bottom button.active {
+.bottom-nav-item.active {
   background: var(--purple-soft);
-
   color: var(--purple);
 }
 
-.nav-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.bottom-nav-icon {
+  font-size: 21px;
+  line-height: 1;
 }
 
-/* =========================================================
+/* --------------------------------
    RESPONSIVE
-========================================================= */
+-------------------------------- */
 
-@media (max-width: 1100px) {
-  .app-shell {
-    width: min(100% - 56px, 900px);
+@media (max-width: 900px) {
+  .home-page {
+    padding: 32px 24px 125px;
   }
 
-  .hero-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 760px) {
-  main {
-    padding-bottom: 110px;
-  }
-
-  .app-shell {
-    width: calc(100% - 32px);
-  }
-
-  .top-header {
-    height: 95px;
-  }
-
-  .brand {
-    font-size: 19px;
-  }
-
-  .tagline {
-    font-size: 13px;
-  }
-
-  .profile-mini {
-    width: 46px;
-    height: 46px;
+  .home-header {
+    margin-bottom: 72px;
   }
 
   .hero {
-    padding-top: 45px;
+    margin-bottom: 48px;
   }
 
   .hero h1 {
-    font-size: clamp(50px, 15vw, 76px);
+    font-size: clamp(48px, 10vw, 72px);
+  }
+
+  .home-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .points-card,
+  .home-discover-card {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-page {
+    padding: 26px 18px 120px;
+  }
+
+  .home-header {
+    margin-bottom: 58px;
+  }
+
+  .brand-title {
+    font-size: 19px;
+  }
+
+  .brand-subtitle {
+    font-size: 13px;
+  }
+
+  .profile-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hero h1 {
+    font-size: 52px;
   }
 
   .hero p {
     font-size: 17px;
   }
 
-  .hero-grid {
-    grid-template-columns: 1fr;
-
-    margin-top: 48px;
-
+  .home-feature-grid {
     gap: 16px;
+    margin-bottom: 55px;
   }
 
-  .discover-hero-card,
-  .points-hero-card {
-    min-height: 330px;
+  .home-discover-card,
+  .points-card {
+    min-height: 300px;
+    padding: 28px;
+    border-radius: 24px;
   }
 
-  .discover-hero-card {
-    padding: 34px;
+  .discover-icon {
+    right: 25px;
+    top: 25px;
+
+    width: 58px;
+    height: 58px;
+
+    border-radius: 18px;
   }
 
-  .discover-hero-card h2 {
-    font-size: 42px;
+  .discover-title {
+    font-size: 40px;
   }
 
-  .points-hero-card {
-    padding: 30px;
-  }
-
-  .points-value strong {
+  .points-number {
     font-size: 64px;
-  }
-
-  .section {
-    margin-top: 65px;
-  }
-
-  .section-heading {
-    display: block;
-  }
-
-  .text-button {
-    margin-top: 18px;
-  }
-
-  .services-grid {
-    grid-template-columns: 1fr;
   }
 
   .quick-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .quick-access {
-    margin-top: 55px;
+  .quick-card {
+    min-height: 92px;
+    padding: 18px;
+    border-radius: 20px;
   }
 
-  .page-section {
-    padding-top: 45px;
+  .quick-icon {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
   }
 
-  .page-heading h1 {
-    font-size: 52px;
-  }
-
-  .modal {
-    padding: 30px 22px;
-  }
-
-  .modal-fields {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom {
+  .bottom-nav {
     bottom: 12px;
-
-    width: calc(100% - 20px);
-
+    width: calc(100% - 24px);
     border-radius: 22px;
   }
 
-  .bottom button {
+  .bottom-nav-item {
     min-height: 62px;
-
-    font-size: 10px;
-
-    border-radius: 16px;
   }
 }
 
-@media (max-width: 430px) {
-  .hero h1 {
-    font-size: 51px;
-  }
+/* --------------------------------
+   PREVENT BLUE DEFAULT LINK STYLES
+-------------------------------- */
 
-  .discover-hero-card h2 {
-    font-size: 38px;
-  }
-
-  .discover-icon {
-    width: 62px;
-    height: 62px;
-
-    right: 25px;
-    bottom: 25px;
-  }
-
-  .points-value strong {
-    font-size: 58px;
-  }
-
-  .points-value span {
-    font-size: 18px;
-  }
+.home-page a,
+.home-page a:link,
+.home-page a:visited,
+.home-page a:hover,
+.home-page a:active {
+  color: inherit;
+  text-decoration: none;
 }
