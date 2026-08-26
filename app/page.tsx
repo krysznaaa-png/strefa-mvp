@@ -324,16 +324,26 @@ export default function HomePage() {
       <div className="app-shell">
 
         {/* HEADER */}
-        <header className="top-header">
-          <div>
-            <div className="brand">STREFA</div>
-            <div className="tagline">
-              Twój czas. Twoja strefa.
-            </div>
-          </div>
+<header className="top-header">
+  <div className="brand-block">
+    <div className="brand">STREFA</div>
+    <div className="tagline">Twój czas. Twoja strefa.</div>
+  </div>
 
-          <div className="profile-mini">K</div>
-        </header>
+  <button
+    className="profile-mini"
+    onClick={() => setTab("profile")}
+    aria-label="Otwórz profil Kryszna"
+  >
+    <span className="profile-name">Kryszna</span>
+    <span className="profile-link">
+      Zobacz profil <Icon name="arrow" size={14} />
+    </span>
+    <span className="profile-avatar">
+      K
+    </span>
+  </button>
+</header>
 
                 {/* HOME */}
         {tab === "home" && (
