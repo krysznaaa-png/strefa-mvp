@@ -23,7 +23,25 @@ export default function HomePage() {
   const [day, setDay] = useState('28 sierpnia');
   const [time, setTime] = useState('18:00');
   const [toast, setToast] = useState('');
+  
+const availableDates = [
+  { date: '28 sierpnia', day: 'PT' },
+  { date: '29 sierpnia', day: 'SOB' },
+  { date: '30 sierpnia', day: 'ND' },
+  { date: '31 sierpnia', day: 'PN' },
+  { date: '1 września', day: 'WT' },
+];
 
+const availableTimes = [
+  '09:00',
+  '10:00',
+  '11:30',
+  '13:00',
+  '15:30',
+  '17:00',
+  '18:00',
+  '19:30',
+];
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
       const matchesSearch =
@@ -579,33 +597,67 @@ export default function HomePage() {
       </div>
 
       {selected && (
-        <div className="modal-bg" onClick={() => setSelected(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>{selected}</h2>
-            <p>Wybierz dogodny termin rezerwacji.</p>
+  <div className="modal-bg" onClick={() => setSelected(null)}>
+    <div className="modal" onClick={(e) => e.stopPropagation()}>
+      
+      <h2>{selected}</h2>
+      <p>Wybierz dogodny termin rezerwacji.</p>
 
-            <div className="modal-row">
-              <input
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                placeholder="Data"
-              />
-              <input
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                placeholder="Godzina"
-              />
-            </div>
+      <h3 className="booking-label">Dostępne dni</h3>
 
-            <button
-              className="primary"
-              onClick={() => {
-                setSelected(null);
-                notify(`Wybrano ${selected} — ${day}, ${time}`);
-              }}
-            >
-              Zarezerwuj
-            </button>
+      <div className="date-grid">
+        {availableDates.map((item) => (
+          <button
+            key={item.date}
+            className={`date-box ${day === item.date ? 'active' : ''}`}
+            onClick={() => setDay(item.date)}
+          >
+            <strong>{item.date.split(' ')[0]}</strong>
+            <span>{item.day}</span>
+          </button>
+        ))}
+      </div>
+
+      <h3 className="booking-label">Dostępne godziny</h3>
+
+      <div className="time-grid">
+        {availableTimes.map((item) => (
+          <button
+            key={item}
+            className={`time-box ${time === item ? 'active' : ''}`}
+            onClick={() => setTime(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      <div className="booking-summary">
+        <strong>Wybrany termin</strong>
+        <span>📅 {day}</span>
+        <span>🕐 {time}</span>
+      </div>
+
+      <button
+        className="primary"
+        onClick={() => {
+          setSelected(null);
+          notify(`Zarezerwowano ${selected} – ${day}, ${time}`);
+        }}
+      >
+        Zarezerwuj
+      </button>
+
+      <button
+        className="close"
+        onClick={() => setSelected(null)}
+      >
+        Anuluj
+      </button>
+
+    </div>
+  </div>
+)}
 
             <button className="close" onClick={() => setSelected(null)}>
               Anuluj
