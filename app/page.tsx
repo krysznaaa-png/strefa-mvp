@@ -406,7 +406,28 @@ export default function HomePage() {
                 </button>
               </div>
             </section>
+                        </section>
 
+            <div className="home-points-card">
+              <div className="home-points-icon">
+                <Icon name="star" size={23} />
+              </div>
+
+              <div className="home-points-content">
+                <span>TWÓJ SALDO</span>
+                <strong>320 pkt</strong>
+              </div>
+
+              <button
+                className="home-points-arrow"
+                onClick={() => setTab("benefits")}
+                aria-label="Zobacz benefity"
+              >
+                <Icon name="arrow" size={17} />
+              </button>
+            </div>
+
+            <section className="section">
             <section className="section">
               <div className="section-heading">
                 <div>
