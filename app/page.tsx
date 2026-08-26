@@ -8,6 +8,34 @@ const services=[
  {name:"Trening personalny",place:"z trenerem",price:90,icon:"🧑‍🏫"},
  {name:"Escape room",place:"STREFA Fun",price:80,icon:"🗝️"},
 ];
+function ServiceFlow({selected,close,finish}:{selected:string,close:()=>void,finish:()=>void}){
+ const [step,setStep]=useState(1);
+ const [day,setDay]=useState("28 sierpnia");
+ const [time,setTime]=useState("18:00");
+ const service=services.find(x=>x.name===selected)||services[0];
+ return <div className="modal" onClick={close}><div className="sheet" onClick={e=>e.stopPropagation()}>
+  <button className="close" onClick={close}>×</button>
+  {step===1 && <>
+   <div className="bigEmoji">{service.icon}</div><small className="eyebrow">USŁUGA</small>
+   <h2>{service.name}</h2><span className="placeLine">{service.place} · od {service.price} zł</span>
+   <p>Wybierz dogodny termin. Przed potwierdzeniem zobaczysz podsumowanie ceny i dostępnych benefitów.</p>
+   <div className="choice"><b>Najbliższe terminy</b><span>Jutro · 10:00, 12:30, 18:00</span></div>
+   <button className="primary" onClick={()=>setStep(2)}>Wybierz termin</button>
+  </>}
+  {step===2 && <>
+   <small className="eyebrow">KROK 2 Z 3</small><h2>Wybierz termin</h2>
+   <div className="days">{["28 sie","29 sie","30 sie","31 sie"].map(x=><button className={day===x.replace(" sie"," sierpnia")?"selected":""} onClick={()=>setDay(x.replace(" sie"," sierpnia"))} key={x}>{x}</button>)}</div>
+   <div className="times">{["10:00","12:30","16:00","18:00","19:30"].map(x=><button className={time===x?"selected":""} onClick={()=>setTime(x)} key={x}>{x}</button>)}</div>
+   <button className="primary" onClick={()=>setStep(3)}>Dalej</button>
+  </>}
+  {step===3 && <>
+   <small className="eyebrow">KROK 3 Z 3</small><h2>Potwierdź rezerwację</h2>
+   <div className="summary"><span>Usługa<b>{service.name}</b></span><span>Termin<b>{day}, {time}</b></span><span>Cena<b>{service.price} zł</b></span><span>Benefit<b>Możliwy do użycia</b></span></div>
+   <button className="primary" onClick={finish}>Potwierdź rezerwację</button>
+  </>}
+ </div></div>
+}
+
 export default function HomePage(){
  const [tab,setTab]=useState("home");
  const [selected,setSelected]=useState<string|null>(null);
@@ -30,7 +58,7 @@ export default function HomePage(){
   {tab==="benefits" && <section className="page"><div className="topTitle"><h1>Benefity</h1></div><div className="benefit big"><div className="gift"><Gift/></div><div><b>Benefit sportowy</b><span>8 wejść / miesiąc</span><div className="progress"><i style={{width:"25%"}}/></div><small>Wykorzystano 2 · pozostało 6</small></div></div><div className="benefit big"><div className="gift"><Star/></div><div><b>Loyalty</b><span>320 punktów dostępnych</span><button onClick={()=>notify("Katalog nagród — w przygotowaniu")}>Wymień punkty</button></div></div></section>}
   {tab==="profile" && <section className="page"><div className="profile"><div className="avatar bigAvatar">K</div><h1>Krzysia</h1><span>Klient STREFA</span></div><div className="menu">{["Dane osobowe","Pełnomocnictwa","Preferencje powiadomień","Historia aktywności"].map(x=><button key={x} onClick={()=>notify(x+" — moduł w przygotowaniu")}>{x}<ChevronRight/></button>)}</div></section>}
   <nav>{[[Home,"home","Start"],[Search,"discover","Odkrywaj"],[CalendarDays,"bookings","Rezerwacje"],[Gift,"benefits","Benefity"],[UserRound,"profile","Profil"]].map(([I,k,l]:any)=><button className={tab===k?"active":""} onClick={()=>setTab(k)} key={k}><I size={21}/><span>{l}</span></button>)}</nav>
-  {selected && <div className="modal" onClick={()=>setSelected(null)}><div className="sheet" onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setSelected(null)}>×</button><div className="bigEmoji">✨</div><h2>{selected}</h2><p>Wybierz dogodny termin i zarezerwuj usługę. Cena oraz dostępne benefity zostaną pokazane przed potwierdzeniem.</p><button className="primary" onClick={()=>{setSelected(null);setTab("bookings");notify("Rezerwacja utworzona — wersja demonstracyjna")}}>Wybierz termin</button></div></div>}
+  {selected && <ServiceFlow selected={selected} close={()=>setSelected(null)} finish={()=>{setSelected(null);setTab("bookings");notify("Rezerwacja potwierdzona — wersja demonstracyjna")}}/>}
   {toast&&<div className="toast">{toast}</div>}
  </main>
 }
