@@ -9,6 +9,8 @@ type Service = {
   place: string;
   price: number;
   category: string;
+  rating: string;
+  reviews: number;
   icon: "fitness" | "trainer" | "yoga" | "spa" | "dance" | "massage";
 };
 
@@ -18,6 +20,8 @@ const services: Service[] = [
     place: "STREFA Fitness Centrum",
     price: 49,
     category: "Sport",
+    rating: "4.9",
+    reviews: 128,
     icon: "fitness",
   },
   {
@@ -25,6 +29,8 @@ const services: Service[] = [
     place: "STREFA Fitness Centrum",
     price: 90,
     category: "Sport",
+    rating: "4.9",
+    reviews: 84,
     icon: "trainer",
   },
   {
@@ -32,13 +38,17 @@ const services: Service[] = [
     place: "STREFA Fitness Centrum",
     price: 45,
     category: "Wellness",
+    rating: "4.9",
+    reviews: 86,
     icon: "yoga",
   },
   {
     name: "SPA & Wellness",
     place: "STREFA SPA",
     price: 120,
-    category: "Wellness",
+    category: "Premium",
+    rating: "4.9",
+    reviews: 214,
     icon: "spa",
   },
   {
@@ -46,6 +56,8 @@ const services: Service[] = [
     place: "STREFA Studio",
     price: 55,
     category: "Aktywność",
+    rating: "4.8",
+    reviews: 71,
     icon: "dance",
   },
   {
@@ -53,11 +65,13 @@ const services: Service[] = [
     place: "STREFA SPA",
     price: 110,
     category: "Wellness",
+    rating: "4.9",
+    reviews: 156,
     icon: "massage",
   },
 ];
 
-const categories = ["Wszystko", "Sport", "Wellness", "Aktywność"];
+const categories = ["Wszystko", "Sport", "Wellness", "Aktywność", "Premium"];
 
 function Icon({
   name,
@@ -119,20 +133,18 @@ function Icon({
         </svg>
       );
 
-    case "arrow":
+    case "heart":
       return (
         <svg {...common}>
-          <path d="M5 12h13" />
-          <path d="m13 7 5 5-5 5" />
+          <path d="M20.8 8.8c0 5-8.8 10.2-8.8 10.2S3.2 13.8 3.2 8.8A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z" />
         </svg>
       );
 
-    case "spark":
+    case "tag":
       return (
         <svg {...common}>
-          <path d="M12 3v5M12 16v5M3 12h5M16 12h5" />
-          <path d="m5.6 5.6 3.5 3.5M14.9 14.9l3.5 3.5" />
-          <path d="m18.4 5.6-3.5 3.5M9.1 14.9l-3.5 3.5" />
+          <path d="M20 13 13 20l-9-9V4h7l9 9Z" />
+          <circle cx="8" cy="8" r="1" />
         </svg>
       );
 
@@ -174,8 +186,7 @@ function Icon({
       return (
         <svg {...common}>
           <circle cx="12" cy="4.5" r="2.2" />
-          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1" />
-          <path d="M14 12l-1 5 3 4M10 12l-3 5-3 2" />
+          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1M14 12l-1 5 3 4M10 12l-3 5-3 2" />
         </svg>
       );
 
@@ -185,6 +196,21 @@ function Icon({
           <path d="M5 18c3-5 5-9 7-13 2 4 4 8 7 13" />
           <path d="M7 17c1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 5 0" />
           <circle cx="12" cy="5" r="1" />
+        </svg>
+      );
+
+    case "arrow":
+      return (
+        <svg {...common}>
+          <path d="M5 12h13" />
+          <path d="m13 7 5 5-5 5" />
+        </svg>
+      );
+
+    case "spark":
+      return (
+        <svg {...common}>
+          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5" />
         </svg>
       );
 
@@ -201,21 +227,50 @@ function ServiceIcon({ icon }: { icon: Service["icon"] }) {
   );
 }
 
+function QuickCard({
+  icon,
+  title,
+  subtitle,
+  onClick,
+}: {
+  icon: string;
+  title: string;
+  subtitle: string;
+  onClick: () => void;
+}) {
+  return (
+    <button className="quick-card" onClick={onClick}>
+      <div className="quick-card-icon">
+        <Icon name={icon} size={21} />
+      </div>
+
+      <div className="quick-card-text">
+        <strong>{title}</strong>
+        <span>{subtitle}</span>
+      </div>
+
+      <Icon name="arrow" size={18} />
+    </button>
+  );
+}
+
 export default function HomePage() {
   const [tab, setTab] = useState<Tab>("home");
   const [category, setCategory] = useState("Wszystko");
   const [search, setSearch] = useState("");
-
   const [selected, setSelected] = useState<Service | null>(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
+  const points = 320;
+  const bookingsCount = 0;
+
   const filteredServices = useMemo(() => {
+    const query = search.toLowerCase().trim();
+
     return services.filter((service) => {
       const matchesCategory =
         category === "Wszystko" || service.category === category;
-
-      const query = search.toLowerCase().trim();
 
       const matchesSearch =
         !query ||
@@ -225,16 +280,6 @@ export default function HomePage() {
       return matchesCategory && matchesSearch;
     });
   }, [category, search]);
-
-  function openDiscover() {
-    setTab("discover");
-  }
-
-  function openService(service: Service) {
-    setSelected(service);
-    setDate("");
-    setTime("");
-  }
 
   function reserve() {
     if (!selected) return;
@@ -247,14 +292,14 @@ export default function HomePage() {
     );
 
     setSelected(null);
+    setDate("");
+    setTime("");
   }
 
   return (
     <main>
       <div className="app-shell">
-
         {/* HEADER */}
-
         <header className="top-header">
           <div>
             <div className="brand">STREFA</div>
@@ -262,7 +307,7 @@ export default function HomePage() {
           </div>
 
           <button
-            className="header-avatar"
+            className="avatar"
             onClick={() => setTab("profile")}
             aria-label="Profil"
           >
@@ -271,11 +316,9 @@ export default function HomePage() {
         </header>
 
         {/* HOME */}
-
         {tab === "home" && (
-          <section className="home-page">
-
-            <div className="home-intro">
+          <div className="home-page">
+            <section className="hero">
               <div className="eyebrow">
                 <Icon name="spark" size={14} />
                 <span>DLA CIEBIE</span>
@@ -284,7 +327,7 @@ export default function HomePage() {
               <h1>
                 Znajdź coś
                 <br />
-                dla siebie.
+                dla siebie<span className="purple-dot">.</span>
               </h1>
 
               <p>
@@ -292,36 +335,34 @@ export default function HomePage() {
                 <br />
                 Wszystko w jednym miejscu.
               </p>
-            </div>
+            </section>
 
-            {/* MAIN FEATURE GRID */}
-
-            <div className="feature-grid">
-
+            {/* MAIN FEATURE CARDS */}
+            <section className="feature-grid">
               <button
                 className="discover-feature"
-                onClick={openDiscover}
+                onClick={() => setTab("discover")}
               >
-                <div className="feature-top">
-                  <span className="feature-number">01</span>
+                <div className="feature-number">01</div>
 
-                  <span className="feature-round-arrow">
-                    <Icon name="arrow" size={18} />
-                  </span>
+                <div className="feature-label">ODKRYWAJ</div>
+
+                <h2>
+                  Znajdź coś
+                  <br />
+                  dla siebie
+                </h2>
+
+                <p>Przeglądaj dostępne usługi</p>
+
+                <div className="feature-icon">
+                  <Icon name="search" size={28} />
                 </div>
 
-                <div className="feature-icon-large">
-                  <Icon name="search" size={29} />
-                </div>
-
-                <div className="feature-content">
-                  <span>ODKRYWAJ</span>
-                  <strong>Znajdź coś<br />dla siebie</strong>
-                  <small>Przeglądaj dostępne usługi</small>
+                <div className="feature-arrow">
+                  <Icon name="arrow" size={18} />
                 </div>
               </button>
-
-              {/* POINTS */}
 
               <button
                 className="points-feature"
@@ -329,108 +370,87 @@ export default function HomePage() {
               >
                 <div className="points-glow" />
 
-                <div className="feature-top">
-                  <span className="feature-number">STREFA PLUS</span>
+                <div className="points-top">
+                  <div className="points-badge">
+                    <Icon name="star" size={19} />
+                  </div>
 
-                  <span className="feature-round-arrow light">
+                  <div className="points-arrow">
                     <Icon name="arrow" size={18} />
-                  </span>
-                </div>
-
-                <div className="points-main-icon">
-                  <Icon name="star" size={25} />
-                </div>
-
-                <div className="points-content">
-                  <small>Twoje punkty</small>
-
-                  <strong>
-                    320<span> pkt</span>
-                  </strong>
-
-                  <div className="points-footer">
-                    <span>Wykorzystaj swoje punkty</span>
-                    <Icon name="arrow" size={15} />
                   </div>
                 </div>
-              </button>
 
-            </div>
+                <div className="points-label">STREFA PLUS</div>
+
+                <div className="points-caption">TWOJE PUNKTY</div>
+
+                <div className="points-value">
+                  {points}
+                  <span>pkt</span>
+                </div>
+
+                <div className="points-bottom">
+                  <span>Wykorzystaj swoje punkty</span>
+                  <Icon name="arrow" size={17} />
+                </div>
+              </button>
+            </section>
 
             {/* QUICK ACCESS */}
-
             <section className="quick-section">
-
-              <div className="section-heading">
+              <div className="section-heading compact">
                 <div>
-                  <span className="section-label">
-                    SZYBKI DOSTĘP
-                  </span>
-
+                  <span className="section-label">SZYBKI DOSTĘP</span>
                   <h2>Wszystko pod ręką</h2>
                 </div>
               </div>
 
               <div className="quick-grid">
-
-                <button
-                  className="quick-card"
+                <QuickCard
+                  icon="calendar"
+                  title="Rezerwacje"
+                  subtitle="Twoje terminy"
                   onClick={() => setTab("bookings")}
-                >
-                  <div className="quick-card-icon">
-                    <Icon name="calendar" size={22} />
-                  </div>
+                />
 
-                  <div>
-                    <strong>Rezerwacje</strong>
-                    <span>Twoje terminy</span>
-                  </div>
-
-                  <Icon name="arrow" size={17} />
-                </button>
-
-                <button
-                  className="quick-card"
+                <QuickCard
+                  icon="star"
+                  title="Benefity"
+                  subtitle={`${points} pkt do wykorzystania`}
                   onClick={() => setTab("benefits")}
-                >
-                  <div className="quick-card-icon">
-                    <Icon name="star" size={22} />
-                  </div>
+                />
 
-                  <div>
-                    <strong>Benefity</strong>
-                    <span>320 pkt do wykorzystania</span>
-                  </div>
+                <QuickCard
+                  icon="heart"
+                  title="Ulubione"
+                  subtitle="Twoje miejsca"
+                  onClick={() => alert("Ulubione miejsca pojawią się tutaj.")}
+                />
 
-                  <Icon name="arrow" size={17} />
-                </button>
-
+                <QuickCard
+                  icon="tag"
+                  title="Oferty specjalne"
+                  subtitle="Promocje STREFY"
+                  onClick={() => setTab("discover")}
+                />
               </div>
-
             </section>
 
-            {/* POPULAR */}
-
-            <section className="section">
-
+            {/* POPULAR SERVICES */}
+            <section className="popular-section">
               <div className="section-heading">
-
                 <div>
-                  <span className="section-label">
-                    POPULARNE
-                  </span>
-
-                  <h2>Wybierz coś dla siebie</h2>
+                  <span className="section-label">POPULARNE USŁUGI</span>
+                  <h2>Polecane dla Ciebie</h2>
                 </div>
 
                 <button
                   className="text-button"
-                  onClick={openDiscover}
+                  onClick={() => setTab("discover")}
                 >
                   Zobacz wszystkie
                   <Icon name="arrow" size={17} />
                 </button>
-
               </div>
 
               <div className="services-grid">
@@ -438,43 +458,77 @@ export default function HomePage() {
                   <button
                     className="service-card"
                     key={service.name}
-                    onClick={() => openService(service)}
+                    onClick={() => setSelected(service)}
                   >
-                    <ServiceIcon icon={service.icon} />
-
-                    <h3>{service.name}</h3>
-
-                    <p>{service.place}</p>
-
-                    <div className="service-bottom">
-                      <span>
-                        od <strong>{service.price} zł</strong>
+                    <div className="service-top">
+                      <span className="service-category">
+                        {service.category}
                       </span>
 
-                      <span className="card-arrow">
-                        <Icon name="arrow" size={16} />
+                      <span className="favorite">
+                        <Icon name="heart" size={17} />
                       </span>
+                    </div>
+
+                    <div className="service-image">
+                      <ServiceIcon icon={service.icon} />
+                    </div>
+
+                    <div className="service-content">
+                      <h3>{service.name}</h3>
+
+                      <p>{service.place}</p>
+
+                      <div className="service-meta">
+                        <span className="rating">
+                          ★ {service.rating}
+                          <small> ({service.reviews})</small>
+                        </span>
+
+                        <span className="service-price">
+                          od {service.price} zł
+                        </span>
+                      </div>
                     </div>
                   </button>
                 ))}
               </div>
-
             </section>
 
-          </section>
+            {/* PLUS BANNER */}
+            <section className="plus-banner">
+              <div className="plus-banner-icon">
+                <Icon name="star" size={27} />
+              </div>
+
+              <div className="plus-banner-text">
+                <span>STREFA PLUS</span>
+                <h3>Więcej korzyści, więcej dla Ciebie.</h3>
+                <p>
+                  Zbieraj punkty i wymieniaj je na wyjątkowe benefity.
+                </p>
+              </div>
+
+              <div className="plus-banner-decoration">✦</div>
+
+              <button
+                onClick={() => setTab("benefits")}
+                className="primary-button"
+              >
+                Zobacz benefity
+                <Icon name="arrow" size={17} />
+              </button>
+            </section>
+          </div>
         )}
 
         {/* DISCOVER */}
-
         {tab === "discover" && (
           <section className="page-section">
-
             <div className="page-heading">
               <span className="section-label">STREFA</span>
               <h1>Odkrywaj</h1>
-              <p>
-                Znajdź coś, co pasuje właśnie do Ciebie.
-              </p>
+              <p>Znajdź coś, co pasuje właśnie do Ciebie.</p>
             </div>
 
             <div className="search-box">
@@ -504,19 +558,26 @@ export default function HomePage() {
             </div>
 
             <div className="discover-list">
-
               {filteredServices.map((service) => (
                 <button
                   className="discover-card"
                   key={service.name}
-                  onClick={() => openService(service)}
+                  onClick={() => setSelected(service)}
                 >
                   <ServiceIcon icon={service.icon} />
 
                   <div className="discover-info">
+                    <span className="discover-category">
+                      {service.category}
+                    </span>
+
                     <h3>{service.name}</h3>
+
                     <p>{service.place}</p>
-                    <span>od {service.price} zł</span>
+
+                    <span className="discover-price">
+                      od {service.price} zł
+                    </span>
                   </div>
 
                   <Icon name="arrow" size={20} />
@@ -530,17 +591,13 @@ export default function HomePage() {
                   Spróbuj innej nazwy lub kategorii.
                 </div>
               )}
-
             </div>
-
           </section>
         )}
 
         {/* BOOKINGS */}
-
         {tab === "bookings" && (
           <section className="page-section">
-
             <div className="page-heading">
               <span className="section-label">TWOJA STREFA</span>
               <h1>Rezerwacje</h1>
@@ -548,12 +605,15 @@ export default function HomePage() {
             </div>
 
             <div className="empty-panel">
-
               <div className="large-icon">
                 <Icon name="calendar" size={34} />
               </div>
 
-              <h2>Nie masz jeszcze rezerwacji</h2>
+              <h2>
+                {bookingsCount === 0
+                  ? "Nie masz jeszcze rezerwacji"
+                  : "Twoje rezerwacje"}
+              </h2>
 
               <p>
                 Znajdź usługę i zarezerwuj dogodny termin.
@@ -561,50 +621,42 @@ export default function HomePage() {
 
               <button
                 className="primary-button"
-                onClick={openDiscover}
+                onClick={() => setTab("discover")}
               >
                 Znajdź usługę
                 <Icon name="arrow" size={18} />
               </button>
-
             </div>
-
           </section>
         )}
 
         {/* BENEFITS */}
-
         {tab === "benefits" && (
           <section className="page-section">
-
             <div className="page-heading">
               <span className="section-label">STREFA PLUS</span>
               <h1>Benefity</h1>
               <p>Wykorzystaj swoje punkty.</p>
             </div>
 
-            <div className="premium-points-card">
-
-              <div className="premium-points-icon">
-                <Icon name="star" size={30} />
-              </div>
-
+            <div className="benefits-hero">
               <div>
-                <small>Twoje punkty</small>
+                <span>TWOJE PUNKTY</span>
 
                 <strong>
-                  320 <span>pkt</span>
+                  {points}
+                  <small> pkt</small>
                 </strong>
 
-                <p>Strefa Plus</p>
+                <p>Wykorzystaj je na wyjątkowe benefity.</p>
               </div>
 
-              <Icon name="arrow" size={20} />
-
+              <div className="benefits-star">
+                <Icon name="star" size={38} />
+              </div>
             </div>
 
             <div className="benefit-card">
-
               <div className="benefit-icon">
                 <Icon name="fitness" size={25} />
               </div>
@@ -616,53 +668,42 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <strong>320 pkt</strong>
-
+              <strong>{points} pkt</strong>
             </div>
-
           </section>
         )}
 
         {/* PROFILE */}
-
         {tab === "profile" && (
           <section className="page-section">
-
             <div className="page-heading">
               <span className="section-label">TWOJA STREFA</span>
               <h1>Profil</h1>
             </div>
 
             <div className="profile-card">
-
-              <div className="profile-avatar">
-                K
-              </div>
+              <div className="profile-avatar">K</div>
 
               <div>
                 <small>Twój profil</small>
                 <h2>Kryszna</h2>
               </div>
-
             </div>
 
             <div className="profile-row">
               <span>Twoje punkty</span>
-              <strong>320 pkt</strong>
+              <strong>{points} pkt</strong>
             </div>
 
             <div className="profile-row">
               <span>Rezerwacje</span>
-              <strong>0</strong>
+              <strong>{bookingsCount}</strong>
             </div>
-
           </section>
         )}
-
       </div>
 
-      {/* MODAL REZERWACJI */}
-
+      {/* MODAL */}
       {selected && (
         <div
           className="modal-backdrop"
@@ -672,7 +713,6 @@ export default function HomePage() {
             className="modal"
             onClick={(e) => e.stopPropagation()}
           >
-
             <button
               className="modal-close"
               onClick={() => setSelected(null)}
@@ -698,31 +738,23 @@ export default function HomePage() {
             </div>
 
             <div className="modal-fields">
-
               <label>
                 Data
-
                 <input
                   type="date"
                   value={date}
-                  onChange={(e) =>
-                    setDate(e.target.value)
-                  }
+                  onChange={(e) => setDate(e.target.value)}
                 />
               </label>
 
               <label>
                 Godzina
-
                 <input
                   type="time"
                   value={time}
-                  onChange={(e) =>
-                    setTime(e.target.value)
-                  }
+                  onChange={(e) => setTime(e.target.value)}
                 />
               </label>
-
             </div>
 
             <button
@@ -739,21 +771,18 @@ export default function HomePage() {
             >
               Anuluj
             </button>
-
           </div>
         </div>
       )}
 
       {/* BOTTOM NAV */}
-
       <nav className="bottom">
-
         <button
           className={tab === "home" ? "active" : ""}
           onClick={() => setTab("home")}
         >
           <span className="nav-icon">
-            <Icon name="home" size={22} />
+            <Icon name="home" size={21} />
           </span>
           <span>Start</span>
         </button>
@@ -763,7 +792,7 @@ export default function HomePage() {
           onClick={() => setTab("discover")}
         >
           <span className="nav-icon">
-            <Icon name="search" size={22} />
+            <Icon name="search" size={21} />
           </span>
           <span>Odkrywaj</span>
         </button>
@@ -773,7 +802,7 @@ export default function HomePage() {
           onClick={() => setTab("bookings")}
         >
           <span className="nav-icon">
-            <Icon name="calendar" size={22} />
+            <Icon name="calendar" size={21} />
           </span>
           <span>Rezerwacje</span>
         </button>
@@ -783,7 +812,7 @@ export default function HomePage() {
           onClick={() => setTab("benefits")}
         >
           <span className="nav-icon">
-            <Icon name="star" size={22} />
+            <Icon name="star" size={21} />
           </span>
           <span>Benefity</span>
         </button>
@@ -793,11 +822,10 @@ export default function HomePage() {
           onClick={() => setTab("profile")}
         >
           <span className="nav-icon">
-            <Icon name="user" size={22} />
+            <Icon name="user" size={21} />
           </span>
           <span>Profil</span>
         </button>
-
       </nav>
     </main>
   );
