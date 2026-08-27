@@ -1,1377 +1,1522 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+"use client";
 
-:root {
-  --bg: #faf9fc;
-  --text: #27242d;
-  --muted: #898590;
-  --purple: #8f45ad;
-  --purple-dark: #71308e;
-  --purple-light: #f3e8f7;
-  --border: #e9e5eb;
-  --white: #ffffff;
+import { useMemo, useState } from "react";
+
+type Tab = "home" | "discover" | "bookings" | "benefits" | "profile";
+
+type ServiceIconName =
+  | "fitness"
+  | "trainer"
+  | "yoga"
+  | "spa"
+  | "dance"
+  | "massage";
+
+type Service = {
+  id: string;
+  name: string;
+  place: string;
+  price: number;
+  category: string;
+  icon: ServiceIconName;
+};
+
+type Reservation = {
+  id: string;
+  service: Service;
+  date: string;
+  time: string;
+};
+
+const services: Service[] = [
+  {
+    id: "gym",
+    name: "Siłownia",
+    place: "STREFA Fitness Centrum",
+    price: 49,
+    category: "Sport",
+    icon: "fitness",
+  },
+  {
+    id: "trainer",
+    name: "Trening personalny",
+    place: "STREFA Fitness Centrum",
+    price: 90,
+    category: "Sport",
+    icon: "trainer",
+  },
+  {
+    id: "yoga",
+    name: "Joga",
+    place: "STREFA Fitness Centrum",
+    price: 45,
+    category: "Wellness",
+    icon: "yoga",
+  },
+  {
+    id: "spa",
+    name: "SPA & Wellness",
+    place: "STREFA SPA",
+    price: 120,
+    category: "Wellness",
+    icon: "spa",
+  },
+  {
+    id: "dance",
+    name: "Taniec",
+    place: "STREFA Studio",
+    price: 55,
+    category: "Aktywność",
+    icon: "dance",
+  },
+  {
+    id: "massage",
+    name: "Masaż",
+    place: "STREFA SPA",
+    price: 110,
+    category: "Wellness",
+    icon: "massage",
+  },
+];
+
+const categories = [
+  "Wszystko",
+  "Sport",
+  "Wellness",
+  "Aktywność",
+];
+
+const timeSlots = [
+  "09:00",
+  "10:00",
+  "11:30",
+  "12:30",
+  "13:30",
+  "15:00",
+  "16:30",
+  "18:00",
+  "19:30",
+  "20:00",
+];
+
+function Icon({
+  name,
+  size = 24,
+  className = "",
+}: {
+  name: string;
+  size?: number;
+  className?: string;
+}) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className,
+  };
+
+  switch (name) {
+    case "home":
+      return (
+        <svg {...common}>
+          <path d="M3 10.5 12 3l9 7.5" />
+          <path d="M5.5 9.5V21h13V9.5" />
+          <path d="M9.5 21v-6h5v6" />
+        </svg>
+      );
+
+    case "search":
+      return (
+        <svg {...common}>
+          <circle cx="10.8" cy="10.8" r="6.5" />
+          <path d="m16 16 4.5 4.5" />
+        </svg>
+      );
+
+    case "calendar":
+      return (
+        <svg {...common}>
+          <rect x="4" y="5" width="16" height="16" rx="2" />
+          <path d="M8 3v4M16 3v4M4 10h16" />
+          <path d="M8 14h3M8 17h5" />
+        </svg>
+      );
+
+    case "star":
+      return (
+        <svg {...common}>
+          <path d="m12 3 2.3 5 5.4.7-4 3.8 1 5.4-4.7-2.6-4.7 2.6 1-5.4-4-3.8 5.4-.7L12 3Z" />
+        </svg>
+      );
+
+    case "user":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5 20c.8-3.4 3.1-5 7-5s6.2 1.6 7 5" />
+        </svg>
+      );
+
+    case "fitness":
+      return (
+        <svg {...common}>
+          <path d="M6 8v8M18 8v8M3.5 10v4M20.5 10v4M6 12h12" />
+          <path d="M8 6v12M16 6v12" />
+        </svg>
+      );
+
+    case "trainer":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="6.5" r="3" />
+          <path d="M6.5 21c.6-4.3 2.4-6.5 5.5-6.5s4.9 2.2 5.5 6.5" />
+          <path d="M7.5 12.5 4 16M16.5 12.5 20 16" />
+        </svg>
+      );
+
+    case "yoga":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="4.5" r="2.2" />
+          <path d="M12 7v6M8 10l4 3 4-3M8 20l4-7 4 7" />
+        </svg>
+      );
+
+    case "spa":
+      return (
+        <svg {...common}>
+          <path d="M5 20c0-7 4-12 7-16 3 4 7 9 7 16" />
+          <path d="M7 17c2-1 3.5-1 5 0 1.5-1 3-1 5 0" />
+          <path d="M12 10v8" />
+        </svg>
+      );
+
+    case "dance":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="4.5" r="2.2" />
+          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1M14 12l-1 5 3 4M10 12l-3 5-3 2" />
+        </svg>
+      );
+
+    case "massage":
+      return (
+        <svg {...common}>
+          <path d="M5 18c3-5 5-9 7-13 2 4 4 8 7 13" />
+          <path d="M7 17c1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 5 0" />
+          <circle cx="12" cy="5" r="1" />
+        </svg>
+      );
+
+    case "arrow":
+      return (
+        <svg {...common}>
+          <path d="M5 12h13" />
+          <path d="m13 7 5 5-5 5" />
+        </svg>
+      );
+
+    case "spark":
+      return (
+        <svg {...common}>
+          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5" />
+        </svg>
+      );
+
+    case "check":
+      return (
+        <svg {...common}>
+          <path d="m5 12 4 4L19 6" />
+        </svg>
+      );
+
+    case "chevron-left":
+      return (
+        <svg {...common}>
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      );
+
+    case "chevron-right":
+      return (
+        <svg {...common}>
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      );
+
+    default:
+      return null;
+  }
 }
 
-* {
-  box-sizing: border-box;
+function ServiceIcon({
+  icon,
+}: {
+  icon: ServiceIconName;
+}) {
+  return (
+    <div className="service-icon">
+      <Icon name={icon} size={27} />
+    </div>
+  );
 }
 
-html {
-  min-height: 100%;
+function toDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
-body {
-  margin: 0;
-  min-height: 100%;
-  background:
-    radial-gradient(
-      circle at 82% 24%,
-      rgba(179, 113, 198, 0.08),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 12% 55%,
-      rgba(179, 113, 198, 0.05),
-      transparent 24%
-    ),
-    var(--bg);
-  color: var(--text);
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
+function parseDate(value: string) {
+  return new Date(`${value}T12:00:00`);
 }
 
-button,
-input {
-  font: inherit;
+function formatFullDate(value: string) {
+  return new Intl.DateTimeFormat("pl-PL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(parseDate(value));
 }
 
-button {
-  color: inherit;
-  border: 0;
-  cursor: pointer;
+function formatShortDate(value: string) {
+  const date = parseDate(value);
+
+  return {
+    weekday: new Intl.DateTimeFormat("pl-PL", {
+      weekday: "short",
+    })
+      .format(date)
+      .replace(".", ""),
+    day: date.getDate(),
+    month: new Intl.DateTimeFormat("pl-PL", {
+      month: "short",
+    })
+      .format(date)
+      .replace(".", ""),
+  };
 }
 
-button:disabled {
-  cursor: default;
+function formatMonth(value: Date) {
+  return new Intl.DateTimeFormat("pl-PL", {
+    month: "long",
+    year: "numeric",
+  }).format(value);
 }
 
-/* =========================================================
-   HOME — ZOSTAWIAMY TEN WYGLĄD
-   ========================================================= */
+function getMonthCalendar(month: Date) {
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
 
-.app {
-  min-height: 100vh;
-  padding: 46px 48px 150px;
-  max-width: 1500px;
-  margin: 0 auto;
-}
+  const firstDay = new Date(year, monthIndex, 1);
+  const daysInMonth = new Date(
+    year,
+    monthIndex + 1,
+    0
+  ).getDate();
 
-.header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 68px;
-}
+  const mondayIndex =
+    firstDay.getDay() === 0
+      ? 6
+      : firstDay.getDay() - 1;
 
-.logo {
-  font-size: 25px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: 0.24em;
-}
+  const cells: Array<
+    string | null
+  > = [];
 
-.tagline {
-  margin-top: 14px;
-  color: #77727e;
-  font-size: 17px;
-  line-height: 1.4;
-}
+  for (let i = 0; i < mondayIndex; i++) {
+    cells.push(null);
+  }
 
-.tagline span {
-  color: var(--purple);
-  font-weight: 600;
-}
-
-.avatar {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  color: var(--purple);
-  font-size: 21px;
-  font-weight: 700;
-  box-shadow:
-    0 10px 35px rgba(43, 31, 50, 0.07),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  transition: transform 0.2s ease;
-}
-
-.avatar:hover {
-  transform: translateY(-2px);
-}
-
-.hero-cards {
-  display: grid;
-  grid-template-columns: 1.08fr 1fr;
-  gap: 26px;
-}
-
-.feature-card {
-  position: relative;
-  min-height: 365px;
-  border-radius: 30px;
-  text-align: left;
-  padding: 46px 42px;
-  overflow: hidden;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-3px);
-}
-
-.discover-card {
-  background:
-    radial-gradient(
-      circle at 90% 90%,
-      rgba(184, 113, 207, 0.12),
-      transparent 35%
-    ),
-    var(--white);
-  box-shadow:
-    0 18px 50px rgba(43, 31, 50, 0.055),
-    inset 0 0 0 1px rgba(232, 227, 235, 0.85);
-}
-
-.points-card {
-  background:
-    radial-gradient(
-      circle at 85% 15%,
-      rgba(176, 104, 197, 0.28),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      #27232c 0%,
-      #2e2733 48%,
-      #51305c 100%
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push(
+      toDateKey(new Date(year, monthIndex, day))
     );
-  color: white;
-  box-shadow: 0 22px 55px rgba(45, 26, 53, 0.18);
-}
-
-.card-icon {
-  width: 82px;
-  height: 82px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 26px;
-  background: var(--purple-light);
-  color: var(--purple);
-  margin-bottom: 46px;
-}
-
-.points-card .card-icon {
-  background: rgba(143, 69, 173, 0.22);
-  color: #d79ae8;
-}
-
-.card-content {
-  position: relative;
-  z-index: 2;
-}
-
-.eyebrow {
-  color: var(--purple);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  margin-bottom: 22px;
-}
-
-.points-card .eyebrow {
-  color: #d59ae6;
-}
-
-.card-content h1 {
-  margin: 0;
-  font-size: clamp(36px, 4vw, 48px);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-  font-weight: 750;
-}
-
-.points {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: -5px;
-}
-
-.points strong {
-  font-size: clamp(70px, 7vw, 92px);
-  line-height: 0.95;
-  letter-spacing: -0.065em;
-  font-weight: 750;
-}
-
-.points span {
-  font-size: 24px;
-  color: #b8b1bd;
-  font-weight: 600;
-}
-
-.accent-line {
-  width: 54px;
-  height: 3px;
-  background: var(--purple);
-  margin: 30px 0 18px;
-  border-radius: 10px;
-}
-
-.points-card .accent-line {
-  background: #c36dd8;
-}
-
-.card-content p {
-  margin: 0;
-  color: #77717d;
-  font-size: 17px;
-  line-height: 1.45;
-}
-
-.points-card p {
-  color: #aaa2ad;
-}
-
-.card-content p span {
-  color: var(--purple);
-  font-weight: 700;
-}
-
-.card-arrow {
-  position: absolute;
-  right: 34px;
-  bottom: 34px;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(247, 236, 250, 0.95);
-  color: var(--purple);
-  z-index: 3;
-}
-
-.points-card .card-arrow {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.quick-section {
-  margin-top: 72px;
-}
-
-.section-label {
-  margin-bottom: 22px;
-  color: var(--purple);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-}
-
-.quick-card {
-  min-height: 116px;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 22px 26px;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 24px;
-  text-align: left;
-  box-shadow: inset 0 0 0 1px var(--border);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.quick-card:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 14px 35px rgba(43, 31, 50, 0.06),
-    inset 0 0 0 1px var(--border);
-}
-
-.quick-icon {
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--purple);
-  background: var(--purple-light);
-}
-
-.quick-card h2 {
-  margin: 0 0 5px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-}
-
-.quick-card p {
-  margin: 0;
-  color: #96909a;
-  font-size: 15px;
-}
-
-.quick-arrow {
-  margin-left: auto;
-  color: var(--purple);
-}
-
-.bottom-nav {
-  position: fixed;
-  z-index: 50;
-  left: 50%;
-  bottom: 22px;
-  transform: translateX(-50%);
-  width: min(820px, calc(100% - 40px));
-  height: 88px;
-  padding: 8px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  border-radius: 28px;
-  box-shadow:
-    0 20px 55px rgba(40, 28, 46, 0.12),
-    inset 0 0 0 1px rgba(229, 224, 232, 0.85);
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  background: transparent;
-  color: #9c96a1;
-  border-radius: 22px;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.nav-item span {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.nav-item.active {
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.nav-active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* =========================================================
-   INNER PAGES
-   ========================================================= */
-
-.page {
-  min-height: calc(100vh - 150px);
-}
-
-.page-top {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 38px;
-}
-
-.page-heading .section-label {
-  display: block;
-  margin-bottom: 14px;
-}
-
-.page-heading h1 {
-  margin: 0;
-  font-size: clamp(42px, 5vw, 62px);
-  line-height: 0.95;
-  letter-spacing: -0.055em;
-  font-weight: 750;
-}
-
-.page-heading p {
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.5;
-}
-
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 17px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--purple);
-  box-shadow: inset 0 0 0 1px var(--border);
-  font-weight: 600;
-}
-
-.search-box {
-  height: 62px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 0 20px;
-  margin-bottom: 20px;
-  background: white;
-  border-radius: 19px;
-  color: var(--muted);
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.search-box input {
-  width: 100%;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 16px;
-}
-
-.categories {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 5px;
-  margin-bottom: 28px;
-  scrollbar-width: none;
-}
-
-.categories::-webkit-scrollbar {
-  display: none;
-}
-
-.category {
-  flex: 0 0 auto;
-  padding: 11px 17px;
-  border-radius: 999px;
-  background: white;
-  color: #817b86;
-  box-shadow: inset 0 0 0 1px var(--border);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.category.active {
-  background: var(--purple);
-  color: white;
-  box-shadow: none;
-}
-
-.discover-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.discover-item {
-  min-height: 116px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 20px;
-  background: white;
-  border-radius: 22px;
-  text-align: left;
-  box-shadow: inset 0 0 0 1px var(--border);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.discover-item:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 15px 35px rgba(43, 31, 50, 0.06),
-    inset 0 0 0 1px var(--border);
-}
-
-.service-icon {
-  width: 62px;
-  height: 62px;
-  flex: 0 0 62px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 19px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.discover-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.discover-info h3 {
-  margin: 0 0 5px;
-  font-size: 18px;
-  letter-spacing: -0.025em;
-}
-
-.discover-info p {
-  margin: 0 0 9px;
-  color: #98919d;
-  font-size: 13px;
-}
-
-.discover-price {
-  color: var(--purple);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.empty {
-  grid-column: 1 / -1;
-  padding: 60px 20px;
-  text-align: center;
-  color: var(--muted);
-}
-
-/* =========================================================
-   BOOKINGS
-   ========================================================= */
-
-.booking-layout {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 24px;
-}
-
-.booking-service-card,
-.calendar-card,
-.confirmation-card,
-.empty-panel {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 27px;
-  box-shadow:
-    0 18px 50px rgba(43, 31, 50, 0.045),
-    inset 0 0 0 1px var(--border);
-}
-
-.booking-service-card {
-  padding: 30px;
-}
-
-.booking-service-card h2 {
-  margin: 24px 0 7px;
-  font-size: 28px;
-  letter-spacing: -0.04em;
-}
-
-.booking-service-place {
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.booking-service-price {
-  margin-top: 24px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.booking-service-price strong {
-  color: var(--text);
-  font-size: 23px;
-}
-
-.selected-service {
-  margin-top: 30px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-}
-
-.selected-service-label {
-  display: block;
-  margin-bottom: 11px;
-  color: var(--purple);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-.change-service {
-  margin-top: 18px;
-  color: var(--purple);
-  background: transparent;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.calendar-card {
-  padding: 30px;
-}
-
-.calendar-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 25px;
-}
-
-.calendar-title small {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--purple);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-.calendar-title h2 {
-  margin: 0;
-  font-size: 25px;
-  letter-spacing: -0.035em;
-}
-
-.calendar-controls {
-  display: flex;
-  gap: 7px;
-}
-
-.calendar-control {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 13px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.calendar-week {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 7px;
-  margin-bottom: 8px;
-}
-
-.calendar-week span {
-  text-align: center;
-  color: #a09aa4;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 7px;
-}
-
-.calendar-day {
-  min-height: 67px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  border-radius: 16px;
-  background: #faf9fc;
-  color: var(--text);
-  box-shadow: inset 0 0 0 1px transparent;
-}
-
-.calendar-day:not(:disabled):hover {
-  box-shadow: inset 0 0 0 1px #dbc5e2;
-}
-
-.calendar-day.empty-day {
-  background: transparent;
-  pointer-events: none;
-}
-
-.calendar-day.disabled {
-  color: #c7c2ca;
-  background: #f7f6f8;
-}
-
-.calendar-day.selected {
-  background: var(--purple);
-  color: white;
-  box-shadow: none;
-}
-
-.calendar-day.today:not(.selected) {
-  box-shadow: inset 0 0 0 1px var(--purple);
-}
-
-.calendar-day strong {
-  font-size: 17px;
-}
-
-.calendar-day small {
-  font-size: 9px;
-  font-weight: 600;
-  opacity: 0.75;
-}
-
-.time-section {
-  margin-top: 30px;
-}
-
-.time-section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.time-section-head small {
-  color: var(--purple);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-.time-section-head h3 {
-  margin: 5px 0 0;
-  font-size: 21px;
-  letter-spacing: -0.03em;
-}
-
-.time-section-head span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.time-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 9px;
-}
-
-.time-button {
-  min-height: 46px;
-  border-radius: 13px;
-  background: #faf9fc;
-  color: #6f6975;
-  box-shadow: inset 0 0 0 1px var(--border);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.time-button:hover:not(:disabled) {
-  box-shadow: inset 0 0 0 1px #cda9d9;
-}
-
-.time-button.active {
-  background: var(--purple);
-  color: white;
-  box-shadow: none;
-}
-
-.time-button.disabled {
-  color: #c4bfc7;
-  background: #f5f4f6;
-}
-
-.booking-footer {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.primary-button {
-  min-height: 54px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 11px;
-  padding: 0 24px;
-  border-radius: 17px;
-  background: var(--purple);
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 13px 30px rgba(143, 69, 173, 0.2);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-
-.primary-button:hover {
-  transform: translateY(-1px);
-  background: var(--purple-dark);
-}
-
-.primary-button:disabled {
-  background: #d9d2dc;
-  box-shadow: none;
-  cursor: default;
-}
-
-.full-width {
-  width: 100%;
-}
-
-/* =========================================================
-   BOOKINGS LIST
-   ========================================================= */
-
-.reservation-list {
-  display: grid;
-  gap: 14px;
-}
-
-.reservation-card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 22px;
-  background: white;
-  border-radius: 22px;
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.reservation-date {
-  width: 68px;
-  height: 68px;
-  flex: 0 0 68px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.reservation-date small {
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.reservation-date strong {
-  font-size: 23px;
-}
-
-.reservation-info {
-  flex: 1;
-}
-
-.reservation-info h3 {
-  margin: 0 0 5px;
-  font-size: 18px;
-}
-
-.reservation-info p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.reservation-time {
-  color: var(--purple);
-  font-weight: 800;
-}
-
-.empty-panel {
-  max-width: 680px;
-  padding: 52px 40px;
-  text-align: center;
-  margin: 0 auto;
-}
-
-.large-icon {
-  width: 78px;
-  height: 78px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-  border-radius: 25px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.empty-panel h2 {
-  margin: 0;
-  font-size: 26px;
-  letter-spacing: -0.04em;
-}
-
-.empty-panel p {
-  max-width: 440px;
-  margin: 10px auto 25px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-/* =========================================================
-   BENEFITS
-   ========================================================= */
-
-.benefits-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.benefit-points {
-  padding: 35px;
-  border-radius: 27px;
-  color: white;
-  background:
-    radial-gradient(
-      circle at 88% 12%,
-      rgba(190, 105, 216, 0.35),
-      transparent 32%
-    ),
-    linear-gradient(135deg, #27232c 0%, #2e2733 48%, #51305c 100%);
-  box-shadow: 0 22px 55px rgba(45, 26, 53, 0.17);
-}
-
-.benefit-points small {
-  color: #d59ae6;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-.benefit-points strong {
-  display: block;
-  margin-top: 12px;
-  font-size: 67px;
-  line-height: 1;
-  letter-spacing: -0.07em;
-}
-
-.benefit-points p {
-  margin: 17px 0 0;
-  color: #aaa2ad;
-}
-
-.benefit-item {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 25px;
-  border-radius: 24px;
-  background: white;
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.benefit-icon {
-  width: 58px;
-  height: 58px;
-  flex: 0 0 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.benefit-item h3 {
-  margin: 0 0 6px;
-  font-size: 17px;
-}
-
-.benefit-item p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.benefit-item > strong {
-  margin-left: auto;
-  color: var(--purple);
-  white-space: nowrap;
-}
-
-/* =========================================================
-   PROFILE
-   ========================================================= */
-
-.profile-layout {
-  max-width: 760px;
-}
-
-.profile-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 28px;
-  margin-bottom: 15px;
-  border-radius: 25px;
-  background: white;
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.profile-avatar {
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--purple-light);
-  color: var(--purple);
-  font-size: 27px;
-  font-weight: 800;
-}
-
-.profile-card small {
-  color: var(--muted);
-}
-
-.profile-card h2 {
-  margin: 5px 0 0;
-  font-size: 27px;
-}
-
-.profile-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 21px 24px;
-  margin-bottom: 9px;
-  border-radius: 18px;
-  background: white;
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.profile-row span {
-  color: var(--muted);
-}
-
-.profile-row strong {
-  color: var(--purple);
-}
-
-/* =========================================================
-   BOOKING CONFIRMATION
-   ========================================================= */
-
-.confirmation-card {
-  margin-top: 20px;
-  padding: 23px;
-  display: flex;
-  align-items: center;
-  gap: 17px;
-}
-
-.confirmation-icon {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.confirmation-card small {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--purple);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-}
-
-.confirmation-card strong {
-  font-size: 14px;
-}
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-  .app {
-    padding: 34px 28px 140px;
   }
 
-  .header {
-    margin-bottom: 50px;
+  while (cells.length % 7 !== 0) {
+    cells.push(null);
   }
 
-  .hero-cards {
-    grid-template-columns: 1fr;
-  }
-
-  .feature-card {
-    min-height: 330px;
-  }
-
-  .booking-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .booking-footer {
-    grid-column: auto;
-  }
-
-  .benefits-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .discover-list {
-    grid-template-columns: 1fr;
-  }
+  return cells;
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
 
-@media (max-width: 620px) {
-  .app {
-    padding: 26px 18px 125px;
+export default function Home() {
+  const [tab, setTab] = useState<Tab>("home");
+
+  const [category, setCategory] =
+    useState("Wszystko");
+
+  const [search, setSearch] = useState("");
+
+  const [selectedService, setSelectedService] =
+    useState<Service | null>(null);
+
+  const [selectedDate, setSelectedDate] =
+    useState("");
+
+  const [selectedTime, setSelectedTime] =
+    useState("");
+
+  const [calendarMonth, setCalendarMonth] =
+    useState(() => {
+      const now = new Date();
+      return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      );
+    });
+
+  const [reservations, setReservations] =
+    useState<Reservation[]>([]);
+
+  const filteredServices = useMemo(() => {
+    const query = search.toLowerCase().trim();
+
+    return services.filter((service) => {
+      const categoryMatch =
+        category === "Wszystko" ||
+        service.category === category;
+
+      const searchMatch =
+        !query ||
+        service.name.toLowerCase().includes(query) ||
+        service.place.toLowerCase().includes(query);
+
+      return categoryMatch && searchMatch;
+    });
+  }, [category, search]);
+
+  const calendarDays = useMemo(
+    () => getMonthCalendar(calendarMonth),
+    [calendarMonth]
+  );
+
+  const today = new Date();
+
+  function openDiscover() {
+    setTab("discover");
   }
 
-  .header {
-    margin-bottom: 42px;
+  function openBooking(service: Service) {
+    setSelectedService(service);
+    setSelectedDate("");
+    setSelectedTime("");
+    setTab("bookings");
+
+    const now = new Date();
+
+    setCalendarMonth(
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      )
+    );
   }
 
-  .logo {
-    font-size: 20px;
+  function closeBooking() {
+    setSelectedService(null);
+    setSelectedDate("");
+    setSelectedTime("");
   }
 
-  .tagline {
-    font-size: 14px;
-    margin-top: 9px;
+  function reserve() {
+    if (!selectedService) return;
+
+    if (!selectedDate || !selectedTime) {
+      alert("Wybierz dzień i godzinę.");
+      return;
+    }
+
+    const reservation: Reservation = {
+      id: `${selectedService.id}-${selectedDate}-${selectedTime}-${Date.now()}`,
+      service: selectedService,
+      date: selectedDate,
+      time: selectedTime,
+    };
+
+    setReservations((current) => [
+      ...current,
+      reservation,
+    ]);
+
+    setSelectedService(null);
+    setSelectedDate("");
+    setSelectedTime("");
+
+    setTab("bookings");
+
+    alert(
+      `Rezerwacja została dodana.\n\n${selectedService.name}\n${formatFullDate(
+        selectedDate
+      )} · ${selectedTime}`
+    );
   }
 
-  .avatar {
-    width: 46px;
-    height: 46px;
-    font-size: 17px;
+  function previousMonth() {
+    setCalendarMonth(
+      (current) =>
+        new Date(
+          current.getFullYear(),
+          current.getMonth() - 1,
+          1
+        )
+    );
   }
 
-  .hero-cards {
-    gap: 16px;
+  function nextMonth() {
+    setCalendarMonth(
+      (current) =>
+        new Date(
+          current.getFullYear(),
+          current.getMonth() + 1,
+          1
+        )
+    );
   }
 
-  .feature-card {
-    min-height: 310px;
-    padding: 28px 26px;
-    border-radius: 25px;
+  function isDateAvailable(dateKey: string) {
+    const date = parseDate(dateKey);
+
+    if (date < new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    )) {
+      return false;
+    }
+
+    if (date.getDay() === 0) {
+      return false;
+    }
+
+    return true;
   }
 
-  .card-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 21px;
-    margin-bottom: 30px;
+  function removeReservation(id: string) {
+    setReservations((current) =>
+      current.filter(
+        (reservation) => reservation.id !== id
+      )
+    );
   }
 
-  .card-content h1 {
-    font-size: 35px;
-  }
+  return (
+    <main className="app">
 
-  .points strong {
-    font-size: 66px;
-  }
+      {/* =====================================================
+          HOME
+          ===================================================== */}
 
-  .points span {
-    font-size: 19px;
-  }
+      {tab === "home" && (
+        <>
+          <header className="header">
+            <div>
+              <div className="logo">
+                STREFA
+              </div>
 
-  .card-content p {
-    font-size: 15px;
-  }
+              <div className="tagline">
+                Twoja strefa.{" "}
+                <span>Twoje miejsce.</span>
+              </div>
+            </div>
 
-  .card-arrow {
-    width: 50px;
-    height: 50px;
-    right: 23px;
-    bottom: 23px;
-  }
+            <button
+              className="avatar"
+              aria-label="Profil"
+              onClick={() => setTab("profile")}
+            >
+              K
+            </button>
+          </header>
 
-  .quick-section {
-    margin-top: 46px;
-  }
+          <section className="hero-cards">
 
-  .quick-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
+            <button
+              className="feature-card discover-card"
+              onClick={openDiscover}
+            >
+              <div className="card-icon">
+                <Icon
+                  name="search"
+                  size={34}
+                />
+              </div>
 
-  .quick-card {
-    min-height: 92px;
-    padding: 16px 18px;
-    border-radius: 21px;
-  }
+              <div className="card-content">
+                <div className="eyebrow">
+                  ODKRYWAJ
+                </div>
 
-  .quick-icon {
-    width: 54px;
-    height: 54px;
-    flex-basis: 54px;
-    border-radius: 17px;
-  }
+                <h1>
+                  Znajdź coś
+                  <br />
+                  dla siebie
+                </h1>
 
-  .quick-card h2 {
-    font-size: 17px;
-  }
+                <div className="accent-line" />
 
-  .quick-card p {
-    font-size: 13px;
-  }
+                <p>
+                  Sport <span>•</span> wellness{" "}
+                  <span>•</span>
+                  <br />
+                  aktywności i więcej
+                </p>
+              </div>
 
-  .bottom-nav {
-    bottom: 12px;
-    width: calc(100% - 24px);
-    height: 74px;
-    border-radius: 23px;
-  }
+              <div className="card-arrow">
+                <Icon
+                  name="arrow"
+                  size={25}
+                />
+              </div>
+            </button>
 
-  .nav-item {
-    border-radius: 18px;
-  }
+            <button
+              className="feature-card points-card"
+              onClick={() => setTab("benefits")}
+            >
+              <div className="card-icon">
+                <Icon
+                  name="star"
+                  size={34}
+                />
+              </div>
 
-  .nav-item svg {
-    width: 22px;
-    height: 22px;
-  }
+              <div className="card-content">
+                <div className="eyebrow">
+                  TWOJE PUNKTY
+                </div>
 
-  .nav-item span {
-    font-size: 10px;
-  }
+                <div className="points">
+                  <strong>320</strong>
+                  <span>pkt</span>
+                </div>
 
-  .page {
-    min-height: auto;
-  }
+                <div className="accent-line" />
 
-  .page-top {
-    align-items: flex-start;
-    flex-direction: column;
-    margin-bottom: 27px;
-  }
+                <p>
+                  Wykorzystaj
+                  <br />
+                  swoje punkty
+                </p>
+              </div>
 
-  .page-heading h1 {
-    font-size: 42px;
-  }
+              <div className="card-arrow">
+                <Icon
+                  name="arrow"
+                  size={25}
+                />
+              </div>
+            </button>
 
-  .page-heading p {
-    font-size: 15px;
-  }
+          </section>
 
-  .back-button {
-    padding: 11px 14px;
-  }
+          <section className="quick-section">
+            <div className="section-label">
+              SZYBKI DOSTĘP
+            </div>
 
-  .discover-item {
-    padding: 17px;
-  }
+            <div className="quick-grid">
 
-  .booking-service-card,
-  .calendar-card {
-    padding: 22px;
-    border-radius: 23px;
-  }
+              <button
+                className="quick-card"
+                onClick={() => {
+                  setSelectedService(null);
+                  setTab("bookings");
+                }}
+              >
+                <div className="quick-icon">
+                  <Icon
+                    name="calendar"
+                    size={27}
+                  />
+                </div>
 
-  .calendar-grid,
-  .calendar-week {
-    gap: 4px;
-  }
+                <div>
+                  <h2>Rezerwacje</h2>
+                  <p>
+                    {reservations.length > 0
+                      ? `${reservations.length} ${
+                          reservations.length === 1
+                            ? "termin"
+                            : "terminy"
+                        }`
+                      : "Twoje terminy"}
+                  </p>
+                </div>
 
-  .calendar-day {
-    min-height: 55px;
-    border-radius: 13px;
-  }
+                <Icon
+                  className="quick-arrow"
+                  name="arrow"
+                  size={24}
+                />
+              </button>
 
-  .calendar-day strong {
-    font-size: 15px;
-  }
+              <button
+                className="quick-card"
+                onClick={() =>
+                  setTab("benefits")
+                }
+              >
+                <div className="quick-icon">
+                  <Icon
+                    name="star"
+                    size={27}
+                  />
+                </div>
 
-  .time-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+                <div>
+                  <h2>Benefity</h2>
+                  <p>
+                    Twoje korzyści
+                  </p>
+                </div>
 
-  .time-button {
-    min-height: 44px;
-  }
+                <Icon
+                  className="quick-arrow"
+                  name="arrow"
+                  size={24}
+                />
+              </button>
 
-  .reservation-card {
-    padding: 17px;
-  }
+            </div>
+          </section>
+        </>
+      )}
 
-  .reservation-date {
-    width: 57px;
-    height: 57px;
-    flex-basis: 57px;
-  }
+      {/* =====================================================
+          ODKRYWAJ
+          ===================================================== */}
 
-  .reservation-date strong {
-    font-size: 19px;
-  }
+      {tab === "discover" && (
+        <section className="page">
 
-  .reservation-info h3 {
-    font-size: 16px;
-  }
+          <div className="page-top">
+            <div className="page-heading">
+              <span className="section-label">
+                STREFA
+              </span>
 
-  .reservation-time {
-    font-size: 13px;
-  }
+              <h1>Odkrywaj</h1>
 
-  .benefit-points {
-    padding: 27px;
-  }
+              <p>
+                Znajdź coś, co pasuje właśnie
+                do Ciebie.
+              </p>
+            </div>
 
-  .benefit-points strong {
-    font-size: 58px;
-  }
+            <button
+              className="back-button"
+              onClick={() => setTab("home")}
+            >
+              <Icon
+                name="home"
+                size={17}
+              />
+              Start
+            </button>
+          </div>
 
-  .benefit-item {
-    padding: 19px;
-  }
+          <div className="search-box">
+            <Icon
+              name="search"
+              size={21}
+            />
 
-  .benefit-item > strong {
-    font-size: 12px;
-  }
+            <input
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+              placeholder="Czego szukasz?"
+            />
+          </div>
 
-  .empty-panel {
-    padding: 40px 24px;
-  }
+          <div className="categories">
+            {categories.map((item) => (
+              <button
+                key={item}
+                className={
+                  category === item
+                    ? "category active"
+                    : "category"
+                }
+                onClick={() =>
+                  setCategory(item)
+                }
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div className="discover-list">
+            {filteredServices.map((service) => (
+              <button
+                key={service.id}
+                className="discover-item"
+                onClick={() =>
+                  openBooking(service)
+                }
+              >
+                <ServiceIcon
+                  icon={service.icon}
+                />
+
+                <div className="discover-info">
+                  <h3>{service.name}</h3>
+
+                  <p>{service.place}</p>
+
+                  <span className="discover-price">
+                    od {service.price} zł
+                  </span>
+                </div>
+
+                <Icon
+                  name="arrow"
+                  size={20}
+                />
+              </button>
+            ))}
+
+            {filteredServices.length === 0 && (
+              <div className="empty">
+                Nie znaleziono usług.
+                <br />
+                Spróbuj innej nazwy lub kategorii.
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================
+          REZERWACJE
+          ===================================================== */}
+
+      {tab === "bookings" && (
+        <section className="page">
+
+          <div className="page-top">
+            <div className="page-heading">
+              <span className="section-label">
+                TWOJA STREFA
+              </span>
+
+              <h1>Rezerwacje</h1>
+
+              <p>
+                Zarządzaj swoimi terminami.
+              </p>
+            </div>
+
+            <button
+              className="back-button"
+              onClick={() => setTab("home")}
+            >
+              <Icon
+                name="home"
+                size={17}
+              />
+              Start
+            </button>
+          </div>
+
+          {selectedService ? (
+            <div className="booking-layout">
+
+              {/* SERVICE */}
+
+              <div className="booking-service-card">
+                <ServiceIcon
+                  icon={selectedService.icon}
+                />
+
+                <h2>
+                  {selectedService.name}
+                </h2>
+
+                <p className="booking-service-place">
+                  {selectedService.place}
+                </p>
+
+                <div className="booking-service-price">
+                  od{" "}
+                  <strong>
+                    {selectedService.price} zł
+                  </strong>
+                </div>
+
+                <div className="selected-service">
+                  <span className="selected-service-label">
+                    WYBRANA USŁUGA
+                  </span>
+
+                  <strong>
+                    {selectedService.name}
+                  </strong>
+
+                  <button
+                    className="change-service"
+                    onClick={openDiscover}
+                  >
+                    Zmień usługę →
+                  </button>
+                </div>
+              </div>
+
+              {/* CALENDAR */}
+
+              <div className="calendar-card">
+
+                <div className="calendar-head">
+
+                  <div className="calendar-title">
+                    <small>
+                      TERMIN
+                    </small>
+
+                    <h2>
+                      {formatMonth(
+                        calendarMonth
+                      )}
+                    </h2>
+                  </div>
+
+                  <div className="calendar-controls">
+                    <button
+                      className="calendar-control"
+                      onClick={
+                        previousMonth
+                      }
+                      aria-label="Poprzedni miesiąc"
+                    >
+                      <Icon
+                        name="chevron-left"
+                        size={19}
+                      />
+                    </button>
+
+                    <button
+                      className="calendar-control"
+                      onClick={nextMonth}
+                      aria-label="Następny miesiąc"
+                    >
+                      <Icon
+                        name="chevron-right"
+                        size={19}
+                      />
+                    </button>
+                  </div>
+
+                </div>
+
+                <div className="calendar-week">
+                  {[
+                    "Pon",
+                    "Wt",
+                    "Śr",
+                    "Czw",
+                    "Pt",
+                    "Sob",
+                    "Nd",
+                  ].map((day) => (
+                    <span key={day}>
+                      {day}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="calendar-grid">
+                  {calendarDays.map(
+                    (dateKey, index) => {
+                      if (!dateKey) {
+                        return (
+                          <div
+                            key={`empty-${index}`}
+                            className="calendar-day empty-day"
+                          />
+                        );
+                      }
+
+                      const date =
+                        parseDate(dateKey);
+
+                      const available =
+                        isDateAvailable(
+                          dateKey
+                        );
+
+                      const selected =
+                        selectedDate ===
+                        dateKey;
+
+                      const todayDate =
+                        isSameDay(
+                          date,
+                          today
+                        );
+
+                      return (
+                        <button
+                          key={dateKey}
+                          className={[
+                            "calendar-day",
+                            !available
+                              ? "disabled"
+                              : "",
+                            selected
+                              ? "selected"
+                              : "",
+                            todayDate
+                              ? "today"
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          disabled={!available}
+                          onClick={() => {
+                            setSelectedDate(
+                              dateKey
+                            );
+                            setSelectedTime("");
+                          }}
+                        >
+                          <strong>
+                            {date.getDate()}
+                          </strong>
+
+                          {todayDate && (
+                            <small>
+                              dziś
+                            </small>
+                          )}
+                        </button>
+                      );
+                    }
+                  )}
+                </div>
+
+                <div className="time-section">
+
+                  <div className="time-section-head">
+                    <div>
+                      <small>
+                        GODZINA
+                      </small>
+
+                      <h3>
+                        Wybierz godzinę
+                      </h3>
+                    </div>
+
+                    <span>
+                      {selectedDate
+                        ? formatFullDate(
+                            selectedDate
+                          )
+                        : "Najpierw wybierz dzień"}
+                    </span>
+                  </div>
+
+                  <div className="time-grid">
+                    {timeSlots.map(
+                      (time) => {
+                        const disabled =
+                          !selectedDate;
+
+                        const active =
+                          selectedTime ===
+                          time;
+
+                        return (
+                          <button
+                            key={time}
+                            className={[
+                              "time-button",
+                              active
+                                ? "active"
+                                : "",
+                              disabled
+                                ? "disabled"
+                                : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                            disabled={
+                              disabled
+                            }
+                            onClick={() =>
+                              setSelectedTime(
+                                time
+                              )
+                            }
+                          >
+                            {time}
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+
+                {selectedDate &&
+                  selectedTime && (
+                    <div className="confirmation-card">
+
+                      <div className="confirmation-icon">
+                        <Icon
+                          name="calendar"
+                          size={20}
+                        />
+                      </div>
+
+                      <div>
+                        <small>
+                          WYBRANY TERMIN
+                        </small>
+
+                        <strong>
+                          {formatFullDate(
+                            selectedDate
+                          )}
+                          {" · "}
+                          {selectedTime}
+                        </strong>
+                      </div>
+
+                    </div>
+                  )}
+
+                <div style={{ marginTop: 18 }}>
+                  <button
+                    className="primary-button full-width"
+                    disabled={
+                      !selectedDate ||
+                      !selectedTime
+                    }
+                    onClick={reserve}
+                  >
+                    Zarezerwuj termin
+                    <Icon
+                      name="arrow"
+                      size={18}
+                    />
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          ) : reservations.length === 0 ? (
+            <div className="empty-panel">
+
+              <div className="large-icon">
+                <Icon
+                  name="calendar"
+                  size={34}
+                />
+              </div>
+
+              <h2>
+                Nie masz jeszcze
+                rezerwacji
+              </h2>
+
+              <p>
+                Znajdź usługę, wybierz dzień
+                i godzinę, a następnie
+                zarezerwuj swój termin.
+              </p>
+
+              <button
+                className="primary-button"
+                onClick={openDiscover}
+              >
+                Znajdź usługę
+                <Icon
+                  name="arrow"
+                  size={18}
+                />
+              </button>
+
+            </div>
+          ) : (
+            <div className="reservation-list">
+
+              {reservations.map(
+                (reservation) => {
+                  const date =
+                    formatShortDate(
+                      reservation.date
+                    );
+
+                  return (
+                    <div
+                      className="reservation-card"
+                      key={reservation.id}
+                    >
+
+                      <div className="reservation-date">
+                        <small>
+                          {date.month}
+                        </small>
+
+                        <strong>
+                          {date.day}
+                        </strong>
+                      </div>
+
+                      <div className="reservation-info">
+                        <h3>
+                          {reservation.service.name}
+                        </h3>
+
+                        <p>
+                          {reservation.service.place}
+                        </p>
+
+                        <p
+                          style={{
+                            marginTop: 6,
+                          }}
+                        >
+                          {formatFullDate(
+                            reservation.date
+                          )}
+                        </p>
+                      </div>
+
+                      <div>
+                        <div className="reservation-time">
+                          {reservation.time}
+                        </div>
+
+                        <button
+                          style={{
+                            marginTop: 8,
+                            padding: 0,
+                            background:
+                              "transparent",
+                            color:
+                              "#9c96a1",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                          onClick={() =>
+                            removeReservation(
+                              reservation.id
+                            )
+                          }
+                        >
+                          Usuń
+                        </button>
+                      </div>
+
+                    </div>
+                  );
+                }
+              )}
+
+              <button
+                className="primary-button"
+                onClick={openDiscover}
+                style={{
+                  marginTop: 10,
+                  width: "fit-content",
+                }}
+              >
+                Dodaj kolejną rezerwację
+                <Icon
+                  name="arrow"
+                  size={18}
+                />
+              </button>
+
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* =====================================================
+          BENEFITY
+          ===================================================== */}
+
+      {tab === "benefits" && (
+        <section className="page">
+
+          <div className="page-top">
+            <div className="page-heading">
+              <span className="section-label">
+                STREFA PLUS
+              </span>
+
+              <h1>Benefity</h1>
+
+              <p>
+                Wykorzystaj swoje punkty.
+              </p>
+            </div>
+
+            <button
+              className="back-button"
+              onClick={() => setTab("home")}
+            >
+              <Icon
+                name="home"
+                size={17}
+              />
+              Start
+            </button>
+          </div>
+
+          <div className="benefits-layout">
+
+            <div className="benefit-points">
+              <small>
+                TWOJE PUNKTY
+              </small>
+
+              <strong>
+                320 pkt
+              </strong>
+
+              <p>
+                Zbieraj punkty i wykorzystuj
+                je na aktywności dostępne
+                w Strefie.
+              </p>
+            </div>
+
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <Icon
+                  name="fitness"
+                  size={25}
+                />
+              </div>
+
+              <div>
+                <h3>
+                  Benefit sportowy
+                </h3>
+
+                <p>
+                  Wykorzystaj swoje punkty
+                  na aktywność.
+                </p>
+              </div>
+
+              <strong>
+                320 pkt
+              </strong>
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================
+          PROFILE
+          ===================================================== */}
+
+      {tab === "profile" && (
+        <section className="page profile-layout">
+
+          <div className="page-top">
+            <div className="page-heading">
+              <span className="section-label">
+                TWOJA STREFA
+              </span>
+
+              <h1>Profil</h1>
+
+              <p>
+                Twoje dane i aktywność.
+              </p>
+            </div>
+
+            <button
+              className="back-button"
+              onClick={() => setTab("home")}
+            >
+              <Icon
+                name="home"
+                size={17}
+              />
+              Start
+            </button>
+          </div>
+
+          <div className="profile-card">
+
+            <div className="profile-avatar">
+              K
+            </div>
+
+            <div>
+              <small>
+                Twój profil
+              </small>
+
+              <h2>
+                Kryszna
+              </h2>
+            </div>
+
+          </div>
+
+          <div className="profile-row">
+            <span>
+              Twoje punkty
+            </span>
+
+            <strong>
+              320 pkt
+            </strong>
+          </div>
+
+          <div className="profile-row">
+            <span>
+              Rezerwacje
+            </span>
+
+            <strong>
+              {reservations.length}
+            </strong>
+          </div>
+
+        </section>
+      )}
+
+      {/* =====================================================
+          BOTTOM NAV
+          ===================================================== */}
+
+      <nav className="bottom-nav">
+
+        <button
+          className={
+            tab === "home"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() => {
+            closeBooking();
+            setTab("home");
+          }}
+        >
+          <span className="nav-active">
+            <Icon
+              name="home"
+              size={25}
+            />
+          </span>
+
+          <span>Start</span>
+        </button>
+
+        <button
+          className={
+            tab === "discover"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() => {
+            closeBooking();
+            setTab("discover");
+          }}
+        >
+          <span className="nav-active">
+            <Icon
+              name="search"
+              size={25}
+            />
+          </span>
+
+          <span>Odkrywaj</span>
+        </button>
+
+        <button
+          className={
+            tab === "bookings"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() => setTab("bookings")}
+        >
+          <span className="nav-active">
+            <Icon
+              name="calendar"
+              size={25}
+            />
+          </span>
+
+          <span>Rezerwacje</span>
+        </button>
+
+        <button
+          className={
+            tab === "benefits"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() => {
+            closeBooking();
+            setTab("benefits");
+          }}
+        >
+          <span className="nav-active">
+            <Icon
+              name="star"
+              size={25}
+            />
+          </span>
+
+          <span>Benefity</span>
+        </button>
+
+        <button
+          className={
+            tab === "profile"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() => {
+            closeBooking();
+            setTab("profile");
+          }}
+        >
+          <span className="nav-active">
+            <Icon
+              name="user"
+              size={25}
+            />
+          </span>
+
+          <span>Profil</span>
+        </button>
+
+      </nav>
+    </main>
+  );
 }
