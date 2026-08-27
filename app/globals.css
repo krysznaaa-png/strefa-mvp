@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f8f6fa;
+  --bg: #f8f7fa;
   --surface: #ffffff;
-  --text: #27252d;
-  --muted: #8f8a96;
-  --purple: #9650ad;
-  --purple-dark: #342b38;
-  --purple-soft: #f2e8f5;
-  --border: rgba(45, 35, 50, 0.10);
-  --shadow: 0 18px 50px rgba(55, 35, 65, 0.07);
+  --text: #29272e;
+  --muted: #96919d;
+  --muted-dark: #77727e;
+  --purple: #9652a9;
+  --purple-dark: #71407f;
+  --purple-soft: #f3eaf6;
+  --purple-softer: #f8f2fa;
+  --border: rgba(42, 37, 47, 0.09);
+  --shadow: 0 20px 55px rgba(49, 39, 55, 0.08);
+  --radius-xl: 30px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
 }
 
 * {
@@ -31,13 +36,13 @@ body {
   background:
     radial-gradient(
       circle at 82% 18%,
-      rgba(180, 125, 200, 0.10),
-      transparent 28%
+      rgba(207, 174, 219, 0.18),
+      transparent 30%
     ),
     radial-gradient(
-      circle at 12% 45%,
-      rgba(220, 190, 225, 0.10),
-      transparent 30%
+      circle at 8% 42%,
+      rgba(220, 204, 227, 0.13),
+      transparent 28%
     ),
     var(--bg);
 
@@ -47,18 +52,12 @@ body {
     Inter,
     -apple-system,
     BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
     "Segoe UI",
     sans-serif;
 
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-
-/* --------------------------------
-   RESET
--------------------------------- */
 
 button,
 input,
@@ -76,235 +75,237 @@ a {
   text-decoration: none;
 }
 
-a:visited {
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* --------------------------------
-   MAIN APP
--------------------------------- */
+/* =========================================================
+   MAIN
+========================================================= */
 
 main {
   width: 100%;
+}
+
+.home {
   min-height: 100vh;
-}
-
-.home-page {
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
   padding: 48px 48px 150px;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* --------------------------------
+/* =========================================================
    HEADER
--------------------------------- */
+========================================================= */
 
 .home-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-
   width: 100%;
-  margin-bottom: 105px;
+  margin-bottom: 115px;
 }
 
-.brand {
+.home-brand {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
-.brand-title {
+.home-brand-title {
   margin: 0;
-
   font-size: 22px;
   line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
 }
 
-.brand-subtitle {
+.home-brand-subtitle {
   margin: 0;
-
   color: var(--muted);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.4;
 }
 
-.profile-avatar {
-  width: 48px;
-  height: 48px;
+/* Nie pokazujemy loginu w prawym rogu.
+   Zostawiamy tylko subtelny avatar. */
+
+.home-profile {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(42, 37, 47, 0.07);
 
   color: var(--purple);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
 
   box-shadow:
-    0 10px 30px rgba(70, 45, 80, 0.08),
-    inset 0 0 0 1px rgba(80, 50, 90, 0.06);
+    0 10px 30px rgba(49, 39, 55, 0.08);
+
+  flex-shrink: 0;
 }
 
-/* --------------------------------
+/* =========================================================
    HERO
--------------------------------- */
+========================================================= */
 
-.hero {
-  width: 100%;
-  max-width: 900px;
-  margin-bottom: 72px;
+.home-hero {
+  max-width: 850px;
+  margin-bottom: 78px;
 }
 
-.hero-kicker {
+.home-eyebrow {
   display: flex;
   align-items: center;
   gap: 10px;
 
-  margin-bottom: 18px;
+  margin: 0 0 20px;
 
   color: var(--purple);
 
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1;
   font-weight: 800;
+
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-.hero-kicker::before {
+.home-eyebrow::before {
   content: "✦";
-  font-size: 14px;
+  font-size: 17px;
+  letter-spacing: 0;
 }
 
-.hero h1 {
-  max-width: 700px;
-
+.home-title {
   margin: 0;
 
-  color: var(--text);
+  max-width: 720px;
 
-  font-size: clamp(54px, 6vw, 88px);
-  line-height: 0.94;
+  font-size: clamp(64px, 7vw, 108px);
+  line-height: 0.91;
   letter-spacing: -0.065em;
-  font-weight: 800;
+  font-weight: 850;
 }
 
-.hero h1 .accent {
-  color: var(--purple);
+.home-title::after {
+  content: "";
 }
 
-.hero p {
+.home-description {
+  margin: 34px 0 0;
+
   max-width: 470px;
 
-  margin: 28px 0 0;
+  color: var(--muted-dark);
 
-  color: var(--muted);
-
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1.45;
+  letter-spacing: -0.02em;
 }
 
-/* --------------------------------
-   MAIN FEATURE GRID
--------------------------------- */
+/* =========================================================
+   FEATURE AREA
+========================================================= */
 
 .home-feature-grid {
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.65fr)
-    minmax(340px, 0.95fr);
-
-  gap: 28px;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+  gap: 24px;
 
   width: 100%;
-  margin-bottom: 78px;
+  margin-bottom: 88px;
 }
 
-/* --------------------------------
+/* =========================================================
    DISCOVER CARD
--------------------------------- */
+========================================================= */
 
 .home-discover-card {
   position: relative;
 
   min-height: 380px;
 
-  padding: 48px;
+  padding: 44px;
+
+  border-radius: var(--radius-xl);
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 
-  overflow: hidden;
-
-  background: var(--surface);
-
-  border: 1px solid var(--border);
-  border-radius: 30px;
-
-  box-shadow: var(--shadow);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
 }
 
-.home-discover-card::after {
+.home-discover-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 28px 65px rgba(49, 39, 55, 0.11);
+}
+
+.home-discover-card::before {
   content: "";
 
   position: absolute;
+  width: 300px;
+  height: 300px;
 
-  width: 360px;
-  height: 360px;
+  right: -80px;
+  bottom: -150px;
 
-  right: -150px;
-  bottom: -170px;
+  border-radius: 50%;
 
-  background: radial-gradient(
-    circle,
-    rgba(160, 85, 180, 0.10),
-    transparent 68%
-  );
+  background: rgba(235, 217, 241, 0.35);
+
+  filter: blur(20px);
 
   pointer-events: none;
 }
 
-.discover-content {
+.home-discover-content {
   position: relative;
-  z-index: 1;
-
-  max-width: 570px;
+  z-index: 2;
 }
 
-.discover-label {
+.home-discover-label {
   margin-bottom: 18px;
 
   color: var(--purple);
 
   font-size: 13px;
   font-weight: 800;
+
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-.discover-title {
+.home-discover-title {
   margin: 0;
 
-  font-size: clamp(38px, 4vw, 58px);
-  line-height: 0.98;
+  max-width: 510px;
+
+  font-size: clamp(42px, 4.4vw, 66px);
+  line-height: 0.96;
   letter-spacing: -0.055em;
   font-weight: 800;
 }
 
-.discover-description {
+.home-discover-description {
   margin: 18px 0 0;
 
   color: var(--muted);
@@ -313,245 +314,281 @@ main {
   line-height: 1.45;
 }
 
-.discover-icon {
+.home-discover-icon {
   position: absolute;
 
-  right: 42px;
-  top: 42px;
+  right: 38px;
+  bottom: 38px;
 
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
+
+  border-radius: 24px;
+
+  background: var(--purple-soft);
+
+  color: var(--purple);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 22px;
+  font-size: 30px;
 
-  background: var(--purple-soft);
-  color: var(--purple);
-
-  font-size: 28px;
+  z-index: 3;
 }
 
-/* --------------------------------
+/* =========================================================
    POINTS CARD
--------------------------------- */
+========================================================= */
 
-.points-card {
+.home-points-card {
   position: relative;
 
   min-height: 380px;
 
   padding: 40px;
 
-  display: flex;
-  flex-direction: column;
+  border-radius: var(--radius-xl);
 
-  overflow: hidden;
-
-  color: #ffffff;
+  color: white;
 
   background:
     radial-gradient(
-      circle at 90% 0%,
-      rgba(176, 90, 195, 0.42),
+      circle at 88% 12%,
+      rgba(171, 111, 189, 0.42),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 80% 100%,
+      rgba(132, 61, 153, 0.48),
       transparent 42%
     ),
     linear-gradient(
       145deg,
-      #27232b 0%,
-      #302632 52%,
-      #54305f 100%
+      #29262d 0%,
+      #242128 50%,
+      #38253d 100%
     );
 
-  border-radius: 30px;
-
   box-shadow:
-    0 25px 55px rgba(45, 25, 55, 0.20);
+    0 25px 65px rgba(47, 31, 52, 0.19);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
 }
 
-.points-card::after {
+.home-points-card::after {
   content: "";
 
   position: absolute;
 
-  width: 180px;
-  height: 180px;
+  width: 230px;
+  height: 230px;
 
-  right: -80px;
-  bottom: -100px;
+  right: -90px;
+  bottom: -110px;
 
-  background: rgba(225, 174, 235, 0.22);
+  border-radius: 50%;
 
-  filter: blur(40px);
+  background: rgba(185, 102, 207, 0.18);
 
-  pointer-events: none;
+  filter: blur(18px);
 }
 
-.points-icon {
-  width: 64px;
-  height: 64px;
+.home-points-icon {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 20px;
+  background: rgba(156, 81, 177, 0.25);
 
-  background: rgba(170, 90, 190, 0.22);
+  color: #d9a7e4;
 
-  color: #d59ae3;
+  font-size: 26px;
 
-  font-size: 25px;
+  margin-bottom: auto;
+
+  position: relative;
+  z-index: 2;
 }
 
-.points-label {
-  margin-top: auto;
+.home-points-label {
+  position: relative;
+  z-index: 2;
 
-  color: rgba(255, 255, 255, 0.62);
+  margin: 0 0 10px;
 
-  font-size: 12px;
+  color: #c99bd5;
+
+  font-size: 13px;
   font-weight: 800;
+
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-.points-value {
+.home-points-value {
+  position: relative;
+  z-index: 2;
+
   display: flex;
   align-items: baseline;
-  gap: 9px;
+  gap: 10px;
 
-  margin-top: 8px;
-}
+  margin: 0;
 
-.points-number {
-  font-size: clamp(64px, 6vw, 86px);
-  line-height: 0.95;
-  letter-spacing: -0.06em;
+  font-size: clamp(66px, 6vw, 92px);
+  line-height: 0.9;
+
   font-weight: 800;
+
+  letter-spacing: -0.065em;
 }
 
-.points-unit {
-  color: rgba(255, 255, 255, 0.62);
+.home-points-unit {
+  color: rgba(255, 255, 255, 0.58);
 
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
+
+  letter-spacing: -0.02em;
 }
 
-.points-divider {
-  width: 100%;
-  height: 1px;
+.home-points-footer {
+  position: relative;
+  z-index: 2;
 
-  margin: 25px 0 18px;
-
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.points-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  margin-top: 30px;
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
 
   color: rgba(255, 255, 255, 0.62);
 
   font-size: 15px;
 }
 
-/* --------------------------------
-   QUICK ACCESS
--------------------------------- */
+.home-points-footer::after {
+  content: "→";
 
-.quick-section {
-  width: 100%;
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 21px;
 }
 
-.section-kicker {
-  margin-bottom: 10px;
+/* =========================================================
+   QUICK ACCESS
+========================================================= */
+
+.home-quick {
+  margin-bottom: 90px;
+}
+
+.home-section-label {
+  margin: 0 0 10px;
 
   color: var(--purple);
 
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
+
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-.section-title {
+.home-section-title {
   margin: 0 0 28px;
 
-  font-size: clamp(30px, 3vw, 42px);
+  font-size: clamp(32px, 4vw, 46px);
   line-height: 1;
   letter-spacing: -0.045em;
   font-weight: 800;
 }
 
-.quick-grid {
+.home-quick-grid {
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 22px;
+  gap: 20px;
 }
 
-.quick-card {
-  min-height: 112px;
+.home-quick-card {
+  min-height: 128px;
 
-  padding: 24px 28px;
+  padding: 25px 28px;
+
+  border-radius: var(--radius-lg);
+
+  background: rgba(255, 255, 255, 0.92);
+
+  border: 1px solid var(--border);
+
+  box-shadow:
+    0 12px 40px rgba(49, 39, 55, 0.045);
 
   display: flex;
   align-items: center;
   gap: 20px;
 
-  background: #ffffff;
-
-  border: 1px solid var(--border);
-  border-radius: 24px;
-
-  box-shadow: 0 12px 35px rgba(50, 35, 60, 0.045);
-
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
-.quick-card:hover {
+.home-quick-card:hover {
   transform: translateY(-2px);
 
   box-shadow:
-    0 18px 40px rgba(50, 35, 60, 0.08);
+    0 18px 45px rgba(49, 39, 55, 0.08);
 }
 
-.quick-icon {
-  width: 58px;
-  height: 58px;
+.home-quick-icon {
+  width: 60px;
+  height: 60px;
 
-  flex: 0 0 58px;
+  border-radius: 19px;
+
+  flex-shrink: 0;
+
+  background: var(--purple-soft);
+
+  color: var(--purple);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 18px;
-
-  background: var(--purple-soft);
-  color: var(--purple);
-
-  font-size: 24px;
+  font-size: 25px;
 }
 
-.quick-content {
+.home-quick-content {
   min-width: 0;
+  flex: 1;
 }
 
-.quick-title {
+.home-quick-title {
   margin: 0;
 
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 750;
+
+  letter-spacing: -0.025em;
 }
 
-.quick-description {
+.home-quick-description {
   margin: 5px 0 0;
 
   color: var(--muted);
@@ -559,68 +596,146 @@ main {
   font-size: 14px;
 }
 
-.quick-arrow {
-  margin-left: auto;
-
-  color: #aaa4ae;
-
-  font-size: 20px;
+.home-quick-arrow {
+  color: #aaa4af;
+  font-size: 23px;
 }
 
-/* --------------------------------
+/* =========================================================
+   SERVICE CARDS
+========================================================= */
+
+.home-services {
+  margin-top: 10px;
+}
+
+.home-services-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+.home-service-card {
+  position: relative;
+
+  min-height: 230px;
+
+  padding: 30px;
+
+  border-radius: var(--radius-lg);
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  overflow: hidden;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.home-service-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: var(--shadow);
+}
+
+.home-service-icon {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 18px;
+
+  background: var(--purple-soft);
+
+  color: var(--purple);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 35px;
+}
+
+.home-service-title {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 750;
+
+  letter-spacing: -0.03em;
+}
+
+.home-service-description {
+  margin: 8px 0 0;
+
+  color: var(--muted);
+
+  font-size: 15px;
+}
+
+/* =========================================================
    BOTTOM NAV
--------------------------------- */
+========================================================= */
 
 .bottom-nav {
   position: fixed;
 
-  z-index: 50;
-
   left: 50%;
-  bottom: 18px;
+  bottom: 22px;
 
   transform: translateX(-50%);
 
-  width: min(900px, calc(100% - 32px));
+  width: min(820px, calc(100% - 40px));
 
-  padding: 7px;
+  padding: 8px;
+
+  border-radius: 26px;
+
+  background: rgba(255, 255, 255, 0.93);
+
+  border: 1px solid rgba(42, 37, 47, 0.08);
+
+  box-shadow:
+    0 20px 55px rgba(49, 39, 55, 0.13);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 
   display: grid;
   grid-template-columns: repeat(5, 1fr);
 
-  background: rgba(255, 255, 255, 0.92);
-
-  border: 1px solid rgba(50, 35, 55, 0.09);
-
-  border-radius: 25px;
-
-  box-shadow:
-    0 18px 55px rgba(50, 35, 60, 0.13),
-    0 2px 8px rgba(50, 35, 60, 0.05);
-
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  z-index: 100;
 }
 
 .bottom-nav-item {
-  min-height: 68px;
+  min-height: 70px;
+
+  border-radius: 20px;
+
+  background: transparent;
+
+  color: #a19ba6;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   gap: 5px;
 
-  border-radius: 18px;
-
-  color: #aaa4ae;
-
-  font-size: 12px;
-  font-weight: 600;
+  cursor: pointer;
 
   transition:
-    background 0.2s ease,
-    color 0.2s ease;
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.bottom-nav-item:hover {
+  color: var(--purple);
 }
 
 .bottom-nav-item.active {
@@ -629,138 +744,190 @@ main {
 }
 
 .bottom-nav-icon {
-  font-size: 21px;
+  font-size: 23px;
   line-height: 1;
 }
 
-/* --------------------------------
-   RESPONSIVE
--------------------------------- */
+.bottom-nav-label {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   REMOVE OLD / DUPLICATED ELEMENTS
+========================================================= */
+
+.home-user-name,
+.home-profile-name,
+.home-profile-link,
+.home-header-actions,
+.home-hero-actions,
+.home-points-arrow,
+.home-discover-arrow {
+  display: none !important;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 900px) {
-  .home-page {
+  .home {
     padding: 32px 24px 125px;
   }
 
   .home-header {
-    margin-bottom: 72px;
-  }
-
-  .hero {
-    margin-bottom: 48px;
-  }
-
-  .hero h1 {
-    font-size: clamp(48px, 10vw, 72px);
+    margin-bottom: 80px;
   }
 
   .home-feature-grid {
     grid-template-columns: 1fr;
   }
 
-  .points-card,
+  .home-points-card,
   .home-discover-card {
-    min-height: 320px;
+    min-height: 330px;
+  }
+
+  .home-services-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (max-width: 600px) {
-  .home-page {
-    padding: 26px 18px 120px;
+@media (max-width: 640px) {
+  .home {
+    padding: 24px 18px 120px;
   }
 
   .home-header {
-    margin-bottom: 58px;
+    margin-bottom: 65px;
   }
 
-  .brand-title {
-    font-size: 19px;
+  .home-brand-title {
+    font-size: 18px;
   }
 
-  .brand-subtitle {
-    font-size: 13px;
+  .home-brand-subtitle {
+    font-size: 14px;
   }
 
-  .profile-avatar {
-    width: 42px;
-    height: 42px;
+  .home-profile {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
   }
 
-  .hero h1 {
-    font-size: 52px;
+  .home-hero {
+    margin-bottom: 55px;
   }
 
-  .hero p {
-    font-size: 17px;
+  .home-eyebrow {
+    font-size: 11px;
+  }
+
+  .home-title {
+    font-size: clamp(52px, 16vw, 76px);
+  }
+
+  .home-description {
+    font-size: 18px;
+    margin-top: 24px;
   }
 
   .home-feature-grid {
     gap: 16px;
-    margin-bottom: 55px;
+    margin-bottom: 65px;
   }
 
   .home-discover-card,
-  .points-card {
+  .home-points-card {
     min-height: 300px;
     padding: 28px;
-    border-radius: 24px;
+    border-radius: 25px;
   }
 
-  .discover-icon {
+  .home-discover-title {
+    font-size: 42px;
+  }
+
+  .home-discover-description {
+    font-size: 15px;
+    max-width: 260px;
+  }
+
+  .home-discover-icon {
     right: 25px;
-    top: 25px;
+    bottom: 25px;
 
-    width: 58px;
-    height: 58px;
+    width: 62px;
+    height: 62px;
 
-    border-radius: 18px;
+    border-radius: 19px;
   }
 
-  .discover-title {
-    font-size: 40px;
+  .home-points-value {
+    font-size: 68px;
   }
 
-  .points-number {
-    font-size: 64px;
+  .home-points-unit {
+    font-size: 19px;
   }
 
-  .quick-grid {
+  .home-points-footer {
+    font-size: 14px;
+  }
+
+  .home-quick-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
 
-  .quick-card {
-    min-height: 92px;
+  .home-quick-card {
+    min-height: 100px;
     padding: 18px;
-    border-radius: 20px;
   }
 
-  .quick-icon {
-    width: 50px;
-    height: 50px;
-    flex-basis: 50px;
+  .home-quick-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .home-services-grid {
+    grid-template-columns: 1fr;
   }
 
   .bottom-nav {
-    bottom: 12px;
     width: calc(100% - 24px);
-    border-radius: 22px;
+    bottom: 12px;
+
+    border-radius: 23px;
+
+    padding: 6px;
   }
 
   .bottom-nav-item {
     min-height: 62px;
+    border-radius: 18px;
+  }
+
+  .bottom-nav-icon {
+    font-size: 20px;
+  }
+
+  .bottom-nav-label {
+    font-size: 10px;
   }
 }
 
-/* --------------------------------
-   PREVENT BLUE DEFAULT LINK STYLES
--------------------------------- */
+/* =========================================================
+   TOUCH
+========================================================= */
 
-.home-page a,
-.home-page a:link,
-.home-page a:visited,
-.home-page a:hover,
-.home-page a:active {
-  color: inherit;
-  text-decoration: none;
+@media (hover: none) {
+  .home-discover-card:hover,
+  .home-quick-card:hover,
+  .home-service-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
