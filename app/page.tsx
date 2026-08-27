@@ -1,856 +1,1377 @@
-"use client";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-import { useMemo, useState } from "react";
-
-type Tab = "home" | "discover" | "bookings" | "benefits" | "profile";
-
-type Service = {
-  name: string;
-  place: string;
-  price: number;
-  category: string;
-  icon: "fitness" | "trainer" | "yoga" | "spa" | "dance" | "massage";
-};
-
-const services: Service[] = [
-  {
-    name: "Siłownia",
-    place: "STREFA Fitness Centrum",
-    price: 49,
-    category: "Sport",
-    icon: "fitness",
-  },
-  {
-    name: "Trening personalny",
-    place: "STREFA Fitness Centrum",
-    price: 90,
-    category: "Sport",
-    icon: "trainer",
-  },
-  {
-    name: "Joga",
-    place: "STREFA Fitness Centrum",
-    price: 45,
-    category: "Wellness",
-    icon: "yoga",
-  },
-  {
-    name: "SPA & Wellness",
-    place: "STREFA SPA",
-    price: 120,
-    category: "Wellness",
-    icon: "spa",
-  },
-  {
-    name: "Taniec",
-    place: "STREFA Studio",
-    price: 55,
-    category: "Aktywność",
-    icon: "dance",
-  },
-  {
-    name: "Masaż",
-    place: "STREFA SPA",
-    price: 110,
-    category: "Wellness",
-    icon: "massage",
-  },
-];
-
-const categories = ["Wszystko", "Sport", "Wellness", "Aktywność"];
-
-const timeSlots = [
-  "09:00",
-  "10:00",
-  "11:30",
-  "12:30",
-  "13:30",
-  "15:00",
-  "16:30",
-  "18:00",
-  "19:30",
-  "20:00",
-];
-
-function Icon({
-  name,
-  size = 24,
-  className = "",
-}: {
-  name: string;
-  size?: number;
-  className?: string;
-}) {
-  const common = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    className,
-  };
-
-  switch (name) {
-    case "home":
-      return (
-        <svg {...common}>
-          <path d="M3 10.5 12 3l9 7.5" />
-          <path d="M5.5 9.5V21h13V9.5" />
-          <path d="M9.5 21v-6h5v6" />
-        </svg>
-      );
-
-    case "search":
-      return (
-        <svg {...common}>
-          <circle cx="10.8" cy="10.8" r="6.5" />
-          <path d="m16 16 4.5 4.5" />
-        </svg>
-      );
-
-    case "calendar":
-      return (
-        <svg {...common}>
-          <rect x="4" y="5" width="16" height="16" rx="2" />
-          <path d="M8 3v4M16 3v4M4 10h16" />
-          <path d="M8 14h3M8 17h5" />
-        </svg>
-      );
-
-    case "star":
-      return (
-        <svg {...common}>
-          <path d="m12 3 2.3 5 5.4.7-4 3.8 1 5.4-4.7-2.6-4.7 2.6 1-5.4-4-3.8 5.4-.7L12 3Z" />
-        </svg>
-      );
-
-    case "user":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="8" r="3.5" />
-          <path d="M5 20c.8-3.4 3.1-5 7-5s6.2 1.6 7 5" />
-        </svg>
-      );
-
-    case "fitness":
-      return (
-        <svg {...common}>
-          <path d="M6 8v8M18 8v8M3.5 10v4M20.5 10v4M6 12h12" />
-          <path d="M8 6v12M16 6v12" />
-        </svg>
-      );
-
-    case "trainer":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="6.5" r="3" />
-          <path d="M6.5 21c.6-4.3 2.4-6.5 5.5-6.5s4.9 2.2 5.5 6.5" />
-          <path d="M7.5 12.5 4 16M16.5 12.5 20 16" />
-        </svg>
-      );
-
-    case "yoga":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="4.5" r="2.2" />
-          <path d="M12 7v6M8 10l4 3 4-3M8 20l4-7 4 7" />
-        </svg>
-      );
-
-    case "spa":
-      return (
-        <svg {...common}>
-          <path d="M5 20c0-7 4-12 7-16 3 4 7 9 7 16" />
-          <path d="M7 17c2-1 3.5-1 5 0 1.5-1 3-1 5 0" />
-          <path d="M12 10v8" />
-        </svg>
-      );
-
-    case "dance":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="4.5" r="2.2" />
-          <path d="m12 7 2 5 4 2M12 8l-4 4-3 1M14 12l-1 5 3 4M10 12l-3 5-3 2" />
-        </svg>
-      );
-
-    case "massage":
-      return (
-        <svg {...common}>
-          <path d="M5 18c3-5 5-9 7-13 2 4 4 8 7 13" />
-          <path d="M7 17c1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 5 0" />
-          <circle cx="12" cy="5" r="1" />
-        </svg>
-      );
-
-    case "arrow":
-      return (
-        <svg {...common}>
-          <path d="M5 12h13" />
-          <path d="m13 7 5 5-5 5" />
-        </svg>
-      );
-
-    case "spark":
-      return (
-        <svg {...common}>
-          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5" />
-        </svg>
-      );
-
-    case "check":
-      return (
-        <svg {...common}>
-          <path d="m5 12 4 4L19 6" />
-        </svg>
-      );
-
-    default:
-      return null;
-  }
+:root {
+  --bg: #faf9fc;
+  --text: #27242d;
+  --muted: #898590;
+  --purple: #8f45ad;
+  --purple-dark: #71308e;
+  --purple-light: #f3e8f7;
+  --border: #e9e5eb;
+  --white: #ffffff;
 }
 
-function ServiceIcon({ icon }: { icon: Service["icon"] }) {
-  return (
-    <div className="service-icon">
-      <Icon name={icon} size={27} />
-    </div>
-  );
+* {
+  box-sizing: border-box;
 }
 
-function formatDate(value: string) {
-  const date = new Date(`${value}T12:00:00`);
-
-  return {
-    weekday: new Intl.DateTimeFormat("pl-PL", {
-      weekday: "short",
-    })
-      .format(date)
-      .replace(".", ""),
-    day: date.getDate(),
-    month: new Intl.DateTimeFormat("pl-PL", {
-      month: "short",
-    })
-      .format(date)
-      .replace(".", ""),
-    full: new Intl.DateTimeFormat("pl-PL", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(date),
-  };
+html {
+  min-height: 100%;
 }
 
-export default function HomePage() {
-  const [tab, setTab] = useState<Tab>("home");
-  const [category, setCategory] = useState("Wszystko");
-  const [search, setSearch] = useState("");
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(
+      circle at 82% 24%,
+      rgba(179, 113, 198, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 12% 55%,
+      rgba(179, 113, 198, 0.05),
+      transparent 24%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
 
-  const [selected, setSelected] = useState<Service | null>(null);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+button,
+input {
+  font: inherit;
+}
 
-  const availableDates = useMemo(() => {
-    const dates: string[] = [];
-    const today = new Date();
+button {
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+}
 
-    for (let i = 1; dates.length < 12; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
+button:disabled {
+  cursor: default;
+}
 
-      if (date.getDay() !== 0) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
+/* =========================================================
+   HOME — ZOSTAWIAMY TEN WYGLĄD
+   ========================================================= */
 
-        dates.push(`${year}-${month}-${day}`);
-      }
-    }
+.app {
+  min-height: 100vh;
+  padding: 46px 48px 150px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
 
-    return dates;
-  }, []);
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 68px;
+}
 
-  const filteredServices = useMemo(() => {
-    return services.filter((service) => {
-      const matchesCategory =
-        category === "Wszystko" || service.category === category;
+.logo {
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
 
-      const query = search.toLowerCase().trim();
+.tagline {
+  margin-top: 14px;
+  color: #77727e;
+  font-size: 17px;
+  line-height: 1.4;
+}
 
-      const matchesSearch =
-        !query ||
-        service.name.toLowerCase().includes(query) ||
-        service.place.toLowerCase().includes(query);
+.tagline span {
+  color: var(--purple);
+  font-weight: 600;
+}
 
-      return matchesCategory && matchesSearch;
-    });
-  }, [category, search]);
+.avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--purple);
+  font-size: 21px;
+  font-weight: 700;
+  box-shadow:
+    0 10px 35px rgba(43, 31, 50, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s ease;
+}
 
-  function openDiscover() {
-    setTab("discover");
-  }
+.avatar:hover {
+  transform: translateY(-2px);
+}
 
-  function openBooking(service: Service) {
-    setSelected(service);
-    setSelectedDate("");
-    setSelectedTime("");
-  }
+.hero-cards {
+  display: grid;
+  grid-template-columns: 1.08fr 1fr;
+  gap: 26px;
+}
 
-  function closeBooking() {
-    setSelected(null);
-    setSelectedDate("");
-    setSelectedTime("");
-  }
+.feature-card {
+  position: relative;
+  min-height: 365px;
+  border-radius: 30px;
+  text-align: left;
+  padding: 46px 42px;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
 
-  function reserve() {
-    if (!selectedDate || !selectedTime) {
-      alert("Wybierz dzień i godzinę.");
-      return;
-    }
+.feature-card:hover {
+  transform: translateY(-3px);
+}
 
-    if (!selected) return;
+.discover-card {
+  background:
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(184, 113, 207, 0.12),
+      transparent 35%
+    ),
+    var(--white);
+  box-shadow:
+    0 18px 50px rgba(43, 31, 50, 0.055),
+    inset 0 0 0 1px rgba(232, 227, 235, 0.85);
+}
 
-    const dateInfo = formatDate(selectedDate);
-
-    alert(
-      `Rezerwacja: ${selected.name}\n${dateInfo.full} — ${selectedTime}`
+.points-card {
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(176, 104, 197, 0.28),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #27232c 0%,
+      #2e2733 48%,
+      #51305c 100%
     );
+  color: white;
+  box-shadow: 0 22px 55px rgba(45, 26, 53, 0.18);
+}
 
-    closeBooking();
+.card-icon {
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 26px;
+  background: var(--purple-light);
+  color: var(--purple);
+  margin-bottom: 46px;
+}
+
+.points-card .card-icon {
+  background: rgba(143, 69, 173, 0.22);
+  color: #d79ae8;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  margin-bottom: 22px;
+}
+
+.points-card .eyebrow {
+  color: #d59ae6;
+}
+
+.card-content h1 {
+  margin: 0;
+  font-size: clamp(36px, 4vw, 48px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  font-weight: 750;
+}
+
+.points {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: -5px;
+}
+
+.points strong {
+  font-size: clamp(70px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+  font-weight: 750;
+}
+
+.points span {
+  font-size: 24px;
+  color: #b8b1bd;
+  font-weight: 600;
+}
+
+.accent-line {
+  width: 54px;
+  height: 3px;
+  background: var(--purple);
+  margin: 30px 0 18px;
+  border-radius: 10px;
+}
+
+.points-card .accent-line {
+  background: #c36dd8;
+}
+
+.card-content p {
+  margin: 0;
+  color: #77717d;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.points-card p {
+  color: #aaa2ad;
+}
+
+.card-content p span {
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.card-arrow {
+  position: absolute;
+  right: 34px;
+  bottom: 34px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(247, 236, 250, 0.95);
+  color: var(--purple);
+  z-index: 3;
+}
+
+.points-card .card-arrow {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.quick-section {
+  margin-top: 72px;
+}
+
+.section-label {
+  margin-bottom: 22px;
+  color: var(--purple);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.quick-card {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px 26px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  text-align: left;
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.quick-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 35px rgba(43, 31, 50, 0.06),
+    inset 0 0 0 1px var(--border);
+}
+
+.quick-icon {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--purple);
+  background: var(--purple-light);
+}
+
+.quick-card h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.quick-card p {
+  margin: 0;
+  color: #96909a;
+  font-size: 15px;
+}
+
+.quick-arrow {
+  margin-left: auto;
+  color: var(--purple);
+}
+
+.bottom-nav {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(820px, calc(100% - 40px));
+  height: 88px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-radius: 28px;
+  box-shadow:
+    0 20px 55px rgba(40, 28, 46, 0.12),
+    inset 0 0 0 1px rgba(229, 224, 232, 0.85);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  color: #9c96a1;
+  border-radius: 22px;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-item span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.nav-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   INNER PAGES
+   ========================================================= */
+
+.page {
+  min-height: calc(100vh - 150px);
+}
+
+.page-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 38px;
+}
+
+.page-heading .section-label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.page-heading h1 {
+  margin: 0;
+  font-size: clamp(42px, 5vw, 62px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  font-weight: 750;
+}
+
+.page-heading p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 17px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--purple);
+  box-shadow: inset 0 0 0 1px var(--border);
+  font-weight: 600;
+}
+
+.search-box {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 19px;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.categories {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  margin-bottom: 28px;
+  scrollbar-width: none;
+}
+
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+.category {
+  flex: 0 0 auto;
+  padding: 11px 17px;
+  border-radius: 999px;
+  background: white;
+  color: #817b86;
+  box-shadow: inset 0 0 0 1px var(--border);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.category.active {
+  background: var(--purple);
+  color: white;
+  box-shadow: none;
+}
+
+.discover-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.discover-item {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  background: white;
+  border-radius: 22px;
+  text-align: left;
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.discover-item:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 15px 35px rgba(43, 31, 50, 0.06),
+    inset 0 0 0 1px var(--border);
+}
+
+.service-icon {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 19px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.discover-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.discover-info h3 {
+  margin: 0 0 5px;
+  font-size: 18px;
+  letter-spacing: -0.025em;
+}
+
+.discover-info p {
+  margin: 0 0 9px;
+  color: #98919d;
+  font-size: 13px;
+}
+
+.discover-price {
+  color: var(--purple);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* =========================================================
+   BOOKINGS
+   ========================================================= */
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 24px;
+}
+
+.booking-service-card,
+.calendar-card,
+.confirmation-card,
+.empty-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 27px;
+  box-shadow:
+    0 18px 50px rgba(43, 31, 50, 0.045),
+    inset 0 0 0 1px var(--border);
+}
+
+.booking-service-card {
+  padding: 30px;
+}
+
+.booking-service-card h2 {
+  margin: 24px 0 7px;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.booking-service-place {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.booking-service-price {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.booking-service-price strong {
+  color: var(--text);
+  font-size: 23px;
+}
+
+.selected-service {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.selected-service-label {
+  display: block;
+  margin-bottom: 11px;
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.change-service {
+  margin-top: 18px;
+  color: var(--purple);
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.calendar-card {
+  padding: 30px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.calendar-title small {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.calendar-title h2 {
+  margin: 0;
+  font-size: 25px;
+  letter-spacing: -0.035em;
+}
+
+.calendar-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.calendar-control {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.calendar-week span {
+  text-align: center;
+  color: #a09aa4;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+}
+
+.calendar-day {
+  min-height: 67px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 16px;
+  background: #faf9fc;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+.calendar-day:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px #dbc5e2;
+}
+
+.calendar-day.empty-day {
+  background: transparent;
+  pointer-events: none;
+}
+
+.calendar-day.disabled {
+  color: #c7c2ca;
+  background: #f7f6f8;
+}
+
+.calendar-day.selected {
+  background: var(--purple);
+  color: white;
+  box-shadow: none;
+}
+
+.calendar-day.today:not(.selected) {
+  box-shadow: inset 0 0 0 1px var(--purple);
+}
+
+.calendar-day strong {
+  font-size: 17px;
+}
+
+.calendar-day small {
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.time-section {
+  margin-top: 30px;
+}
+
+.time-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.time-section-head small {
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.time-section-head h3 {
+  margin: 5px 0 0;
+  font-size: 21px;
+  letter-spacing: -0.03em;
+}
+
+.time-section-head span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9px;
+}
+
+.time-button {
+  min-height: 46px;
+  border-radius: 13px;
+  background: #faf9fc;
+  color: #6f6975;
+  box-shadow: inset 0 0 0 1px var(--border);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.time-button:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 1px #cda9d9;
+}
+
+.time-button.active {
+  background: var(--purple);
+  color: white;
+  box-shadow: none;
+}
+
+.time-button.disabled {
+  color: #c4bfc7;
+  background: #f5f4f6;
+}
+
+.booking-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.primary-button {
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0 24px;
+  border-radius: 17px;
+  background: var(--purple);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 13px 30px rgba(143, 69, 173, 0.2);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  background: var(--purple-dark);
+}
+
+.primary-button:disabled {
+  background: #d9d2dc;
+  box-shadow: none;
+  cursor: default;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* =========================================================
+   BOOKINGS LIST
+   ========================================================= */
+
+.reservation-list {
+  display: grid;
+  gap: 14px;
+}
+
+.reservation-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  background: white;
+  border-radius: 22px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.reservation-date {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.reservation-date small {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.reservation-date strong {
+  font-size: 23px;
+}
+
+.reservation-info {
+  flex: 1;
+}
+
+.reservation-info h3 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.reservation-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.reservation-time {
+  color: var(--purple);
+  font-weight: 800;
+}
+
+.empty-panel {
+  max-width: 680px;
+  padding: 52px 40px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.large-icon {
+  width: 78px;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  border-radius: 25px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.empty-panel h2 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.04em;
+}
+
+.empty-panel p {
+  max-width: 440px;
+  margin: 10px auto 25px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* =========================================================
+   BENEFITS
+   ========================================================= */
+
+.benefits-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.benefit-points {
+  padding: 35px;
+  border-radius: 27px;
+  color: white;
+  background:
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(190, 105, 216, 0.35),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #27232c 0%, #2e2733 48%, #51305c 100%);
+  box-shadow: 0 22px 55px rgba(45, 26, 53, 0.17);
+}
+
+.benefit-points small {
+  color: #d59ae6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.benefit-points strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 67px;
+  line-height: 1;
+  letter-spacing: -0.07em;
+}
+
+.benefit-points p {
+  margin: 17px 0 0;
+  color: #aaa2ad;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 25px;
+  border-radius: 24px;
+  background: white;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.benefit-icon {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.benefit-item h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.benefit-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.benefit-item > strong {
+  margin-left: auto;
+  color: var(--purple);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.profile-layout {
+  max-width: 760px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+  margin-bottom: 15px;
+  border-radius: 25px;
+  background: white;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--purple-light);
+  color: var(--purple);
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.profile-card small {
+  color: var(--muted);
+}
+
+.profile-card h2 {
+  margin: 5px 0 0;
+  font-size: 27px;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 21px 24px;
+  margin-bottom: 9px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.profile-row span {
+  color: var(--muted);
+}
+
+.profile-row strong {
+  color: var(--purple);
+}
+
+/* =========================================================
+   BOOKING CONFIRMATION
+   ========================================================= */
+
+.confirmation-card {
+  margin-top: 20px;
+  padding: 23px;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.confirmation-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.confirmation-card small {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--purple);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.confirmation-card strong {
+  font-size: 14px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .app {
+    padding: 34px 28px 140px;
   }
 
-  return (
-    <main>
-      <div className="app-shell">
-        {/* HEADER */}
-        <header className="top-header">
-          <div>
-            <div className="brand">STREFA</div>
-            <div className="tagline">
-              Twój czas. <span>Twoja strefa.</span>
-            </div>
-          </div>
-
-          <button
-            className="profile-mini"
-            onClick={() => setTab("profile")}
-            aria-label="Profil"
-          >
-            K
-          </button>
-        </header>
-
-        {/* HOME */}
-        {tab === "home" && (
-          <>
-            <section className="hero">
-              <div className="eyebrow">
-                <Icon name="spark" size={15} />
-                <span>WITAJ W STREFIE</span>
-              </div>
-
-              <h1>
-                Znajdź coś
-                <br />
-                dla siebie.
-              </h1>
-
-              <p>
-                Sport, wellness i rozrywka
-                <br />
-                w jednym miejscu.
-              </p>
-
-              <div className="hero-actions">
-                <button
-                  className="quick-action"
-                  onClick={openDiscover}
-                >
-                  <span className="quick-icon">
-                    <Icon name="search" size={21} />
-                  </span>
-
-                  <span className="quick-copy">
-                    <strong>Odkrywaj</strong>
-                    <small>Znajdź usługę</small>
-                  </span>
-
-                  <Icon name="arrow" size={17} />
-                </button>
-
-                <button
-                  className="quick-action"
-                  onClick={() => setTab("bookings")}
-                >
-                  <span className="quick-icon">
-                    <Icon name="calendar" size={21} />
-                  </span>
-
-                  <span className="quick-copy">
-                    <strong>Rezerwacje</strong>
-                    <small>Twoje terminy</small>
-                  </span>
-
-                  <Icon name="arrow" size={17} />
-                </button>
-
-                <button
-                  className="quick-action"
-                  onClick={() => setTab("benefits")}
-                >
-                  <span className="quick-icon">
-                    <Icon name="star" size={21} />
-                  </span>
-
-                  <span className="quick-copy">
-                    <strong>Benefity</strong>
-                    <small>Twoje punkty</small>
-                  </span>
-
-                  <Icon name="arrow" size={17} />
-                </button>
-              </div>
-            </section>
-
-            <section className="section">
-              <div className="section-heading">
-                <div>
-                  <span className="section-label">POLECANE</span>
-                  <h2>Popularne usługi</h2>
-                </div>
-
-                <button
-                  className="text-button"
-                  onClick={openDiscover}
-                >
-                  Zobacz wszystkie
-                  <Icon name="arrow" size={17} />
-                </button>
-              </div>
-
-              <div className="services-grid">
-                {services.slice(0, 4).map((service) => (
-                  <button
-                    className="service-card"
-                    key={service.name}
-                    onClick={() => openBooking(service)}
-                  >
-                    <ServiceIcon icon={service.icon} />
-
-                    <h3>{service.name}</h3>
-
-                    <p>{service.place}</p>
-
-                    <div className="service-bottom">
-                      <span>
-                        od <strong>{service.price} zł</strong>
-                      </span>
-
-                      <span className="card-arrow">
-                        <Icon name="arrow" size={17} />
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          </>
-        )}
-
-        {/* DISCOVER */}
-        {tab === "discover" && (
-          <section className="page-section">
-            <div className="page-heading">
-              <span className="section-label">STREFA</span>
-
-              <h1>Odkrywaj</h1>
-
-              <p>Znajdź coś, co pasuje właśnie do Ciebie.</p>
-            </div>
-
-            <div className="search-box">
-              <Icon name="search" size={21} />
-
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Czego szukasz?"
-              />
-            </div>
-
-            <div className="categories">
-              {categories.map((item) => (
-                <button
-                  key={item}
-                  className={
-                    category === item
-                      ? "category active"
-                      : "category"
-                  }
-                  onClick={() => setCategory(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            <div className="discover-list">
-              {filteredServices.map((service) => (
-                <button
-                  className="discover-card"
-                  key={service.name}
-                  onClick={() => openBooking(service)}
-                >
-                  <ServiceIcon icon={service.icon} />
-
-                  <div className="discover-info">
-                    <h3>{service.name}</h3>
-
-                    <p>{service.place}</p>
-
-                    <span>od {service.price} zł</span>
-                  </div>
-
-                  <Icon name="arrow" size={20} />
-                </button>
-              ))}
-
-              {filteredServices.length === 0 && (
-                <div className="empty">
-                  Nie znaleziono usług.
-                  <br />
-                  Spróbuj innej nazwy lub kategorii.
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* BOOKINGS */}
-        {tab === "bookings" && (
-          <section className="page-section">
-            <div className="page-heading">
-              <span className="section-label">TWOJA STREFA</span>
-
-              <h1>Rezerwacje</h1>
-
-              <p>Zarządzaj swoimi terminami.</p>
-            </div>
-
-            <div className="empty-panel">
-              <div className="large-icon">
-                <Icon name="calendar" size={34} />
-              </div>
-
-              <h2>Nie masz jeszcze rezerwacji</h2>
-
-              <p>
-                Znajdź usługę i zarezerwuj dogodny termin.
-              </p>
-
-              <button
-                className="primary-button"
-                onClick={openDiscover}
-              >
-                Znajdź usługę
-                <Icon name="arrow" size={18} />
-              </button>
-            </div>
-          </section>
-        )}
-
-        {/* BENEFITS */}
-        {tab === "benefits" && (
-          <section className="page-section">
-            <div className="page-heading">
-              <span className="section-label">STREFA PLUS</span>
-
-              <h1>Benefity</h1>
-
-              <p>Wykorzystaj swoje punkty.</p>
-            </div>
-
-            <div className="points-card">
-              <div className="points-icon">
-                <Icon name="star" size={30} />
-              </div>
-
-              <div>
-                <small>Twoje punkty</small>
-                <strong>320 pkt</strong>
-              </div>
-            </div>
-
-            <div className="benefit-card">
-              <div className="benefit-icon">
-                <Icon name="fitness" size={25} />
-              </div>
-
-              <div>
-                <h3>Benefit sportowy</h3>
-
-                <p>
-                  Wykorzystaj swoje punkty na aktywność.
-                </p>
-              </div>
-
-              <strong>320 pkt</strong>
-            </div>
-          </section>
-        )}
-
-        {/* PROFILE */}
-        {tab === "profile" && (
-          <section className="page-section">
-            <div className="page-heading">
-              <span className="section-label">TWOJA STREFA</span>
-
-              <h1>Profil</h1>
-            </div>
-
-            <div className="profile-card">
-              <div className="profile-avatar">K</div>
-
-              <div>
-                <small>Twój profil</small>
-                <h2>Kryszna</h2>
-              </div>
-            </div>
-
-            <div className="profile-row">
-              <span>Twoje punkty</span>
-              <strong>320 pkt</strong>
-            </div>
-
-            <div className="profile-row">
-              <span>Rezerwacje</span>
-              <strong>0</strong>
-            </div>
-          </section>
-        )}
-      </div>
-
-      {/* BOOKING MODAL */}
-      {selected && (
-        <div
-          className="modal-backdrop"
-          onClick={closeBooking}
-        >
-          <div
-            className="modal booking-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="modal-close"
-              onClick={closeBooking}
-              aria-label="Zamknij"
-            >
-              ×
-            </button>
-
-            <ServiceIcon icon={selected.icon} />
-
-            <span className="section-label">
-              {selected.category}
-            </span>
-
-            <h2>{selected.name}</h2>
-
-            <p className="modal-place">{selected.place}</p>
-
-            <div className="modal-price">
-              od <strong>{selected.price} zł</strong>
-            </div>
-
-            {/* DZIEŃ */}
-            <div className="booking-section">
-              <div className="booking-section-head">
-                <div>
-                  <span className="booking-kicker">TERMIN</span>
-                  <h3>Wybierz dzień</h3>
-                </div>
-
-                {selectedDate && (
-                  <span className="booking-selected-label">
-                    {formatDate(selectedDate).full}
-                  </span>
-                )}
-              </div>
-
-              <div className="date-boxes">
-                {availableDates.map((date) => {
-                  const info = formatDate(date);
-                  const active = selectedDate === date;
-
-                  return (
-                    <button
-                      type="button"
-                      key={date}
-                      className={
-                        active ? "date-box active" : "date-box"
-                      }
-                      onClick={() => {
-                        setSelectedDate(date);
-                        setSelectedTime("");
-                      }}
-                    >
-                      <span className="date-weekday">
-                        {info.weekday}
-                      </span>
-
-                      <strong>{info.day}</strong>
-
-                      <span className="date-month">
-                        {info.month}
-                      </span>
-
-                      {active && (
-                        <span className="date-check">
-                          <Icon name="check" size={12} />
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* GODZINA */}
-            <div className="booking-section">
-              <div className="booking-section-head">
-                <div>
-                  <span className="booking-kicker">
-                    DOSTĘPNE GODZINY
-                  </span>
-
-                  <h3>Wybierz godzinę</h3>
-                </div>
-
-                {!selectedDate && (
-                  <span className="booking-hint">
-                    Najpierw wybierz dzień
-                  </span>
-                )}
-              </div>
-
-              <div className="time-boxes">
-                {timeSlots.map((time) => {
-                  const active = selectedTime === time;
-                  const disabled = !selectedDate;
-
-                  return (
-                    <button
-                      type="button"
-                      key={time}
-                      disabled={disabled}
-                      className={[
-                        "time-box",
-                        active ? "active" : "",
-                        disabled ? "disabled" : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() => setSelectedTime(time)}
-                    >
-                      {time}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* PODSUMOWANIE */}
-            {selectedDate && selectedTime && (
-              <div className="booking-summary">
-                <div className="summary-icon">
-                  <Icon name="calendar" size={19} />
-                </div>
-
-                <div>
-                  <span>WYBRANY TERMIN</span>
-
-                  <strong>
-                    {formatDate(selectedDate).full}
-                    {" · "}
-                    {selectedTime}
-                  </strong>
-                </div>
-              </div>
-            )}
-
-            <button
-              className="primary-button full"
-              onClick={reserve}
-            >
-              Zarezerwuj termin
-              <Icon name="arrow" size={18} />
-            </button>
-
-            <button
-              className="secondary-button"
-              onClick={closeBooking}
-            >
-              Anuluj
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* BOTTOM NAV */}
-      <nav className="bottom">
-        <button
-          className={tab === "home" ? "active" : ""}
-          onClick={() => setTab("home")}
-        >
-          <span className="nav-icon">
-            <Icon name="home" size={22} />
-          </span>
-          <span>Start</span>
-        </button>
-
-        <button
-          className={tab === "discover" ? "active" : ""}
-          onClick={() => setTab("discover")}
-        >
-          <span className="nav-icon">
-            <Icon name="search" size={22} />
-          </span>
-          <span>Odkrywaj</span>
-        </button>
-
-        <button
-          className={tab === "bookings" ? "active" : ""}
-          onClick={() => setTab("bookings")}
-        >
-          <span className="nav-icon">
-            <Icon name="calendar" size={22} />
-          </span>
-          <span>Rezerwacje</span>
-        </button>
-
-        <button
-          className={tab === "benefits" ? "active" : ""}
-          onClick={() => setTab("benefits")}
-        >
-          <span className="nav-icon">
-            <Icon name="star" size={22} />
-          </span>
-          <span>Benefity</span>
-        </button>
-
-        <button
-          className={tab === "profile" ? "active" : ""}
-          onClick={() => setTab("profile")}
-        >
-          <span className="nav-icon">
-            <Icon name="user" size={22} />
-          </span>
-          <span>Profil</span>
-        </button>
-      </nav>
-    </main>
-  );
+  .header {
+    margin-bottom: 50px;
+  }
+
+  .hero-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: 330px;
+  }
+
+  .booking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-footer {
+    grid-column: auto;
+  }
+
+  .benefits-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .discover-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 620px) {
+  .app {
+    padding: 26px 18px 125px;
+  }
+
+  .header {
+    margin-bottom: 42px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .tagline {
+    font-size: 14px;
+    margin-top: 9px;
+  }
+
+  .avatar {
+    width: 46px;
+    height: 46px;
+    font-size: 17px;
+  }
+
+  .hero-cards {
+    gap: 16px;
+  }
+
+  .feature-card {
+    min-height: 310px;
+    padding: 28px 26px;
+    border-radius: 25px;
+  }
+
+  .card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 21px;
+    margin-bottom: 30px;
+  }
+
+  .card-content h1 {
+    font-size: 35px;
+  }
+
+  .points strong {
+    font-size: 66px;
+  }
+
+  .points span {
+    font-size: 19px;
+  }
+
+  .card-content p {
+    font-size: 15px;
+  }
+
+  .card-arrow {
+    width: 50px;
+    height: 50px;
+    right: 23px;
+    bottom: 23px;
+  }
+
+  .quick-section {
+    margin-top: 46px;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .quick-card {
+    min-height: 92px;
+    padding: 16px 18px;
+    border-radius: 21px;
+  }
+
+  .quick-icon {
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
+    border-radius: 17px;
+  }
+
+  .quick-card h2 {
+    font-size: 17px;
+  }
+
+  .quick-card p {
+    font-size: 13px;
+  }
+
+  .bottom-nav {
+    bottom: 12px;
+    width: calc(100% - 24px);
+    height: 74px;
+    border-radius: 23px;
+  }
+
+  .nav-item {
+    border-radius: 18px;
+  }
+
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-item span {
+    font-size: 10px;
+  }
+
+  .page {
+    min-height: auto;
+  }
+
+  .page-top {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 27px;
+  }
+
+  .page-heading h1 {
+    font-size: 42px;
+  }
+
+  .page-heading p {
+    font-size: 15px;
+  }
+
+  .back-button {
+    padding: 11px 14px;
+  }
+
+  .discover-item {
+    padding: 17px;
+  }
+
+  .booking-service-card,
+  .calendar-card {
+    padding: 22px;
+    border-radius: 23px;
+  }
+
+  .calendar-grid,
+  .calendar-week {
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 55px;
+    border-radius: 13px;
+  }
+
+  .calendar-day strong {
+    font-size: 15px;
+  }
+
+  .time-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .time-button {
+    min-height: 44px;
+  }
+
+  .reservation-card {
+    padding: 17px;
+  }
+
+  .reservation-date {
+    width: 57px;
+    height: 57px;
+    flex-basis: 57px;
+  }
+
+  .reservation-date strong {
+    font-size: 19px;
+  }
+
+  .reservation-info h3 {
+    font-size: 16px;
+  }
+
+  .reservation-time {
+    font-size: 13px;
+  }
+
+  .benefit-points {
+    padding: 27px;
+  }
+
+  .benefit-points strong {
+    font-size: 58px;
+  }
+
+  .benefit-item {
+    padding: 19px;
+  }
+
+  .benefit-item > strong {
+    font-size: 12px;
+  }
+
+  .empty-panel {
+    padding: 40px 24px;
+  }
 }
