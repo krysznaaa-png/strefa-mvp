@@ -9,13 +9,7 @@
   --purple-light: #f3e8f7;
   --border: #e9e5eb;
   --white: #ffffff;
-
-  --bottom-nav-height: 88px;
 }
-
-/* =========================================================
-   BASE
-   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -66,19 +60,15 @@ button:disabled {
 }
 
 /* =========================================================
-   APP
+   HOME
    ========================================================= */
 
 .app {
   min-height: 100vh;
-  padding: 46px 48px calc(var(--bottom-nav-height) + 70px);
+  padding: 46px 48px 150px;
   max-width: 1500px;
   margin: 0 auto;
 }
-
-/* =========================================================
-   HOME
-   ========================================================= */
 
 .header {
   display: flex;
@@ -287,155 +277,11 @@ button:disabled {
 }
 
 /* =========================================================
-   QUICK ACCESS
-   ========================================================= */
-
-.quick-section {
-  margin-top: 72px;
-}
-
-.section-label {
-  margin-bottom: 22px;
-  color: var(--purple);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-}
-
-.quick-card {
-  min-height: 116px;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 22px 26px;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 24px;
-  text-align: left;
-  box-shadow: inset 0 0 0 1px var(--border);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.quick-card:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 14px 35px rgba(43, 31, 50, 0.06),
-    inset 0 0 0 1px var(--border);
-}
-
-.quick-icon {
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--purple);
-  background: var(--purple-light);
-}
-
-.quick-card h2 {
-  margin: 0 0 5px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-}
-
-.quick-card p {
-  margin: 0;
-  color: #96909a;
-  font-size: 15px;
-}
-
-.quick-arrow {
-  margin-left: auto;
-  color: var(--purple);
-  flex: 0 0 auto;
-}
-
-/* =========================================================
-   BOTTOM NAVIGATION
-   NIE PŁYWAJĄCE — PEŁNA SZEROKOŚĆ
-   ========================================================= */
-
-.bottom-nav {
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: var(--bottom-nav-height);
-
-  padding:
-    8px
-    max(8px, env(safe-area-inset-right))
-    calc(8px + env(safe-area-inset-bottom))
-    max(8px, env(safe-area-inset-left));
-
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-
-  background: #ffffff;
-  border-radius: 0;
-  border-top: 1px solid var(--border);
-
-  box-shadow:
-    0 -8px 30px rgba(40, 28, 46, 0.07);
-
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.nav-item {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-
-  background: transparent;
-  color: #9c96a1;
-  border-radius: 14px;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.nav-item span {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.nav-item.active {
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.nav-active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* =========================================================
    INNER PAGES
    ========================================================= */
 
 .page {
-  min-height: calc(100vh - var(--bottom-nav-height));
+  min-height: calc(100vh - 150px);
 }
 
 .page-top {
@@ -445,11 +291,6 @@ button:disabled {
   gap: 30px;
   margin-bottom: 38px;
 }
-
-/*
-  Celowo NIE MA tutaj przycisku Start.
-  Powrót odbywa się wyłącznie przez dolną nawigację.
-*/
 
 .page-heading .section-label {
   display: block;
@@ -471,9 +312,12 @@ button:disabled {
   line-height: 1.5;
 }
 
-/* =========================================================
-   SEARCH
-   ========================================================= */
+/* Celowo zachowane dla innych elementów,
+   ale przyciski Start nie są już używane w sekcjach. */
+
+.back-button {
+  display: none;
+}
 
 .search-box {
   height: 62px;
@@ -526,10 +370,6 @@ button:disabled {
   color: white;
   box-shadow: none;
 }
-
-/* =========================================================
-   DISCOVER
-   ========================================================= */
 
 .discover-list {
   display: grid;
@@ -883,7 +723,7 @@ button:disabled {
 }
 
 /* =========================================================
-   RESERVATION LIST
+   BOOKINGS LIST
    ========================================================= */
 
 .reservation-list {
@@ -996,12 +836,7 @@ button:disabled {
       rgba(190, 105, 216, 0.35),
       transparent 32%
     ),
-    linear-gradient(
-      135deg,
-      #27232c 0%,
-      #2e2733 48%,
-      #51305c 100%
-    );
+    linear-gradient(135deg, #27232c 0%, #2e2733 48%, #51305c 100%);
   box-shadow: 0 22px 55px rgba(45, 26, 53, 0.17);
 }
 
@@ -1125,8 +960,76 @@ button:disabled {
   color: var(--purple);
 }
 
+.profile-settings {
+  margin-top: 25px;
+}
+
+.profile-settings-title {
+  margin: 0 0 12px;
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.profile-option {
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 20px;
+  margin-bottom: 9px;
+  border-radius: 18px;
+  background: white;
+  text-align: left;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.profile-option-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.profile-option-content {
+  flex: 1;
+}
+
+.profile-option-content strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.profile-option-content span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.profile-option-arrow {
+  color: #aaa4ae;
+}
+
+.profile-option.logout {
+  color: #8b5b94;
+}
+
+.profile-option.logout .profile-option-icon {
+  background: #f7edf8;
+  color: #8b5b94;
+}
+
 /* =========================================================
-   CONFIRMATION
+   BOOKING CONFIRMATION
    ========================================================= */
 
 .confirmation-card {
@@ -1163,12 +1066,64 @@ button:disabled {
 }
 
 /* =========================================================
+   BOTTOM NAV
+   ========================================================= */
+
+.bottom-nav {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  width: 100%;
+  height: 82px;
+  padding: 7px max(18px, calc((100vw - 820px) / 2));
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  background: #ffffff;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 28px rgba(40, 28, 46, 0.07);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  color: #9c96a1;
+  border-radius: 14px;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-item span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.nav-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
    TABLET
    ========================================================= */
 
 @media (max-width: 900px) {
   .app {
-    padding: 34px 28px calc(var(--bottom-nav-height) + 55px);
+    padding: 34px 28px 120px;
   }
 
   .header {
@@ -1196,7 +1151,7 @@ button:disabled {
   }
 
   .discover-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -1205,217 +1160,68 @@ button:disabled {
    ========================================================= */
 
 @media (max-width: 620px) {
-  :root {
-    --bottom-nav-height: 76px;
-  }
-
   .app {
-    width: 100%;
-    padding:
-      24px
-      16px
-      calc(var(--bottom-nav-height) + 28px);
+    padding: 26px 18px 112px;
   }
-
-  /* -------------------------
-     HEADER
-     ------------------------- */
 
   .header {
-    margin-bottom: 30px;
+    margin-bottom: 42px;
   }
 
   .logo {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .tagline {
-    font-size: 13px;
-    margin-top: 8px;
+    font-size: 14px;
+    margin-top: 9px;
   }
 
   .avatar {
-    width: 44px;
-    height: 44px;
-    font-size: 16px;
-  }
-
-  /* -------------------------
-     HOME HERO
-     ------------------------- */
-
-  .hero-cards {
-    gap: 12px;
-  }
-
-  .feature-card {
-    min-height: 245px;
-    padding: 23px 21px;
-    border-radius: 22px;
-  }
-
-  .card-icon {
-    width: 51px;
-    height: 51px;
-    border-radius: 17px;
-    margin-bottom: 20px;
-  }
-
-  .card-icon svg {
-    width: 26px;
-    height: 26px;
-  }
-
-  .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.19em;
-    margin-bottom: 13px;
-  }
-
-  .card-content h1 {
-    font-size: 29px;
-    line-height: 0.98;
-  }
-
-  .points {
-    gap: 7px;
-  }
-
-  .points strong {
-    font-size: 54px;
-  }
-
-  .points span {
+    width: 46px;
+    height: 46px;
     font-size: 17px;
   }
 
-  .accent-line {
-    width: 42px;
-    height: 2px;
-    margin: 18px 0 12px;
+  .hero-cards {
+    gap: 16px;
+  }
+
+  .feature-card {
+    min-height: 310px;
+    padding: 28px 26px;
+    border-radius: 25px;
+  }
+
+  .card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 21px;
+    margin-bottom: 30px;
+  }
+
+  .card-content h1 {
+    font-size: 35px;
+  }
+
+  .points strong {
+    font-size: 66px;
+  }
+
+  .points span {
+    font-size: 19px;
   }
 
   .card-content p {
-    font-size: 13px;
-    line-height: 1.35;
+    font-size: 15px;
   }
 
   .card-arrow {
-    width: 42px;
-    height: 42px;
-    right: 18px;
-    bottom: 18px;
+    width: 50px;
+    height: 50px;
+    right: 23px;
+    bottom: 23px;
   }
-
-  .card-arrow svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* -------------------------
-     QUICK ACCESS
-     KOMPAKTOWE 2 KOLUMNY
-     ------------------------- */
-
-  .quick-section {
-    margin-top: 30px;
-  }
-
-  .section-label {
-    margin-bottom: 13px;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-  }
-
-  .quick-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .quick-card {
-    min-height: 108px;
-    height: 108px;
-    padding: 14px;
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    column-gap: 10px;
-    row-gap: 2px;
-    border-radius: 18px;
-  }
-
-  .quick-icon {
-    width: 42px;
-    height: 42px;
-    flex: none;
-    grid-row: 1 / 3;
-    border-radius: 13px;
-  }
-
-  .quick-icon svg {
-    width: 21px;
-    height: 21px;
-  }
-
-  .quick-card h2 {
-    align-self: end;
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.1;
-  }
-
-  .quick-card p {
-    align-self: start;
-    margin: 0;
-    font-size: 11px;
-    line-height: 1.2;
-  }
-
-  .quick-arrow {
-    display: none;
-  }
-
-  /* -------------------------
-     BOTTOM NAV
-     ------------------------- */
-
-  .bottom-nav {
-    height: var(--bottom-nav-height);
-    padding:
-      5px
-      max(5px, env(safe-area-inset-right))
-      calc(5px + env(safe-area-inset-bottom))
-      max(5px, env(safe-area-inset-left));
-
-    gap: 2px;
-
-    border-radius: 0;
-    border-top: 1px solid var(--border);
-
-    box-shadow:
-      0 -6px 22px rgba(40, 28, 46, 0.08);
-
-    background: #ffffff;
-  }
-
-  .nav-item {
-    gap: 2px;
-    border-radius: 12px;
-  }
-
-  .nav-item svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .nav-item span {
-    font-size: 9px;
-    line-height: 1;
-  }
-
-  /* -------------------------
-     INNER PAGES
-     ------------------------- */
 
   .page {
     min-height: auto;
@@ -1424,282 +1230,107 @@ button:disabled {
   .page-top {
     align-items: flex-start;
     flex-direction: column;
-    margin-bottom: 22px;
+    margin-bottom: 27px;
   }
 
   .page-heading h1 {
-    font-size: 38px;
+    font-size: 42px;
   }
 
   .page-heading p {
-    font-size: 14px;
-    margin-top: 10px;
-  }
-
-  /* -------------------------
-     DISCOVER
-     ------------------------- */
-
-  .search-box {
-    height: 54px;
-    margin-bottom: 14px;
-    padding: 0 16px;
-    border-radius: 17px;
-  }
-
-  .search-box input {
-    font-size: 14px;
-  }
-
-  .categories {
-    gap: 7px;
-    margin-bottom: 20px;
-  }
-
-  .category {
-    padding: 9px 13px;
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .discover-list {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 
   .discover-item {
-    min-height: 88px;
-    padding: 13px;
-    gap: 13px;
-    border-radius: 18px;
-  }
-
-  .service-icon {
-    width: 50px;
-    height: 50px;
-    flex-basis: 50px;
-    border-radius: 15px;
-  }
-
-  .service-icon svg {
-    width: 23px;
-    height: 23px;
-  }
-
-  .discover-info h3 {
-    font-size: 15px;
-  }
-
-  .discover-info p {
-    font-size: 11px;
-    margin-bottom: 5px;
-  }
-
-  .discover-price {
-    font-size: 11px;
-  }
-
-  /* -------------------------
-     BOOKING
-     ------------------------- */
-
-  .booking-service-card,
-  .calendar-card {
-    padding: 19px;
+    min-height: 96px;
+    padding: 17px;
     border-radius: 20px;
   }
 
-  .booking-service-card h2 {
-    margin-top: 18px;
-    font-size: 24px;
-  }
-
-  .calendar-head {
-    margin-bottom: 19px;
-  }
-
-  .calendar-title h2 {
-    font-size: 21px;
-  }
-
-  .calendar-control {
-    width: 36px;
-    height: 36px;
-    border-radius: 11px;
+  .booking-service-card,
+  .calendar-card {
+    padding: 22px;
+    border-radius: 23px;
   }
 
   .calendar-grid,
   .calendar-week {
-    gap: 3px;
+    gap: 4px;
   }
 
   .calendar-day {
-    min-height: 48px;
-    border-radius: 11px;
+    min-height: 55px;
+    border-radius: 13px;
   }
 
   .calendar-day strong {
-    font-size: 14px;
-  }
-
-  .calendar-day small {
-    font-size: 8px;
-  }
-
-  .calendar-week span {
-    font-size: 9px;
-  }
-
-  .time-section {
-    margin-top: 23px;
-  }
-
-  .time-section-head {
-    display: block;
-  }
-
-  .time-section-head h3 {
-    font-size: 18px;
-  }
-
-  .time-section-head > span {
-    display: block;
-    margin-top: 6px;
-    font-size: 11px;
+    font-size: 15px;
   }
 
   .time-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
   }
 
   .time-button {
-    min-height: 42px;
-    border-radius: 11px;
-    font-size: 12px;
-  }
-
-  .confirmation-card {
-    padding: 16px;
-    margin-top: 16px;
-  }
-
-  .confirmation-icon {
-    width: 42px;
-    height: 42px;
-    flex-basis: 42px;
-  }
-
-  .confirmation-card strong {
-    font-size: 12px;
-  }
-
-  .primary-button {
-    min-height: 50px;
-    border-radius: 15px;
-    font-size: 13px;
-  }
-
-  /* -------------------------
-     RESERVATIONS
-     ------------------------- */
-
-  .reservation-list {
-    gap: 10px;
+    min-height: 44px;
   }
 
   .reservation-card {
-    padding: 14px;
-    gap: 12px;
-    border-radius: 18px;
+    padding: 17px;
   }
 
   .reservation-date {
-    width: 51px;
-    height: 51px;
-    flex-basis: 51px;
-    border-radius: 14px;
+    width: 57px;
+    height: 57px;
+    flex-basis: 57px;
   }
 
   .reservation-date strong {
-    font-size: 17px;
-  }
-
-  .reservation-date small {
-    font-size: 8px;
+    font-size: 19px;
   }
 
   .reservation-info h3 {
-    font-size: 14px;
-  }
-
-  .reservation-info p {
-    font-size: 10px;
+    font-size: 16px;
   }
 
   .reservation-time {
-    font-size: 12px;
-  }
-
-  /* -------------------------
-     BENEFITS
-     ------------------------- */
-
-  .benefits-layout {
-    gap: 10px;
+    font-size: 13px;
   }
 
   .benefit-points {
-    padding: 24px;
-    border-radius: 21px;
+    padding: 27px;
   }
 
   .benefit-points strong {
-    font-size: 52px;
-  }
-
-  .benefit-points p {
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 58px;
   }
 
   .benefit-item {
-    padding: 17px;
-    border-radius: 19px;
-    gap: 12px;
-  }
-
-  .benefit-icon {
-    width: 47px;
-    height: 47px;
-    flex-basis: 47px;
-    border-radius: 14px;
-  }
-
-  .benefit-item h3 {
-    font-size: 14px;
-  }
-
-  .benefit-item p {
-    font-size: 11px;
+    padding: 19px;
   }
 
   .benefit-item > strong {
-    font-size: 10px;
+    font-size: 12px;
   }
 
-  /* -------------------------
-     PROFILE
-     ------------------------- */
+  .empty-panel {
+    padding: 40px 24px;
+  }
 
   .profile-card {
-    padding: 20px;
-    border-radius: 20px;
+    padding: 22px;
   }
 
   .profile-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 22px;
+    width: 62px;
+    height: 62px;
+    flex-basis: 62px;
+    font-size: 24px;
   }
 
   .profile-card h2 {
@@ -1707,69 +1338,35 @@ button:disabled {
   }
 
   .profile-row {
-    padding: 17px;
-    border-radius: 16px;
+    padding: 18px;
   }
 
-  .profile-row span,
-  .profile-row strong {
-    font-size: 13px;
+  .profile-option {
+    min-height: 60px;
+    padding: 14px 16px;
   }
 
-  .empty-panel {
-    padding: 35px 20px;
-    border-radius: 21px;
-  }
-}
-
-/* =========================================================
-   BARDZO MAŁE TELEFONY
-   ========================================================= */
-
-@media (max-width: 390px) {
-  .app {
-    padding-left: 13px;
-    padding-right: 13px;
-  }
-
-  .feature-card {
-    min-height: 225px;
-    padding: 20px 18px;
-  }
-
-  .card-content h1 {
-    font-size: 27px;
-  }
-
-  .points strong {
-    font-size: 49px;
-  }
-
-  .quick-card {
-    min-height: 101px;
-    height: 101px;
-    padding: 12px;
-  }
-
-  .quick-icon {
+  .profile-option-icon {
     width: 38px;
     height: 38px;
+    flex-basis: 38px;
   }
 
-  .quick-card h2 {
-    font-size: 13px;
+  .bottom-nav {
+    height: 72px;
+    padding: 5px 8px;
   }
 
-  .quick-card p {
-    font-size: 10px;
+  .nav-item {
+    border-radius: 14px;
   }
 
   .nav-item svg {
-    width: 19px;
-    height: 19px;
+    width: 22px;
+    height: 22px;
   }
 
   .nav-item span {
-    font-size: 8px;
+    font-size: 10px;
   }
 }
