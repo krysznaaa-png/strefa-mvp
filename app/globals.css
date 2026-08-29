@@ -15,13 +15,15 @@
   box-sizing: border-box;
 }
 
-html {
+html,
+body {
+  width: 100%;
   min-height: 100%;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 body {
-  margin: 0;
-  min-height: 100%;
   background:
     radial-gradient(
       circle at 82% 24%,
@@ -64,14 +66,15 @@ button:disabled {
    ========================================================= */
 
 .app {
+  width: 100%;
   min-height: 100vh;
-  padding: 46px 48px 125px;
+  padding: 46px 48px 150px;
   max-width: 1500px;
   margin: 0 auto;
 }
 
 /* =========================================================
-   HEADER
+   HOME
    ========================================================= */
 
 .header {
@@ -103,6 +106,7 @@ button:disabled {
 .avatar {
   width: 58px;
   height: 58px;
+  flex: 0 0 58px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
   color: var(--purple);
@@ -119,17 +123,20 @@ button:disabled {
 }
 
 /* =========================================================
-   HOME
+   HOME — KAFELKI
    ========================================================= */
 
 .hero-cards {
+  width: 100%;
   display: grid;
-  grid-template-columns: 1.08fr 1fr;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
   gap: 26px;
 }
 
 .feature-card {
   position: relative;
+  width: 100%;
+  min-width: 0;
   min-height: 365px;
   border-radius: 30px;
   text-align: left;
@@ -194,6 +201,7 @@ button:disabled {
 .card-content {
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -289,6 +297,8 @@ button:disabled {
    ========================================================= */
 
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: calc(100vh - 150px);
 }
 
@@ -300,21 +310,25 @@ button:disabled {
   margin-bottom: 38px;
 }
 
-/* FIOLETOWE OZNACZENIA SEKCJI */
+.page-heading {
+  min-width: 0;
+}
 
 .page-heading .section-label {
   display: block;
   margin-bottom: 14px;
+}
+
+.section-label {
   color: var(--purple);
   font-size: 13px;
-  line-height: 1.2;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.25em;
-  text-transform: uppercase;
 }
 
 .page-heading h1 {
   margin: 0;
+  color: var(--text);
   font-size: clamp(42px, 5vw, 62px);
   line-height: 0.95;
   letter-spacing: -0.055em;
@@ -329,10 +343,11 @@ button:disabled {
 }
 
 /* =========================================================
-   SEARCH
+   DISCOVER
    ========================================================= */
 
 .search-box {
+  width: 100%;
   height: 62px;
   display: flex;
   align-items: center;
@@ -347,6 +362,7 @@ button:disabled {
 
 .search-box input {
   width: 100%;
+  min-width: 0;
   border: 0;
   outline: none;
   background: transparent;
@@ -384,17 +400,15 @@ button:disabled {
   box-shadow: none;
 }
 
-/* =========================================================
-   DISCOVER
-   ========================================================= */
-
 .discover-list {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
 .discover-item {
+  min-width: 0;
   min-height: 116px;
   display: flex;
   align-items: center;
@@ -463,8 +477,9 @@ button:disabled {
    ========================================================= */
 
 .booking-layout {
+  width: 100%;
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 24px;
 }
 
@@ -480,6 +495,7 @@ button:disabled {
 }
 
 .booking-service-card {
+  min-width: 0;
   padding: 30px;
 }
 
@@ -531,6 +547,7 @@ button:disabled {
 }
 
 .calendar-card {
+  min-width: 0;
   padding: 30px;
 }
 
@@ -572,9 +589,13 @@ button:disabled {
   color: var(--purple);
 }
 
-.calendar-week {
+.calendar-week,
+.calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-week {
   gap: 7px;
   margin-bottom: 8px;
 }
@@ -588,12 +609,11 @@ button:disabled {
 }
 
 .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
   gap: 7px;
 }
 
 .calendar-day {
+  min-width: 0;
   min-height: 67px;
   display: flex;
   flex-direction: column;
@@ -668,12 +688,11 @@ button:disabled {
 .time-section-head span {
   color: var(--muted);
   font-size: 12px;
-  text-align: right;
 }
 
 .time-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 9px;
 }
 
@@ -741,7 +760,7 @@ button:disabled {
 }
 
 /* =========================================================
-   RESERVATION LIST
+   RESERVATIONS
    ========================================================= */
 
 .reservation-list {
@@ -750,6 +769,7 @@ button:disabled {
 }
 
 .reservation-card {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -783,6 +803,7 @@ button:disabled {
 }
 
 .reservation-info {
+  min-width: 0;
   flex: 1;
 }
 
@@ -839,12 +860,14 @@ button:disabled {
    ========================================================= */
 
 .benefits-layout {
+  width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
 }
 
 .benefit-points {
+  min-width: 0;
   padding: 35px;
   border-radius: 27px;
   color: white;
@@ -884,6 +907,7 @@ button:disabled {
 }
 
 .benefit-item {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -928,6 +952,7 @@ button:disabled {
    ========================================================= */
 
 .profile-layout {
+  width: 100%;
   max-width: 760px;
 }
 
@@ -945,10 +970,10 @@ button:disabled {
 .profile-avatar {
   width: 72px;
   height: 72px;
+  flex: 0 0 72px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 72px;
   border-radius: 50%;
   background: var(--purple-light);
   color: var(--purple);
@@ -969,6 +994,7 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 15px;
   padding: 21px 24px;
   margin-bottom: 9px;
   border-radius: 18px;
@@ -982,49 +1008,6 @@ button:disabled {
 
 .profile-row strong {
   color: var(--purple);
-}
-
-.profile-section-title {
-  margin: 32px 0 12px;
-  color: var(--purple);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.profile-action {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 19px 22px;
-  margin-bottom: 9px;
-  border-radius: 18px;
-  background: white;
-  color: var(--text);
-  text-align: left;
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.profile-action span {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.profile-action strong {
-  color: var(--purple);
-  font-size: 14px;
-}
-
-.profile-logout {
-  width: 100%;
-  padding: 17px;
-  margin-top: 22px;
-  border-radius: 17px;
-  background: var(--purple-light);
-  color: var(--purple);
-  font-weight: 700;
 }
 
 /* =========================================================
@@ -1065,44 +1048,40 @@ button:disabled {
 }
 
 /* =========================================================
-   BOTTOM NAV
+   BOTTOM NAV — DESKTOP
    ========================================================= */
 
 .bottom-nav {
   position: fixed;
   z-index: 50;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transform: none;
-
-  width: 100%;
-  height: 82px;
-  padding: 7px max(12px, calc((100vw - 820px) / 2));
-
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(820px, calc(100% - 40px));
+  height: 88px;
+  padding: 8px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
-
-  background: #ffffff;
-  border-radius: 0;
-
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-radius: 28px;
   box-shadow:
-    0 -8px 30px rgba(40, 28, 46, 0.06),
-    inset 0 1px 0 rgba(229, 224, 232, 0.85);
+    0 20px 55px rgba(40, 28, 46, 0.12),
+    inset 0 0 0 1px rgba(229, 224, 232, 0.85);
 }
 
 .nav-item {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
-
   background: transparent;
   color: #9c96a1;
-  border-radius: 17px;
-
+  border-radius: 22px;
   transition:
     background 0.2s ease,
     color 0.2s ease;
@@ -1130,23 +1109,28 @@ button:disabled {
 
 @media (max-width: 900px) {
   .app {
-    padding: 34px 28px 105px;
+    width: 100%;
+    padding: 34px 28px 140px;
   }
 
   .header {
     margin-bottom: 50px;
   }
 
+  /* WAŻNE — KAFELKI ZAWSZE JEDEN POD DRUGIM */
   .hero-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
   }
 
   .feature-card {
+    width: 100%;
+    min-width: 0;
     min-height: 330px;
   }
 
   .booking-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .booking-footer {
@@ -1154,15 +1138,11 @@ button:disabled {
   }
 
   .benefits-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .discover-list {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom-nav {
-    height: 78px;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1171,525 +1151,416 @@ button:disabled {
    ========================================================= */
 
 @media (max-width: 620px) {
-  .app {
-    padding: 22px 16px 96px;
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
+  .app {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 26px 18px 110px;
+    margin: 0;
+  }
+
+  /* HEADER */
+
   .header {
-    margin-bottom: 30px;
+    width: 100%;
+    margin-bottom: 42px;
   }
 
   .logo {
     font-size: 20px;
+    letter-spacing: 0.24em;
   }
 
   .tagline {
-    font-size: 13px;
-    margin-top: 8px;
+    font-size: 14px;
+    margin-top: 9px;
   }
 
   .avatar {
-    width: 45px;
-    height: 45px;
-    font-size: 16px;
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+    font-size: 17px;
   }
 
-  /* -------------------------------------------------------
-     HOME — ZWARTE / BIAŁE KAFLE NIE SĄ JUŻ OGROMNE
-     ------------------------------------------------------- */
+  /* =======================================================
+     NAJWAŻNIEJSZA POPRAWKA:
+     HOME = DWA KAFELKI PIONOWO
+     ======================================================= */
 
   .hero-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
 
   .feature-card {
-    min-height: 285px;
-    padding: 20px 18px;
-    border-radius: 22px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 310px;
+    padding: 28px 26px;
+    border-radius: 25px;
+  }
+
+  .discover-card,
+  .points-card {
+    width: 100%;
+    min-width: 0;
   }
 
   .card-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 17px;
-    margin-bottom: 25px;
+    width: 64px;
+    height: 64px;
+    border-radius: 21px;
+    margin-bottom: 30px;
   }
 
-  .card-icon svg {
-    width: 25px;
-    height: 25px;
-  }
-
-  .eyebrow {
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    margin-bottom: 13px;
+  .card-content {
+    width: 100%;
+    min-width: 0;
   }
 
   .card-content h1 {
-    font-size: 27px;
-    line-height: 1;
-    letter-spacing: -0.05em;
+    font-size: 35px;
+    line-height: 0.98;
   }
 
   .points {
-    gap: 5px;
-    margin-top: 0;
+    max-width: 100%;
   }
 
   .points strong {
-    font-size: 49px;
-    letter-spacing: -0.065em;
+    font-size: 66px;
   }
 
   .points span {
+    font-size: 19px;
+  }
+
+  .card-content p {
     font-size: 15px;
   }
 
   .accent-line {
-    width: 34px;
-    height: 2px;
-    margin: 19px 0 13px;
-  }
-
-  .card-content p {
-    font-size: 12px;
-    line-height: 1.4;
+    margin-top: 28px;
   }
 
   .card-arrow {
-    width: 38px;
-    height: 38px;
-    right: 14px;
-    bottom: 14px;
+    width: 50px;
+    height: 50px;
+    right: 23px;
+    bottom: 23px;
   }
 
-  .card-arrow svg {
-    width: 17px;
-    height: 17px;
-  }
-
-  /* -------------------------------------------------------
+  /* =======================================================
      INNER PAGES
-     ------------------------------------------------------- */
+     ======================================================= */
 
   .page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     min-height: auto;
   }
 
   .page-top {
+    width: 100%;
     align-items: flex-start;
     flex-direction: column;
-    gap: 0;
-    margin-bottom: 23px;
+    margin-bottom: 27px;
   }
 
-  .page-heading .section-label {
-    margin-bottom: 11px;
-    font-size: 10px;
-    letter-spacing: 0.22em;
+  .page-heading {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* FIOLETOWE LABELKI — STREFA / TWOJA STREFA / STREFA PLUS */
+
+  .page-heading .section-label,
+  .section-label {
+    display: block;
+    color: var(--purple);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.20em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    white-space: nowrap;
   }
 
   .page-heading h1 {
-    font-size: 39px;
-    line-height: 0.98;
+    font-size: 42px;
+    line-height: 0.95;
   }
 
   .page-heading p {
-    margin-top: 9px;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
-  /* -------------------------------------------------------
-     DISCOVER
-     ------------------------------------------------------- */
-
-  .search-box {
-    height: 52px;
-    padding: 0 16px;
-    margin-bottom: 14px;
-    border-radius: 16px;
-  }
-
-  .search-box input {
-    font-size: 14px;
-  }
-
-  .categories {
-    gap: 7px;
-    margin-bottom: 19px;
-  }
-
-  .category {
-    padding: 9px 14px;
-    font-size: 12px;
-  }
+  /* =======================================================
+     DISCOVER — JEDNA KOLUMNA
+     ======================================================= */
 
   .discover-list {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
 
   .discover-item {
-    min-height: 88px;
-    padding: 13px;
-    gap: 13px;
-    border-radius: 18px;
+    width: 100%;
+    min-width: 0;
+    padding: 17px;
   }
 
-  .service-icon {
-    width: 48px;
-    height: 48px;
-    flex-basis: 48px;
-    border-radius: 15px;
-  }
-
-  .service-icon svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .discover-info h3 {
-    font-size: 15px;
-  }
-
-  .discover-info p {
-    margin-bottom: 5px;
-    font-size: 11px;
-  }
-
-  .discover-price {
-    font-size: 11px;
-  }
-
-  /* -------------------------------------------------------
+  /* =======================================================
      BOOKINGS
-     ------------------------------------------------------- */
+     ======================================================= */
+
+  .booking-layout {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
 
   .booking-service-card,
   .calendar-card {
-    padding: 19px;
-    border-radius: 20px;
-  }
-
-  .booking-service-card h2 {
-    margin-top: 18px;
-    font-size: 23px;
-  }
-
-  .booking-service-place {
-    font-size: 12px;
-  }
-
-  .booking-service-price {
-    margin-top: 17px;
-    font-size: 12px;
-  }
-
-  .booking-service-price strong {
-    font-size: 20px;
-  }
-
-  .selected-service {
-    margin-top: 22px;
-    padding-top: 18px;
-  }
-
-  .calendar-head {
-    margin-bottom: 18px;
-  }
-
-  .calendar-title small {
-    font-size: 9px;
-  }
-
-  .calendar-title h2 {
-    font-size: 19px;
-  }
-
-  .calendar-control {
-    width: 35px;
-    height: 35px;
-    border-radius: 11px;
+    width: 100%;
+    min-width: 0;
+    padding: 22px;
+    border-radius: 23px;
   }
 
   .calendar-grid,
   .calendar-week {
-    gap: 3px;
+    gap: 4px;
   }
 
   .calendar-day {
-    min-height: 48px;
-    border-radius: 11px;
-    gap: 2px;
+    min-height: 55px;
+    border-radius: 13px;
   }
 
   .calendar-day strong {
-    font-size: 14px;
-  }
-
-  .calendar-day small {
-    font-size: 8px;
-  }
-
-  .time-section {
-    margin-top: 23px;
-  }
-
-  .time-section-head {
-    display: block;
-    margin-bottom: 12px;
-  }
-
-  .time-section-head small {
-    font-size: 9px;
-  }
-
-  .time-section-head h3 {
-    margin-top: 4px;
-    font-size: 18px;
-  }
-
-  .time-section-head span {
-    display: block;
-    margin-top: 5px;
-    text-align: left;
-    font-size: 11px;
+    font-size: 15px;
   }
 
   .time-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .time-button {
-    min-height: 41px;
-    border-radius: 11px;
-    font-size: 12px;
+    min-height: 44px;
   }
 
-  .confirmation-card {
-    padding: 17px;
-    margin-top: 16px;
-    border-radius: 17px;
-  }
-
-  .confirmation-icon {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-  }
-
-  .confirmation-card strong {
-    font-size: 12px;
-  }
-
-  .primary-button {
-    min-height: 49px;
-    padding: 0 18px;
-    border-radius: 15px;
-    font-size: 13px;
-  }
-
-  /* -------------------------------------------------------
-     RESERVATIONS LIST
-     ------------------------------------------------------- */
-
-  .reservation-list {
-    gap: 10px;
-  }
+  /* =======================================================
+     RESERVATIONS
+     ======================================================= */
 
   .reservation-card {
+    width: 100%;
+    min-width: 0;
+    padding: 17px;
     gap: 12px;
-    padding: 14px;
-    border-radius: 18px;
   }
 
   .reservation-date {
-    width: 51px;
-    height: 51px;
-    flex-basis: 51px;
-    border-radius: 15px;
-  }
-
-  .reservation-date small {
-    font-size: 8px;
+    width: 57px;
+    height: 57px;
+    flex-basis: 57px;
   }
 
   .reservation-date strong {
-    font-size: 18px;
+    font-size: 19px;
+  }
+
+  .reservation-info {
+    min-width: 0;
   }
 
   .reservation-info h3 {
-    font-size: 14px;
-  }
-
-  .reservation-info p {
-    font-size: 11px;
+    font-size: 16px;
   }
 
   .reservation-time {
-    font-size: 12px;
+    font-size: 13px;
   }
 
-  /* -------------------------------------------------------
+  /* =======================================================
      BENEFITS
-     ------------------------------------------------------- */
+     ======================================================= */
 
   .benefits-layout {
-    gap: 10px;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
   }
 
   .benefit-points {
-    padding: 23px;
-    border-radius: 21px;
-  }
-
-  .benefit-points small {
-    font-size: 9px;
+    width: 100%;
+    padding: 27px;
   }
 
   .benefit-points strong {
-    margin-top: 9px;
-    font-size: 48px;
-  }
-
-  .benefit-points p {
-    margin-top: 13px;
-    font-size: 12px;
-    line-height: 1.45;
+    font-size: 58px;
   }
 
   .benefit-item {
-    gap: 13px;
-    padding: 17px;
-    border-radius: 18px;
-  }
-
-  .benefit-icon {
-    width: 48px;
-    height: 48px;
-    flex-basis: 48px;
-    border-radius: 15px;
-  }
-
-  .benefit-item h3 {
-    margin-bottom: 4px;
-    font-size: 14px;
-  }
-
-  .benefit-item p {
-    font-size: 11px;
+    width: 100%;
+    min-width: 0;
+    padding: 19px;
   }
 
   .benefit-item > strong {
-    font-size: 10px;
-  }
-
-  /* -------------------------------------------------------
-     PROFILE
-     ------------------------------------------------------- */
-
-  .profile-layout {
-    max-width: none;
-  }
-
-  .profile-card {
-    gap: 14px;
-    padding: 20px;
-    border-radius: 20px;
-  }
-
-  .profile-avatar {
-    width: 58px;
-    height: 58px;
-    flex-basis: 58px;
-    font-size: 22px;
-  }
-
-  .profile-card small {
-    font-size: 11px;
-  }
-
-  .profile-card h2 {
-    margin-top: 4px;
-    font-size: 22px;
-  }
-
-  .profile-row {
-    padding: 17px 18px;
-    border-radius: 16px;
-  }
-
-  .profile-row span,
-  .profile-row strong {
-    font-size: 13px;
-  }
-
-  .profile-section-title {
-    margin-top: 27px;
-    margin-bottom: 10px;
-    font-size: 9px;
-  }
-
-  .profile-action {
-    padding: 16px 18px;
-    border-radius: 16px;
-  }
-
-  .profile-action span,
-  .profile-action strong {
     font-size: 12px;
   }
 
-  .profile-logout {
-    margin-top: 17px;
-    padding: 15px;
-    border-radius: 15px;
-    font-size: 13px;
+  /* =======================================================
+     PROFILE
+     ======================================================= */
+
+  .profile-layout {
+    width: 100%;
+    max-width: 100%;
   }
 
-  /* -------------------------------------------------------
-     BOTTOM NAV
-     ------------------------------------------------------- */
+  .profile-card {
+    width: 100%;
+    padding: 22px;
+  }
+
+  .profile-row {
+    width: 100%;
+    padding: 19px;
+  }
+
+  /* =======================================================
+     EMPTY
+     ======================================================= */
+
+  .empty-panel {
+    width: 100%;
+    max-width: 100%;
+    padding: 40px 24px;
+  }
+
+  /* =======================================================
+     MENU NA DOLE — NIE PŁYWA, PEŁNA SZEROKOŚĆ
+     ======================================================= */
 
   .bottom-nav {
-    height: 72px;
-    padding: 5px 8px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    transform: none;
+
+    width: 100%;
+    max-width: 100%;
+    height: 82px;
+
+    padding:
+      7px
+      8px
+      max(7px, env(safe-area-inset-bottom));
+
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 2px;
 
-    background: #ffffff;
     border-radius: 0;
 
+    background: #ffffff;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
     box-shadow:
-      0 -6px 24px rgba(40, 28, 46, 0.055),
-      inset 0 1px 0 rgba(229, 224, 232, 0.85);
+      0 -1px 0 rgba(229, 224, 232, 0.95),
+      0 -8px 25px rgba(40, 28, 46, 0.04);
+
+    overflow: hidden;
   }
 
   .nav-item {
-    gap: 3px;
-    border-radius: 15px;
+    width: 100%;
+    min-width: 0;
+    border-radius: 18px;
+    gap: 4px;
   }
 
   .nav-item svg {
-    width: 21px;
-    height: 21px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-item span {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+
+  .nav-item.active {
+    background: var(--purple-light);
+    color: var(--purple);
+  }
+}
+
+/* =========================================================
+   BARDZO MAŁE TELEFONY
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .app {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hero-cards {
+    gap: 13px;
+  }
+
+  .feature-card {
+    min-height: 295px;
+    padding: 25px 23px;
+    border-radius: 23px;
+  }
+
+  .card-content h1 {
+    font-size: 32px;
+  }
+
+  .points strong {
+    font-size: 60px;
+  }
+
+  .card-arrow {
+    right: 19px;
+    bottom: 19px;
+  }
+
+  .page-heading h1 {
+    font-size: 39px;
+  }
+
+  .bottom-nav {
+    height: 78px;
   }
 
   .nav-item span {
     font-size: 9px;
-  }
-
-  .empty-panel {
-    padding: 34px 20px;
-    border-radius: 20px;
-  }
-
-  .large-icon {
-    width: 65px;
-    height: 65px;
-    border-radius: 21px;
   }
 }
