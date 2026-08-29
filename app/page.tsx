@@ -146,13 +146,7 @@ function Icon({
     case "calendar":
       return (
         <svg {...common}>
-          <rect
-            x="4"
-            y="5"
-            width="16"
-            height="16"
-            rx="2"
-          />
+          <rect x="4" y="5" width="16" height="16" rx="2" />
           <path d="M8 3v4M16 3v4M4 10h16" />
           <path d="M8 14h3M8 17h5" />
         </svg>
@@ -287,36 +281,50 @@ function parseDate(value: string) {
 }
 
 function formatFullDate(value: string) {
-  return new Intl.DateTimeFormat("pl-PL", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(parseDate(value));
+  return new Intl.DateTimeFormat(
+    "pl-PL",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }
+  ).format(parseDate(value));
 }
 
 function formatShortDate(value: string) {
   const date = parseDate(value);
 
   return {
-    weekday: new Intl.DateTimeFormat("pl-PL", {
-      weekday: "short",
-    })
+    weekday: new Intl.DateTimeFormat(
+      "pl-PL",
+      {
+        weekday: "short",
+      }
+    )
       .format(date)
       .replace(".", ""),
+
     day: date.getDate(),
-    month: new Intl.DateTimeFormat("pl-PL", {
-      month: "short",
-    })
+
+    month: new Intl.DateTimeFormat(
+      "pl-PL",
+      {
+        month: "short",
+      }
+    )
       .format(date)
       .replace(".", ""),
   };
 }
 
 function formatMonth(value: Date) {
-  return new Intl.DateTimeFormat("pl-PL", {
-    month: "long",
-    year: "numeric",
-  }).format(value);
+  return new Intl.DateTimeFormat(
+    "pl-PL",
+    {
+      month: "long",
+      year: "numeric",
+    }
+  ).format(value);
 }
 
 function getMonthCalendar(month: Date) {
@@ -340,9 +348,7 @@ function getMonthCalendar(month: Date) {
       ? 6
       : firstDay.getDay() - 1;
 
-  const cells: Array<
-    string | null
-  > = [];
+  const cells: Array<string | null> = [];
 
   for (
     let i = 0;
@@ -402,7 +408,8 @@ export default function Home() {
   const [
     selectedService,
     setSelectedService,
-  ] = useState<Service | null>(null);
+  ] =
+    useState<Service | null>(null);
 
   const [
     selectedDate,
@@ -435,9 +442,7 @@ export default function Home() {
   const filteredServices =
     useMemo(() => {
       const query =
-        search
-          .toLowerCase()
-          .trim();
+        search.toLowerCase().trim();
 
       return services.filter(
         (service) => {
@@ -518,12 +523,13 @@ export default function Home() {
       return;
     }
 
-    const reservation: Reservation = {
-      id: `${selectedService.id}-${selectedDate}-${selectedTime}-${Date.now()}`,
-      service: selectedService,
-      date: selectedDate,
-      time: selectedTime,
-    };
+    const reservation: Reservation =
+      {
+        id: `${selectedService.id}-${selectedDate}-${selectedTime}-${Date.now()}`,
+        service: selectedService,
+        date: selectedDate,
+        time: selectedTime,
+      };
 
     setReservations(
       (current) => [
@@ -627,7 +633,6 @@ export default function Home() {
             </div>
 
             <button
-              type="button"
               className="avatar"
               aria-label="Profil"
               onClick={() =>
@@ -641,9 +646,10 @@ export default function Home() {
           <section className="hero-cards">
 
             <button
-              type="button"
               className="feature-card discover-card"
-              onClick={openDiscover}
+              onClick={
+                openDiscover
+              }
             >
               <div className="card-icon">
                 <Icon
@@ -684,7 +690,6 @@ export default function Home() {
             </button>
 
             <button
-              type="button"
               className="feature-card points-card"
               onClick={() =>
                 setTab("benefits")
@@ -739,13 +744,14 @@ export default function Home() {
             <div className="quick-grid">
 
               <button
-                type="button"
                 className="quick-card"
                 onClick={() => {
                   setSelectedService(
                     null
                   );
-                  setTab("bookings");
+                  setTab(
+                    "bookings"
+                  );
                 }}
               >
                 <div className="quick-icon">
@@ -781,10 +787,11 @@ export default function Home() {
               </button>
 
               <button
-                type="button"
                 className="quick-card"
                 onClick={() =>
-                  setTab("benefits")
+                  setTab(
+                    "benefits"
+                  )
                 }
               >
                 <div className="quick-icon">
@@ -838,21 +845,6 @@ export default function Home() {
                 właśnie do Ciebie.
               </p>
             </div>
-
-            <button
-              type="button"
-              className="back-button"
-              onClick={() =>
-                setTab("home")
-              }
-            >
-              <Icon
-                name="home"
-                size={17}
-              />
-
-              Start
-            </button>
           </div>
 
           <div className="search-box">
@@ -876,7 +868,6 @@ export default function Home() {
             {categories.map(
               (item) => (
                 <button
-                  type="button"
                   key={item}
                   className={
                     category === item
@@ -884,7 +875,9 @@ export default function Home() {
                       : "category"
                   }
                   onClick={() =>
-                    setCategory(item)
+                    setCategory(
+                      item
+                    )
                   }
                 >
                   {item}
@@ -897,7 +890,6 @@ export default function Home() {
             {filteredServices.map(
               (service) => (
                 <button
-                  type="button"
                   key={service.id}
                   className="discover-item"
                   onClick={() =>
@@ -939,8 +931,7 @@ export default function Home() {
             {filteredServices.length ===
               0 && (
               <div className="empty">
-                Nie znaleziono
-                usług.
+                Nie znaleziono usług.
                 <br />
                 Spróbuj innej nazwy
                 lub kategorii.
@@ -972,21 +963,6 @@ export default function Home() {
                 terminami.
               </p>
             </div>
-
-            <button
-              type="button"
-              className="back-button"
-              onClick={() =>
-                setTab("home")
-              }
-            >
-              <Icon
-                name="home"
-                size={17}
-              />
-
-              Start
-            </button>
           </div>
 
           {selectedService ? (
@@ -1033,7 +1009,6 @@ export default function Home() {
                   </strong>
 
                   <button
-                    type="button"
                     className="change-service"
                     onClick={
                       openDiscover
@@ -1063,7 +1038,6 @@ export default function Home() {
                   <div className="calendar-controls">
 
                     <button
-                      type="button"
                       className="calendar-control"
                       onClick={
                         previousMonth
@@ -1077,7 +1051,6 @@ export default function Home() {
                     </button>
 
                     <button
-                      type="button"
                       className="calendar-control"
                       onClick={
                         nextMonth
@@ -1104,7 +1077,9 @@ export default function Home() {
                     "Nd",
                   ].map(
                     (day) => (
-                      <span key={day}>
+                      <span
+                        key={day}
+                      >
                         {day}
                       </span>
                     )
@@ -1150,7 +1125,6 @@ export default function Home() {
 
                       return (
                         <button
-                          type="button"
                           key={dateKey}
                           className={[
                             "calendar-day",
@@ -1175,6 +1149,7 @@ export default function Home() {
                             setSelectedDate(
                               dateKey
                             );
+
                             setSelectedTime(
                               ""
                             );
@@ -1198,7 +1173,6 @@ export default function Home() {
                 <div className="time-section">
 
                   <div className="time-section-head">
-
                     <div>
                       <small>
                         GODZINA
@@ -1216,7 +1190,6 @@ export default function Home() {
                           )
                         : "Najpierw wybierz dzień"}
                     </span>
-
                   </div>
 
                   <div className="time-grid">
@@ -1231,7 +1204,6 @@ export default function Home() {
 
                         return (
                           <button
-                            type="button"
                             key={time}
                             className={[
                               "time-button",
@@ -1291,18 +1263,22 @@ export default function Home() {
                     </div>
                   )}
 
-                <div className="booking-action">
+                <div
+                  style={{
+                    marginTop: 18,
+                  }}
+                >
                   <button
-                    type="button"
                     className="primary-button full-width"
                     disabled={
                       !selectedDate ||
                       !selectedTime
                     }
-                    onClick={reserve}
+                    onClick={
+                      reserve
+                    }
                   >
-                    Zarezerwuj
-                    termin
+                    Zarezerwuj termin
 
                     <Icon
                       name="arrow"
@@ -1331,13 +1307,12 @@ export default function Home() {
 
               <p>
                 Znajdź usługę, wybierz
-                dzień i godzinę, a
-                następnie zarezerwuj
+                dzień i godzinę,
+                a następnie zarezerwuj
                 swój termin.
               </p>
 
               <button
-                type="button"
                 className="primary-button"
                 onClick={
                   openDiscover
@@ -1397,7 +1372,11 @@ export default function Home() {
                           }
                         </p>
 
-                        <p>
+                        <p
+                          style={{
+                            marginTop: 6,
+                          }}
+                        >
                           {formatFullDate(
                             reservation.date
                           )}
@@ -1412,8 +1391,16 @@ export default function Home() {
                         </div>
 
                         <button
-                          type="button"
-                          className="remove-button"
+                          style={{
+                            marginTop: 8,
+                            padding: 0,
+                            background:
+                              "transparent",
+                            color:
+                              "#9c96a1",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
                           onClick={() =>
                             removeReservation(
                               reservation.id
@@ -1430,11 +1417,14 @@ export default function Home() {
               )}
 
               <button
-                type="button"
-                className="primary-button add-reservation-button"
+                className="primary-button"
                 onClick={
                   openDiscover
                 }
+                style={{
+                  marginTop: 10,
+                  width: "fit-content",
+                }}
               >
                 Dodaj kolejną
                 rezerwację
@@ -1472,21 +1462,6 @@ export default function Home() {
                 punkty.
               </p>
             </div>
-
-            <button
-              type="button"
-              className="back-button"
-              onClick={() =>
-                setTab("home")
-              }
-            >
-              <Icon
-                name="home"
-                size={17}
-              />
-
-              Start
-            </button>
           </div>
 
           <div className="benefits-layout">
@@ -1501,10 +1476,10 @@ export default function Home() {
               </strong>
 
               <p>
-                Zbieraj punkty i
-                wykorzystuj je na
-                aktywności dostępne
-                w Strefie.
+                Zbieraj punkty
+                i wykorzystuj je
+                na aktywności
+                dostępne w Strefie.
               </p>
             </div>
 
@@ -1524,8 +1499,7 @@ export default function Home() {
 
                 <p>
                   Wykorzystaj swoje
-                  punkty na
-                  aktywność.
+                  punkty na aktywność.
                 </p>
               </div>
 
@@ -1534,6 +1508,7 @@ export default function Home() {
               </strong>
 
             </div>
+
           </div>
         </section>
       )}
@@ -1556,25 +1531,10 @@ export default function Home() {
               </h1>
 
               <p>
-                Twoje dane i
-                aktywność.
+                Twoje dane
+                i aktywność.
               </p>
             </div>
-
-            <button
-              type="button"
-              className="back-button"
-              onClick={() =>
-                setTab("home")
-              }
-            >
-              <Icon
-                name="home"
-                size={17}
-              />
-
-              Start
-            </button>
           </div>
 
           <div className="profile-card">
@@ -1622,10 +1582,12 @@ export default function Home() {
           BOTTOM NAV
           ===================================================== */}
 
-      <nav className="bottom-nav">
+      <nav
+        className="bottom-nav"
+        aria-label="Główna nawigacja"
+      >
 
         <button
-          type="button"
           className={
             tab === "home"
               ? "nav-item active"
@@ -1649,7 +1611,6 @@ export default function Home() {
         </button>
 
         <button
-          type="button"
           className={
             tab === "discover"
               ? "nav-item active"
@@ -1673,7 +1634,6 @@ export default function Home() {
         </button>
 
         <button
-          type="button"
           className={
             tab === "bookings"
               ? "nav-item active"
@@ -1696,7 +1656,6 @@ export default function Home() {
         </button>
 
         <button
-          type="button"
           className={
             tab === "benefits"
               ? "nav-item active"
@@ -1720,7 +1679,6 @@ export default function Home() {
         </button>
 
         <button
-          type="button"
           className={
             tab === "profile"
               ? "nav-item active"
