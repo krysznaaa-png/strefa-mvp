@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from "react";
 
-type Tab = "home" | "discover" | "bookings" | "benefits" | "profile";
+type Tab =
+  | "home"
+  | "discover"
+  | "bookings"
+  | "benefits"
+  | "profile";
 
 type ServiceIconName =
   | "fitness"
@@ -48,7 +53,7 @@ const services: Service[] = [
   {
     id: "yoga",
     name: "Joga",
-    place: "STREFA Fitness Centrum",
+    place: "STREFA Wellness",
     price: 45,
     category: "Wellness",
     icon: "yoga",
@@ -295,7 +300,9 @@ function formatShortDate(value: string) {
     })
       .format(date)
       .replace(".", ""),
+
     day: date.getDate(),
+
     month: new Intl.DateTimeFormat("pl-PL", {
       month: "short",
     })
@@ -316,6 +323,7 @@ function getMonthCalendar(month: Date) {
   const monthIndex = month.getMonth();
 
   const firstDay = new Date(year, monthIndex, 1);
+
   const daysInMonth = new Date(
     year,
     monthIndex + 1,
@@ -335,7 +343,9 @@ function getMonthCalendar(month: Date) {
 
   for (let day = 1; day <= daysInMonth; day++) {
     cells.push(
-      toDateKey(new Date(year, monthIndex, day))
+      toDateKey(
+        new Date(year, monthIndex, day)
+      )
     );
   }
 
@@ -395,8 +405,12 @@ export default function Home() {
 
       const searchMatch =
         !query ||
-        service.name.toLowerCase().includes(query) ||
-        service.place.toLowerCase().includes(query);
+        service.name
+          .toLowerCase()
+          .includes(query) ||
+        service.place
+          .toLowerCase()
+          .includes(query);
 
       return categoryMatch && searchMatch;
     });
@@ -456,6 +470,9 @@ export default function Home() {
       reservation,
     ]);
 
+    const serviceName =
+      selectedService.name;
+
     setSelectedService(null);
     setSelectedDate("");
     setSelectedTime("");
@@ -463,7 +480,7 @@ export default function Home() {
     setTab("bookings");
 
     alert(
-      `Rezerwacja została dodana.\n\n${selectedService.name}\n${formatFullDate(
+      `Rezerwacja została dodana.\n\n${serviceName}\n${formatFullDate(
         selectedDate
       )} · ${selectedTime}`
     );
@@ -491,7 +508,9 @@ export default function Home() {
     );
   }
 
-  function isDateAvailable(dateKey: string) {
+  function isDateAvailable(
+    dateKey: string
+  ) {
     const date = parseDate(dateKey);
 
     if (
@@ -538,7 +557,9 @@ export default function Home() {
 
               <div className="tagline">
                 Twoja strefa.{" "}
-                <span>Twoje miejsce.</span>
+                <span>
+                  Twoje miejsce.
+                </span>
               </div>
             </div>
 
@@ -580,7 +601,9 @@ export default function Home() {
                 <div className="accent-line" />
 
                 <p>
-                  Sport <span>•</span> wellness{" "}
+                  Sport{" "}
+                  <span>•</span>{" "}
+                  wellness{" "}
                   <span>•</span>
                   <br />
                   aktywności i więcej
@@ -648,6 +671,7 @@ export default function Home() {
 
           <div className="page-top">
             <div className="page-heading">
+
               <span className="section-label">
                 STREFA
               </span>
@@ -658,6 +682,7 @@ export default function Home() {
                 Znajdź coś, co pasuje właśnie
                 do Ciebie.
               </p>
+
             </div>
           </div>
 
@@ -737,7 +762,8 @@ export default function Home() {
               <div className="empty">
                 Nie znaleziono usług.
                 <br />
-                Spróbuj innej nazwy lub kategorii.
+                Spróbuj innej nazwy lub
+                kategorii.
               </div>
             )}
           </div>
@@ -753,6 +779,7 @@ export default function Home() {
 
           <div className="page-top">
             <div className="page-heading">
+
               <span className="section-label">
                 TWOJA STREFA
               </span>
@@ -762,6 +789,7 @@ export default function Home() {
               <p>
                 Zarządzaj swoimi terminami.
               </p>
+
             </div>
           </div>
 
@@ -769,8 +797,11 @@ export default function Home() {
             <div className="booking-layout">
 
               <div className="booking-service-card">
+
                 <ServiceIcon
-                  icon={selectedService.icon}
+                  icon={
+                    selectedService.icon
+                  }
                 />
 
                 <h2>
@@ -789,6 +820,7 @@ export default function Home() {
                 </div>
 
                 <div className="selected-service">
+
                   <span className="selected-service-label">
                     WYBRANA USŁUGA
                   </span>
@@ -799,10 +831,13 @@ export default function Home() {
 
                   <button
                     className="change-service"
-                    onClick={openDiscover}
+                    onClick={
+                      openDiscover
+                    }
                   >
                     Zmień usługę →
                   </button>
+
                 </div>
               </div>
 
@@ -811,6 +846,7 @@ export default function Home() {
                 <div className="calendar-head">
 
                   <div className="calendar-title">
+
                     <small>
                       TERMIN
                     </small>
@@ -820,9 +856,11 @@ export default function Home() {
                         calendarMonth
                       )}
                     </h2>
+
                   </div>
 
                   <div className="calendar-controls">
+
                     <button
                       className="calendar-control"
                       onClick={
@@ -838,7 +876,9 @@ export default function Home() {
 
                     <button
                       className="calendar-control"
-                      onClick={nextMonth}
+                      onClick={
+                        nextMonth
+                      }
                       aria-label="Następny miesiąc"
                     >
                       <Icon
@@ -846,11 +886,13 @@ export default function Home() {
                         size={19}
                       />
                     </button>
+
                   </div>
 
                 </div>
 
                 <div className="calendar-week">
+
                   {[
                     "Pon",
                     "Wt",
@@ -864,11 +906,14 @@ export default function Home() {
                       {day}
                     </span>
                   ))}
+
                 </div>
 
                 <div className="calendar-grid">
+
                   {calendarDays.map(
                     (dateKey, index) => {
+
                       if (!dateKey) {
                         return (
                           <div
@@ -913,12 +958,17 @@ export default function Home() {
                           ]
                             .filter(Boolean)
                             .join(" ")}
-                          disabled={!available}
+                          disabled={
+                            !available
+                          }
                           onClick={() => {
                             setSelectedDate(
                               dateKey
                             );
-                            setSelectedTime("");
+
+                            setSelectedTime(
+                              ""
+                            );
                           }}
                         >
                           <strong>
@@ -934,12 +984,15 @@ export default function Home() {
                       );
                     }
                   )}
+
                 </div>
 
                 <div className="time-section">
 
                   <div className="time-section-head">
+
                     <div>
+
                       <small>
                         GODZINA
                       </small>
@@ -947,6 +1000,7 @@ export default function Home() {
                       <h3>
                         Wybierz godzinę
                       </h3>
+
                     </div>
 
                     <span>
@@ -956,11 +1010,14 @@ export default function Home() {
                           )
                         : "Najpierw wybierz dzień"}
                     </span>
+
                   </div>
 
                   <div className="time-grid">
+
                     {timeSlots.map(
                       (time) => {
+
                         const disabled =
                           !selectedDate;
 
@@ -996,6 +1053,7 @@ export default function Home() {
                         );
                       }
                     )}
+
                   </div>
                 </div>
 
@@ -1011,6 +1069,7 @@ export default function Home() {
                       </div>
 
                       <div>
+
                         <small>
                           WYBRANY TERMIN
                         </small>
@@ -1022,12 +1081,17 @@ export default function Home() {
                           {" · "}
                           {selectedTime}
                         </strong>
+
                       </div>
 
                     </div>
                   )}
 
-                <div style={{ marginTop: 18 }}>
+                <div
+                  style={{
+                    marginTop: 18,
+                  }}
+                >
                   <button
                     className="primary-button full-width"
                     disabled={
@@ -1037,6 +1101,7 @@ export default function Home() {
                     onClick={reserve}
                   >
                     Zarezerwuj termin
+
                     <Icon
                       name="arrow"
                       size={18}
@@ -1046,7 +1111,8 @@ export default function Home() {
 
               </div>
             </div>
-          ) : reservations.length === 0 ? (
+          ) : reservations.length ===
+            0 ? (
             <div className="empty-panel">
 
               <div className="large-icon">
@@ -1072,6 +1138,7 @@ export default function Home() {
                 onClick={openDiscover}
               >
                 Znajdź usługę
+
                 <Icon
                   name="arrow"
                   size={18}
@@ -1084,6 +1151,7 @@ export default function Home() {
 
               {reservations.map(
                 (reservation) => {
+
                   const date =
                     formatShortDate(
                       reservation.date
@@ -1096,6 +1164,7 @@ export default function Home() {
                     >
 
                       <div className="reservation-date">
+
                         <small>
                           {date.month}
                         </small>
@@ -1103,20 +1172,24 @@ export default function Home() {
                         <strong>
                           {date.day}
                         </strong>
+
                       </div>
 
                       <div className="reservation-info">
+
                         <h3>
                           {
                             reservation
-                              .service.name
+                              .service
+                              .name
                           }
                         </h3>
 
                         <p>
                           {
                             reservation
-                              .service.place
+                              .service
+                              .place
                           }
                         </p>
 
@@ -1129,9 +1202,11 @@ export default function Home() {
                             reservation.date
                           )}
                         </p>
+
                       </div>
 
                       <div>
+
                         <div className="reservation-time">
                           {
                             reservation.time
@@ -1157,6 +1232,7 @@ export default function Home() {
                         >
                           Usuń
                         </button>
+
                       </div>
 
                     </div>
@@ -1173,6 +1249,7 @@ export default function Home() {
                 }}
               >
                 Dodaj kolejną rezerwację
+
                 <Icon
                   name="arrow"
                   size={18}
@@ -1192,7 +1269,9 @@ export default function Home() {
         <section className="page">
 
           <div className="page-top">
+
             <div className="page-heading">
+
               <span className="section-label">
                 STREFA PLUS
               </span>
@@ -1202,12 +1281,15 @@ export default function Home() {
               <p>
                 Wykorzystaj swoje punkty.
               </p>
+
             </div>
+
           </div>
 
           <div className="benefits-layout">
 
             <div className="benefit-points">
+
               <small>
                 TWOJE PUNKTY
               </small>
@@ -1221,9 +1303,11 @@ export default function Home() {
                 je na aktywności dostępne
                 w Strefie.
               </p>
+
             </div>
 
             <div className="benefit-item">
+
               <div className="benefit-icon">
                 <Icon
                   name="fitness"
@@ -1232,6 +1316,7 @@ export default function Home() {
               </div>
 
               <div>
+
                 <h3>
                   Benefit sportowy
                 </h3>
@@ -1240,11 +1325,13 @@ export default function Home() {
                   Wykorzystaj swoje punkty
                   na aktywność.
                 </p>
+
               </div>
 
               <strong>
                 320 pkt
               </strong>
+
             </div>
 
           </div>
@@ -1259,7 +1346,9 @@ export default function Home() {
         <section className="page profile-layout">
 
           <div className="page-top">
+
             <div className="page-heading">
+
               <span className="section-label">
                 TWOJA STREFA
               </span>
@@ -1269,7 +1358,9 @@ export default function Home() {
               <p>
                 Twoje dane i aktywność.
               </p>
+
             </div>
+
           </div>
 
           <div className="profile-card">
@@ -1279,6 +1370,7 @@ export default function Home() {
             </div>
 
             <div>
+
               <small>
                 Twój profil
               </small>
@@ -1286,11 +1378,13 @@ export default function Home() {
               <h2>
                 Kryszna
               </h2>
+
             </div>
 
           </div>
 
           <div className="profile-row">
+
             <span>
               Twoje punkty
             </span>
@@ -1298,9 +1392,11 @@ export default function Home() {
             <strong>
               320 pkt
             </strong>
+
           </div>
 
           <div className="profile-row">
+
             <span>
               Rezerwacje
             </span>
@@ -1308,112 +1404,77 @@ export default function Home() {
             <strong>
               {reservations.length}
             </strong>
-          </div>
-
-          <div className="profile-settings">
-
-            <div className="profile-settings-title">
-              USTAWIENIA KONTA
-            </div>
-
-            <div className="profile-option">
-              <div className="profile-option-icon">
-                <Icon
-                  name="user"
-                  size={20}
-                />
-              </div>
-
-              <div className="profile-option-content">
-                <strong>
-                  Dane osobowe
-                </strong>
-
-                <span>
-                  Imię, dane kontaktowe
-                </span>
-              </div>
-
-              <div className="profile-option-arrow">
-                <Icon
-                  name="arrow"
-                  size={18}
-                />
-              </div>
-            </div>
-
-            <div className="profile-option">
-              <div className="profile-option-icon">
-                <Icon
-                  name="spark"
-                  size={20}
-                />
-              </div>
-
-              <div className="profile-option-content">
-                <strong>
-                  Powiadomienia
-                </strong>
-
-                <span>
-                  Ustawienia powiadomień
-                </span>
-              </div>
-
-              <div className="profile-option-arrow">
-                <Icon
-                  name="arrow"
-                  size={18}
-                />
-              </div>
-            </div>
-
-            <div className="profile-option">
-              <div className="profile-option-icon">
-                <Icon
-                  name="check"
-                  size={20}
-                />
-              </div>
-
-              <div className="profile-option-content">
-                <strong>
-                  Bezpieczeństwo
-                </strong>
-
-                <span>
-                  Hasło i bezpieczeństwo konta
-                </span>
-              </div>
-
-              <div className="profile-option-arrow">
-                <Icon
-                  name="arrow"
-                  size={18}
-                />
-              </div>
-            </div>
-
-            <div className="profile-option logout">
-              <div className="profile-option-icon">
-                <Icon
-                  name="arrow"
-                  size={20}
-                />
-              </div>
-
-              <div className="profile-option-content">
-                <strong>
-                  Wyloguj się
-                </strong>
-
-                <span>
-                  Zakończ bieżącą sesję
-                </span>
-              </div>
-            </div>
 
           </div>
+
+          <div className="profile-section-title">
+            TWOJE DANE
+          </div>
+
+          <div className="profile-action">
+            <span>
+              Dane osobowe
+            </span>
+
+            <strong>
+              Edytuj
+            </strong>
+          </div>
+
+          <div className="profile-action">
+            <span>
+              Dane kontaktowe
+            </span>
+
+            <strong>
+              Edytuj
+            </strong>
+          </div>
+
+          <div className="profile-action">
+            <span>
+              Preferencje
+            </span>
+
+            <strong>
+              →
+            </strong>
+          </div>
+
+          <div className="profile-section-title">
+            KONTO
+          </div>
+
+          <div className="profile-action">
+            <span>
+              Powiadomienia
+            </span>
+
+            <strong>
+              Włączone
+            </strong>
+          </div>
+
+          <div className="profile-action">
+            <span>
+              Prywatność
+            </span>
+
+            <strong>
+              →
+            </strong>
+          </div>
+
+          <button
+            className="profile-logout"
+            onClick={() =>
+              alert(
+                "Wylogowanie — wersja demonstracyjna."
+              )
+            }
+          >
+            Wyloguj się
+          </button>
 
         </section>
       )}
@@ -1442,7 +1503,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Start</span>
+          <span>
+            Start
+          </span>
         </button>
 
         <button
@@ -1463,7 +1526,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Odkrywaj</span>
+          <span>
+            Odkrywaj
+          </span>
         </button>
 
         <button
@@ -1483,7 +1548,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Rezerwacje</span>
+          <span>
+            Rezerwacje
+          </span>
         </button>
 
         <button
@@ -1504,7 +1571,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Benefity</span>
+          <span>
+            Benefity
+          </span>
         </button>
 
         <button
@@ -1525,7 +1594,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Profil</span>
+          <span>
+            Profil
+          </span>
         </button>
 
       </nav>
