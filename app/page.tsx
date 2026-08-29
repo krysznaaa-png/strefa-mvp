@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from "react";
 
-type Tab = "home" | "discover" | "bookings" | "benefits" | "profile";
+type Tab =
+  | "home"
+  | "discover"
+  | "bookings"
+  | "benefits"
+  | "profile";
 
 type ServiceIconName =
   | "fitness"
@@ -141,7 +146,13 @@ function Icon({
     case "calendar":
       return (
         <svg {...common}>
-          <rect x="4" y="5" width="16" height="16" rx="2" />
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="16"
+            rx="2"
+          />
           <path d="M8 3v4M16 3v4M4 10h16" />
           <path d="M8 14h3M8 17h5" />
         </svg>
@@ -221,13 +232,6 @@ function Icon({
         </svg>
       );
 
-    case "spark":
-      return (
-        <svg {...common}>
-          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5" />
-        </svg>
-      );
-
     case "check":
       return (
         <svg {...common}>
@@ -268,8 +272,12 @@ function ServiceIcon({
 
 function toDateKey(date: Date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(
+    date.getMonth() + 1
+  ).padStart(2, "0");
+  const day = String(
+    date.getDate()
+  ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
@@ -315,7 +323,12 @@ function getMonthCalendar(month: Date) {
   const year = month.getFullYear();
   const monthIndex = month.getMonth();
 
-  const firstDay = new Date(year, monthIndex, 1);
+  const firstDay = new Date(
+    year,
+    monthIndex,
+    1
+  );
+
   const daysInMonth = new Date(
     year,
     monthIndex + 1,
@@ -331,13 +344,27 @@ function getMonthCalendar(month: Date) {
     string | null
   > = [];
 
-  for (let i = 0; i < mondayIndex; i++) {
+  for (
+    let i = 0;
+    i < mondayIndex;
+    i++
+  ) {
     cells.push(null);
   }
 
-  for (let day = 1; day <= daysInMonth; day++) {
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
     cells.push(
-      toDateKey(new Date(year, monthIndex, day))
+      toDateKey(
+        new Date(
+          year,
+          monthIndex,
+          day
+        )
+      )
     );
   }
 
@@ -348,65 +375,102 @@ function getMonthCalendar(month: Date) {
   return cells;
 }
 
-function isSameDay(a: Date, b: Date) {
+function isSameDay(
+  a: Date,
+  b: Date
+) {
   return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
+    a.getFullYear() ===
+      b.getFullYear() &&
+    a.getMonth() ===
+      b.getMonth() &&
+    a.getDate() ===
+      b.getDate()
   );
 }
 
 export default function Home() {
-  const [tab, setTab] = useState<Tab>("home");
+  const [tab, setTab] =
+    useState<Tab>("home");
 
   const [category, setCategory] =
     useState("Wszystko");
 
-  const [search, setSearch] = useState("");
-
-  const [selectedService, setSelectedService] =
-    useState<Service | null>(null);
-
-  const [selectedDate, setSelectedDate] =
+  const [search, setSearch] =
     useState("");
 
-  const [selectedTime, setSelectedTime] =
-    useState("");
+  const [
+    selectedService,
+    setSelectedService,
+  ] = useState<Service | null>(null);
 
-  const [calendarMonth, setCalendarMonth] =
-    useState(() => {
-      const now = new Date();
-      return new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        1
+  const [
+    selectedDate,
+    setSelectedDate,
+  ] = useState("");
+
+  const [
+    selectedTime,
+    setSelectedTime,
+  ] = useState("");
+
+  const [
+    calendarMonth,
+    setCalendarMonth,
+  ] = useState(() => {
+    const now = new Date();
+
+    return new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+  });
+
+  const [
+    reservations,
+    setReservations,
+  ] = useState<Reservation[]>([]);
+
+  const filteredServices =
+    useMemo(() => {
+      const query =
+        search
+          .toLowerCase()
+          .trim();
+
+      return services.filter(
+        (service) => {
+          const categoryMatch =
+            category === "Wszystko" ||
+            service.category ===
+              category;
+
+          const searchMatch =
+            !query ||
+            service.name
+              .toLowerCase()
+              .includes(query) ||
+            service.place
+              .toLowerCase()
+              .includes(query);
+
+          return (
+            categoryMatch &&
+            searchMatch
+          );
+        }
       );
-    });
+    }, [category, search]);
 
-  const [reservations, setReservations] =
-    useState<Reservation[]>([]);
-
-  const filteredServices = useMemo(() => {
-    const query = search.toLowerCase().trim();
-
-    return services.filter((service) => {
-      const categoryMatch =
-        category === "Wszystko" ||
-        service.category === category;
-
-      const searchMatch =
-        !query ||
-        service.name.toLowerCase().includes(query) ||
-        service.place.toLowerCase().includes(query);
-
-      return categoryMatch && searchMatch;
-    });
-  }, [category, search]);
-
-  const calendarDays = useMemo(
-    () => getMonthCalendar(calendarMonth),
-    [calendarMonth]
-  );
+  const calendarDays =
+    useMemo(
+      () =>
+        getMonthCalendar(
+          calendarMonth
+        ),
+      [calendarMonth]
+    );
 
   const today = new Date();
 
@@ -414,7 +478,9 @@ export default function Home() {
     setTab("discover");
   }
 
-  function openBooking(service: Service) {
+  function openBooking(
+    service: Service
+  ) {
     setSelectedService(service);
     setSelectedDate("");
     setSelectedTime("");
@@ -438,10 +504,17 @@ export default function Home() {
   }
 
   function reserve() {
-    if (!selectedService) return;
+    if (!selectedService) {
+      return;
+    }
 
-    if (!selectedDate || !selectedTime) {
-      alert("Wybierz dzień i godzinę.");
+    if (
+      !selectedDate ||
+      !selectedTime
+    ) {
+      alert(
+        "Wybierz dzień i godzinę."
+      );
       return;
     }
 
@@ -452,10 +525,12 @@ export default function Home() {
       time: selectedTime,
     };
 
-    setReservations((current) => [
-      ...current,
-      reservation,
-    ]);
+    setReservations(
+      (current) => [
+        ...current,
+        reservation,
+      ]
+    );
 
     setSelectedService(null);
     setSelectedDate("");
@@ -492,14 +567,20 @@ export default function Home() {
     );
   }
 
-  function isDateAvailable(dateKey: string) {
-    const date = parseDate(dateKey);
+  function isDateAvailable(
+    dateKey: string
+  ) {
+    const date =
+      parseDate(dateKey);
 
-    if (date < new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    )) {
+    const startOfToday =
+      new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+    if (date < startOfToday) {
       return false;
     }
 
@@ -510,11 +591,15 @@ export default function Home() {
     return true;
   }
 
-  function removeReservation(id: string) {
-    setReservations((current) =>
-      current.filter(
-        (reservation) => reservation.id !== id
-      )
+  function removeReservation(
+    id: string
+  ) {
+    setReservations(
+      (current) =>
+        current.filter(
+          (reservation) =>
+            reservation.id !== id
+        )
     );
   }
 
@@ -535,14 +620,19 @@ export default function Home() {
 
               <div className="tagline">
                 Twoja strefa.{" "}
-                <span>Twoje miejsce.</span>
+                <span>
+                  Twoje miejsce.
+                </span>
               </div>
             </div>
 
             <button
+              type="button"
               className="avatar"
               aria-label="Profil"
-              onClick={() => setTab("profile")}
+              onClick={() =>
+                setTab("profile")
+              }
             >
               K
             </button>
@@ -551,6 +641,7 @@ export default function Home() {
           <section className="hero-cards">
 
             <button
+              type="button"
               className="feature-card discover-card"
               onClick={openDiscover}
             >
@@ -575,7 +666,9 @@ export default function Home() {
                 <div className="accent-line" />
 
                 <p>
-                  Sport <span>•</span> wellness{" "}
+                  Sport{" "}
+                  <span>•</span>{" "}
+                  wellness{" "}
                   <span>•</span>
                   <br />
                   aktywności i więcej
@@ -591,8 +684,11 @@ export default function Home() {
             </button>
 
             <button
+              type="button"
               className="feature-card points-card"
-              onClick={() => setTab("benefits")}
+              onClick={() =>
+                setTab("benefits")
+              }
             >
               <div className="card-icon">
                 <Icon
@@ -607,8 +703,13 @@ export default function Home() {
                 </div>
 
                 <div className="points">
-                  <strong>320</strong>
-                  <span>pkt</span>
+                  <strong>
+                    320
+                  </strong>
+
+                  <span>
+                    pkt
+                  </span>
                 </div>
 
                 <div className="accent-line" />
@@ -638,9 +739,12 @@ export default function Home() {
             <div className="quick-grid">
 
               <button
+                type="button"
                 className="quick-card"
                 onClick={() => {
-                  setSelectedService(null);
+                  setSelectedService(
+                    null
+                  );
                   setTab("bookings");
                 }}
               >
@@ -652,11 +756,16 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h2>Rezerwacje</h2>
+                  <h2>
+                    Rezerwacje
+                  </h2>
+
                   <p>
-                    {reservations.length > 0
+                    {reservations.length >
+                    0
                       ? `${reservations.length} ${
-                          reservations.length === 1
+                          reservations.length ===
+                          1
                             ? "termin"
                             : "terminy"
                         }`
@@ -672,6 +781,7 @@ export default function Home() {
               </button>
 
               <button
+                type="button"
                 className="quick-card"
                 onClick={() =>
                   setTab("benefits")
@@ -685,7 +795,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h2>Benefity</h2>
+                  <h2>
+                    Benefity
+                  </h2>
+
                   <p>
                     Twoje korzyści
                   </p>
@@ -716,22 +829,28 @@ export default function Home() {
                 STREFA
               </span>
 
-              <h1>Odkrywaj</h1>
+              <h1>
+                Odkrywaj
+              </h1>
 
               <p>
-                Znajdź coś, co pasuje właśnie
-                do Ciebie.
+                Znajdź coś, co pasuje
+                właśnie do Ciebie.
               </p>
             </div>
 
             <button
+              type="button"
               className="back-button"
-              onClick={() => setTab("home")}
+              onClick={() =>
+                setTab("home")
+              }
             >
               <Icon
                 name="home"
                 size={17}
               />
+
               Start
             </button>
           </div>
@@ -745,65 +864,86 @@ export default function Home() {
             <input
               value={search}
               onChange={(event) =>
-                setSearch(event.target.value)
+                setSearch(
+                  event.target.value
+                )
               }
               placeholder="Czego szukasz?"
             />
           </div>
 
           <div className="categories">
-            {categories.map((item) => (
-              <button
-                key={item}
-                className={
-                  category === item
-                    ? "category active"
-                    : "category"
-                }
-                onClick={() =>
-                  setCategory(item)
-                }
-              >
-                {item}
-              </button>
-            ))}
+            {categories.map(
+              (item) => (
+                <button
+                  type="button"
+                  key={item}
+                  className={
+                    category === item
+                      ? "category active"
+                      : "category"
+                  }
+                  onClick={() =>
+                    setCategory(item)
+                  }
+                >
+                  {item}
+                </button>
+              )
+            )}
           </div>
 
           <div className="discover-list">
-            {filteredServices.map((service) => (
-              <button
-                key={service.id}
-                className="discover-item"
-                onClick={() =>
-                  openBooking(service)
-                }
-              >
-                <ServiceIcon
-                  icon={service.icon}
-                />
+            {filteredServices.map(
+              (service) => (
+                <button
+                  type="button"
+                  key={service.id}
+                  className="discover-item"
+                  onClick={() =>
+                    openBooking(
+                      service
+                    )
+                  }
+                >
+                  <ServiceIcon
+                    icon={
+                      service.icon
+                    }
+                  />
 
-                <div className="discover-info">
-                  <h3>{service.name}</h3>
+                  <div className="discover-info">
+                    <h3>
+                      {service.name}
+                    </h3>
 
-                  <p>{service.place}</p>
+                    <p>
+                      {service.place}
+                    </p>
 
-                  <span className="discover-price">
-                    od {service.price} zł
-                  </span>
-                </div>
+                    <span className="discover-price">
+                      od{" "}
+                      {service.price}{" "}
+                      zł
+                    </span>
+                  </div>
 
-                <Icon
-                  name="arrow"
-                  size={20}
-                />
-              </button>
-            ))}
+                  <Icon
+                    name="arrow"
+                    size={20}
+                  />
+                </button>
+              )
+            )}
 
-            {filteredServices.length === 0 && (
+            {filteredServices.length ===
+              0 && (
               <div className="empty">
-                Nie znaleziono usług.
+                Nie znaleziono
+                usług.
                 <br />
-                Spróbuj innej nazwy lub kategorii.
+                Spróbuj innej nazwy
+                lub kategorii.
               </div>
             )}
           </div>
@@ -823,21 +963,28 @@ export default function Home() {
                 TWOJA STREFA
               </span>
 
-              <h1>Rezerwacje</h1>
+              <h1>
+                Rezerwacje
+              </h1>
 
               <p>
-                Zarządzaj swoimi terminami.
+                Zarządzaj swoimi
+                terminami.
               </p>
             </div>
 
             <button
+              type="button"
               className="back-button"
-              onClick={() => setTab("home")}
+              onClick={() =>
+                setTab("home")
+              }
             >
               <Icon
                 name="home"
                 size={17}
               />
+
               Start
             </button>
           </div>
@@ -845,25 +992,32 @@ export default function Home() {
           {selectedService ? (
             <div className="booking-layout">
 
-              {/* SERVICE */}
-
               <div className="booking-service-card">
                 <ServiceIcon
-                  icon={selectedService.icon}
+                  icon={
+                    selectedService.icon
+                  }
                 />
 
                 <h2>
-                  {selectedService.name}
+                  {
+                    selectedService.name
+                  }
                 </h2>
 
                 <p className="booking-service-place">
-                  {selectedService.place}
+                  {
+                    selectedService.place
+                  }
                 </p>
 
                 <div className="booking-service-price">
                   od{" "}
                   <strong>
-                    {selectedService.price} zł
+                    {
+                      selectedService.price
+                    }{" "}
+                    zł
                   </strong>
                 </div>
 
@@ -873,19 +1027,22 @@ export default function Home() {
                   </span>
 
                   <strong>
-                    {selectedService.name}
+                    {
+                      selectedService.name
+                    }
                   </strong>
 
                   <button
+                    type="button"
                     className="change-service"
-                    onClick={openDiscover}
+                    onClick={
+                      openDiscover
+                    }
                   >
                     Zmień usługę →
                   </button>
                 </div>
               </div>
-
-              {/* CALENDAR */}
 
               <div className="calendar-card">
 
@@ -904,7 +1061,9 @@ export default function Home() {
                   </div>
 
                   <div className="calendar-controls">
+
                     <button
+                      type="button"
                       className="calendar-control"
                       onClick={
                         previousMonth
@@ -918,8 +1077,11 @@ export default function Home() {
                     </button>
 
                     <button
+                      type="button"
                       className="calendar-control"
-                      onClick={nextMonth}
+                      onClick={
+                        nextMonth
+                      }
                       aria-label="Następny miesiąc"
                     >
                       <Icon
@@ -927,8 +1089,8 @@ export default function Home() {
                         size={19}
                       />
                     </button>
-                  </div>
 
+                  </div>
                 </div>
 
                 <div className="calendar-week">
@@ -940,17 +1102,24 @@ export default function Home() {
                     "Pt",
                     "Sob",
                     "Nd",
-                  ].map((day) => (
-                    <span key={day}>
-                      {day}
-                    </span>
-                  ))}
+                  ].map(
+                    (day) => (
+                      <span key={day}>
+                        {day}
+                      </span>
+                    )
+                  )}
                 </div>
 
                 <div className="calendar-grid">
                   {calendarDays.map(
-                    (dateKey, index) => {
-                      if (!dateKey) {
+                    (
+                      dateKey,
+                      index
+                    ) => {
+                      if (
+                        !dateKey
+                      ) {
                         return (
                           <div
                             key={`empty-${index}`}
@@ -960,7 +1129,9 @@ export default function Home() {
                       }
 
                       const date =
-                        parseDate(dateKey);
+                        parseDate(
+                          dateKey
+                        );
 
                       const available =
                         isDateAvailable(
@@ -979,6 +1150,7 @@ export default function Home() {
 
                       return (
                         <button
+                          type="button"
                           key={dateKey}
                           className={[
                             "calendar-day",
@@ -992,14 +1164,20 @@ export default function Home() {
                               ? "today"
                               : "",
                           ]
-                            .filter(Boolean)
+                            .filter(
+                              Boolean
+                            )
                             .join(" ")}
-                          disabled={!available}
+                          disabled={
+                            !available
+                          }
                           onClick={() => {
                             setSelectedDate(
                               dateKey
                             );
-                            setSelectedTime("");
+                            setSelectedTime(
+                              ""
+                            );
                           }}
                         >
                           <strong>
@@ -1020,6 +1198,7 @@ export default function Home() {
                 <div className="time-section">
 
                   <div className="time-section-head">
+
                     <div>
                       <small>
                         GODZINA
@@ -1037,6 +1216,7 @@ export default function Home() {
                           )
                         : "Najpierw wybierz dzień"}
                     </span>
+
                   </div>
 
                   <div className="time-grid">
@@ -1051,6 +1231,7 @@ export default function Home() {
 
                         return (
                           <button
+                            type="button"
                             key={time}
                             className={[
                               "time-button",
@@ -1061,7 +1242,9 @@ export default function Home() {
                                 ? "disabled"
                                 : "",
                             ]
-                              .filter(Boolean)
+                              .filter(
+                                Boolean
+                              )
                               .join(" ")}
                             disabled={
                               disabled
@@ -1108,8 +1291,9 @@ export default function Home() {
                     </div>
                   )}
 
-                <div style={{ marginTop: 18 }}>
+                <div className="booking-action">
                   <button
+                    type="button"
                     className="primary-button full-width"
                     disabled={
                       !selectedDate ||
@@ -1117,7 +1301,9 @@ export default function Home() {
                     }
                     onClick={reserve}
                   >
-                    Zarezerwuj termin
+                    Zarezerwuj
+                    termin
+
                     <Icon
                       name="arrow"
                       size={18}
@@ -1127,7 +1313,8 @@ export default function Home() {
 
               </div>
             </div>
-          ) : reservations.length === 0 ? (
+          ) : reservations.length ===
+            0 ? (
             <div className="empty-panel">
 
               <div className="large-icon">
@@ -1143,16 +1330,21 @@ export default function Home() {
               </h2>
 
               <p>
-                Znajdź usługę, wybierz dzień
-                i godzinę, a następnie
-                zarezerwuj swój termin.
+                Znajdź usługę, wybierz
+                dzień i godzinę, a
+                następnie zarezerwuj
+                swój termin.
               </p>
 
               <button
+                type="button"
                 className="primary-button"
-                onClick={openDiscover}
+                onClick={
+                  openDiscover
+                }
               >
                 Znajdź usługę
+
                 <Icon
                   name="arrow"
                   size={18}
@@ -1173,7 +1365,9 @@ export default function Home() {
                   return (
                     <div
                       className="reservation-card"
-                      key={reservation.id}
+                      key={
+                        reservation.id
+                      }
                     >
 
                       <div className="reservation-date">
@@ -1188,18 +1382,22 @@ export default function Home() {
 
                       <div className="reservation-info">
                         <h3>
-                          {reservation.service.name}
+                          {
+                            reservation
+                              .service
+                              .name
+                          }
                         </h3>
 
                         <p>
-                          {reservation.service.place}
+                          {
+                            reservation
+                              .service
+                              .place
+                          }
                         </p>
 
-                        <p
-                          style={{
-                            marginTop: 6,
-                          }}
-                        >
+                        <p>
                           {formatFullDate(
                             reservation.date
                           )}
@@ -1208,20 +1406,14 @@ export default function Home() {
 
                       <div>
                         <div className="reservation-time">
-                          {reservation.time}
+                          {
+                            reservation.time
+                          }
                         </div>
 
                         <button
-                          style={{
-                            marginTop: 8,
-                            padding: 0,
-                            background:
-                              "transparent",
-                            color:
-                              "#9c96a1",
-                            fontSize: 11,
-                            fontWeight: 600,
-                          }}
+                          type="button"
+                          className="remove-button"
                           onClick={() =>
                             removeReservation(
                               reservation.id
@@ -1238,14 +1430,15 @@ export default function Home() {
               )}
 
               <button
-                className="primary-button"
-                onClick={openDiscover}
-                style={{
-                  marginTop: 10,
-                  width: "fit-content",
-                }}
+                type="button"
+                className="primary-button add-reservation-button"
+                onClick={
+                  openDiscover
+                }
               >
-                Dodaj kolejną rezerwację
+                Dodaj kolejną
+                rezerwację
+
                 <Icon
                   name="arrow"
                   size={18}
@@ -1270,21 +1463,28 @@ export default function Home() {
                 STREFA PLUS
               </span>
 
-              <h1>Benefity</h1>
+              <h1>
+                Benefity
+              </h1>
 
               <p>
-                Wykorzystaj swoje punkty.
+                Wykorzystaj swoje
+                punkty.
               </p>
             </div>
 
             <button
+              type="button"
               className="back-button"
-              onClick={() => setTab("home")}
+              onClick={() =>
+                setTab("home")
+              }
             >
               <Icon
                 name="home"
                 size={17}
               />
+
               Start
             </button>
           </div>
@@ -1301,13 +1501,15 @@ export default function Home() {
               </strong>
 
               <p>
-                Zbieraj punkty i wykorzystuj
-                je na aktywności dostępne
+                Zbieraj punkty i
+                wykorzystuj je na
+                aktywności dostępne
                 w Strefie.
               </p>
             </div>
 
             <div className="benefit-item">
+
               <div className="benefit-icon">
                 <Icon
                   name="fitness"
@@ -1321,16 +1523,17 @@ export default function Home() {
                 </h3>
 
                 <p>
-                  Wykorzystaj swoje punkty
-                  na aktywność.
+                  Wykorzystaj swoje
+                  punkty na
+                  aktywność.
                 </p>
               </div>
 
               <strong>
                 320 pkt
               </strong>
-            </div>
 
+            </div>
           </div>
         </section>
       )}
@@ -1348,21 +1551,28 @@ export default function Home() {
                 TWOJA STREFA
               </span>
 
-              <h1>Profil</h1>
+              <h1>
+                Profil
+              </h1>
 
               <p>
-                Twoje dane i aktywność.
+                Twoje dane i
+                aktywność.
               </p>
             </div>
 
             <button
+              type="button"
               className="back-button"
-              onClick={() => setTab("home")}
+              onClick={() =>
+                setTab("home")
+              }
             >
               <Icon
                 name="home"
                 size={17}
               />
+
               Start
             </button>
           </div>
@@ -1415,6 +1625,7 @@ export default function Home() {
       <nav className="bottom-nav">
 
         <button
+          type="button"
           className={
             tab === "home"
               ? "nav-item active"
@@ -1432,10 +1643,13 @@ export default function Home() {
             />
           </span>
 
-          <span>Start</span>
+          <span>
+            Start
+          </span>
         </button>
 
         <button
+          type="button"
           className={
             tab === "discover"
               ? "nav-item active"
@@ -1453,16 +1667,21 @@ export default function Home() {
             />
           </span>
 
-          <span>Odkrywaj</span>
+          <span>
+            Odkrywaj
+          </span>
         </button>
 
         <button
+          type="button"
           className={
             tab === "bookings"
               ? "nav-item active"
               : "nav-item"
           }
-          onClick={() => setTab("bookings")}
+          onClick={() =>
+            setTab("bookings")
+          }
         >
           <span className="nav-active">
             <Icon
@@ -1471,10 +1690,13 @@ export default function Home() {
             />
           </span>
 
-          <span>Rezerwacje</span>
+          <span>
+            Rezerwacje
+          </span>
         </button>
 
         <button
+          type="button"
           className={
             tab === "benefits"
               ? "nav-item active"
@@ -1492,10 +1714,13 @@ export default function Home() {
             />
           </span>
 
-          <span>Benefity</span>
+          <span>
+            Benefity
+          </span>
         </button>
 
         <button
+          type="button"
           className={
             tab === "profile"
               ? "nav-item active"
@@ -1513,7 +1738,9 @@ export default function Home() {
             />
           </span>
 
-          <span>Profil</span>
+          <span>
+            Profil
+          </span>
         </button>
 
       </nav>
